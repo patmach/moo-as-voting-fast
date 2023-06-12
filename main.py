@@ -10,6 +10,7 @@ RUN_ID = os.environ[mlflow.tracking._RUN_ID_ENV_VAR] if mlflow.tracking._RUN_ID_
 import glob
 
 import numpy as np
+import pandas as pd
 
 from scipy.spatial.distance import squareform, pdist
 
@@ -40,10 +41,14 @@ from caserec.recommenders.rating_prediction.itemknn import ItemKNN
 from caserec.recommenders.rating_prediction.matrixfactorization import MatrixFactorization
 from caserec.recommenders.rating_prediction.base_rating_prediction import BaseRatingPrediction
 
-def get_supports(users_partial_lists, items, extended_rating_matrix, distance_matrix, users_viewed_item, k):
+
+
+
+
+def get_supports(users_partial_lists, items, extended_rating_matrix, distance_matrix, users_viewed_item, k, num_users):
     rel_supps = rating_based_relevance_support(extended_rating_matrix)
     div_supps = intra_list_diversity_support(users_partial_lists, items, distance_matrix, k)
-    nov_supps = popularity_complement_support(users_viewed_item, num_users=users_partial_lists.shape[0])
+    nov_supps = popularity_complement_support(users_viewed_item,users_partial_lists.shape[0], num_users)
     return np.stack([rel_supps, div_supps, nov_supps])
 
 def save_cache(cache_path, cache):
@@ -60,26 +65,39 @@ def load_cache(cache_path):
 # Parse movielens metadata
 def parse_metadata(metadata_path, item_to_item_id):
     metadata = dict()
-
+    all_genres = set()
+    movies_df = pd.read_csv(metadata_path)
+    for index, row in movies_df.iterrows():
+        genres = row["genres"].split("|")
+        all_genres.update(genres)
+        metadata[int(row["movieId"])] = {
+            "movie_name": row["title"],
+            "genres": genres
+        }
+    """
     with open(metadata_path, encoding="ISO-8859-1") as f:
         all_genres = set()
+        first = True
         for line in f.readlines():
-            [movie, movie_name, genres] = line.strip().split("::")
+            if(first):
+                first=False
+                continue
+            [movie, movie_name, genres] = line.strip().split(",")#("::")
             genres = genres.split("|")
             all_genres.update(genres)
             metadata[int(movie)] = {
                 "movie_name": movie_name,
                 "genres": genres
             }
-        
-        genre_to_genre_id = {g:i for i, g in enumerate(all_genres)}
-        metadata_matrix = np.zeros((len(item_to_item_id), len(all_genres)), dtype=np.int32)
-        for movie, data in metadata.items():
-            if movie not in item_to_item_id:
-                continue
-            item_id = item_to_item_id[movie]
-            for g in data["genres"]:
-                metadata_matrix[item_id, genre_to_genre_id[g]] = 1
+    """
+    genre_to_genre_id = {g:i for i, g in enumerate(all_genres)}
+    metadata_matrix = np.zeros((len(item_to_item_id), len(all_genres)), dtype=np.int32)
+    for movie, data in metadata.items():
+        if movie not in item_to_item_id:
+            continue
+        item_id = item_to_item_id[movie]
+        for g in data["genres"]:
+            metadata_matrix[item_id, genre_to_genre_id[g]] = 1
 
     metadata_distances = np.float32(squareform(pdist(metadata_matrix, "cosine")))
     metadata_distances[np.isnan(metadata_distances)] = 1.0
@@ -89,123 +107,112 @@ def parse_metadata(metadata_path, item_to_item_id):
 
 def get_baseline(args, baseline_factory):
     
-    cache_path = os.path.join(args.cache_dir, f"baseline_{baseline_factory.__name__}_{args.seed}.pckl")
-    if args.cache_dir and os.path.exists(cache_path):
-        cache = load_cache(cache_path)
-        items = cache["items"]    
-        users = cache["users"]
-        users_viewed_item = cache["users_viewed_item"]
-        item_to_item_id = cache["item_to_item_id"]
-        item_id_to_item = cache["item_id_to_item"]
-        extended_rating_matrix = cache["extended_rating_matrix"]
-        similarity_matrix = cache["similarity_matrix"]
-        unseen_items_mask = cache["unseen_items_mask"]
-        test_set_users_start_index = cache["test_set_users_start_index"]
-        user_to_user_id = cache["user_to_user_id"]
-        user_id_to_user = cache["user_id_to_user"]
+
+    print(f"Calculating baseline '{baseline_factory.__name__}'")
+    baseline = baseline_factory(args.train_path, sep=",")
+    BaseRatingPrediction.compute(baseline)
+    baseline.init_model()
+    print(f"Training baseline '{baseline_factory.__name__}'")
+
+    if hasattr(baseline, "fit"):
+        baseline.fit()
+    elif hasattr(baseline, "train_baselines"):
+        baseline.train_baselines()
     else:
-        print(f"Calculating baseline '{baseline_factory.__name__}'")
-        baseline = baseline_factory(args.train_path)
+        assert False, "Fit/train_baselines not found for baseline"
+    baseline.create_matrix()
+    similarity_matrix = baseline.compute_similarity(transpose=True)
 
-        BaseRatingPrediction.compute(baseline)
-        baseline.init_model()
-        if hasattr(baseline, "fit"):
-            baseline.fit()
-        elif hasattr(baseline, "train_baselines"):
-            baseline.train_baselines()
-        else:
-            assert False, "Fit/train_baselines not found for baseline"
-        baseline.create_matrix()
-        similarity_matrix = baseline.compute_similarity(transpose=True)
+    train_set = baseline.train_set
 
-        train_set = baseline.train_set
+    num_items = len(train_set['items'])
+    num_users = len(train_set['users'])
+    user_IDS = train_set['users']
+    itemIDs = train_set['items']
+    unseen_items_mask = np.ones((num_users, num_items), dtype=np.bool8)
+    unseen_items_mask[baseline.matrix > 0.0] = 0 # Mask out already seem items
+    
+    item_to_item_id = dict()
+    item_id_to_item = dict()
 
-        num_items = len(train_set['items'])
-        num_users = len(train_set['users'])
+    items = np.arange(num_items)
+    users = np.arange(num_users)
 
-        unseen_items_mask = np.ones((num_users, num_items), dtype=np.bool8)
-        unseen_items_mask[baseline.matrix > 0.0] = 0 # Mask out already seem items
+    users_viewed_item = np.zeros_like(items, dtype=np.int32)
+
+    for idx, item in enumerate(train_set['items']):
+        item_to_item_id[item] = idx
+        item_id_to_item[idx] = item
+        users_viewed_item[idx] = len(train_set['users_viewed_item'][item])
+
+    user_to_user_id = dict()
+    user_id_to_user = dict()
+
+    for idx, user in enumerate(train_set['users']):
+        user_to_user_id[user] = idx
+        user_id_to_user[idx] = user
+    
+    if baseline_factory == ItemKNN:
+        print("Injecting into ItemKNN")
+        def predict_score_wrapper(u_id, i_id):
+            _, _, res = baseline.predict_scores(user_id_to_user[u_id], [item_id_to_item[i_id]])[0]
+            return res
+        setattr(baseline, "_predict_score", predict_score_wrapper)
+
+    extended_rating_matrix = baseline.matrix.copy()
+    for u_id in range(extended_rating_matrix.shape[0]):
+        for i_id in range(extended_rating_matrix.shape[1]):
+            if extended_rating_matrix[u_id, i_id] == 0.0:
+                extended_rating_matrix[u_id, i_id] = baseline._predict_score(u_id, i_id)
+    """
+    test_set = ReadFile(args.test_path).read()
+    test_set_users = []
+
+    test_set_users_start_index = 0
+    next_user_idx = len(train_set['users'])
+    for u in test_set['users']:
+        if u not in user_to_user_id:
+            print(f"Test set contains so-far-unknown user: {u}, assigning id: {next_user_idx}")
+            if test_set_users_start_index == 0:
+                test_set_users_start_index = next_user_idx
+            user_to_user_id[u] = next_user_idx
+            user_id_to_user[next_user_idx] = u
+            user_estimated_rating = extended_rating_matrix.mean(axis=0, keepdims=True)
+            extended_rating_matrix = np.concatenate([extended_rating_matrix, user_estimated_rating], axis=0)            
+            unseen_items_mask = np.concatenate([unseen_items_mask, np.ones((1, num_items), dtype=np.bool8)])
+            next_user_idx += 1
+
+        test_set_users.append(user_to_user_id[u])
         
-        item_to_item_id = dict()
-        item_id_to_item = dict()
-
-        items = np.arange(num_items)
-        users = np.arange(num_users)
-
-        users_viewed_item = np.zeros_like(items, dtype=np.int32)
-
-        for idx, item in enumerate(train_set['items']):
-            item_to_item_id[item] = idx
-            item_id_to_item[idx] = item
-            users_viewed_item[idx] = len(train_set['users_viewed_item'][item])
-
-        user_to_user_id = dict()
-        user_id_to_user = dict()
-
-        for idx, user in enumerate(train_set['users']):
-            user_to_user_id[user] = idx
-            user_id_to_user[idx] = user
-        
-        if baseline_factory == ItemKNN:
-            print("Injecting into ItemKNN")
-            def predict_score_wrapper(u_id, i_id):
-                _, _, res = baseline.predict_scores(user_id_to_user[u_id], [item_id_to_item[i_id]])[0]
-                return res
-            setattr(baseline, "_predict_score", predict_score_wrapper)
-
-        extended_rating_matrix = baseline.matrix.copy()
-        for u_id in range(extended_rating_matrix.shape[0]):
-            for i_id in range(extended_rating_matrix.shape[1]):
-                if extended_rating_matrix[u_id, i_id] == 0.0:
-                    extended_rating_matrix[u_id, i_id] = baseline._predict_score(u_id, i_id)
-
-        test_set = ReadFile(args.test_path).read()
-        test_set_users = []
-
-        test_set_users_start_index = 0
-        next_user_idx = len(train_set['users'])
-        for u in test_set['users']:
-            if u not in user_to_user_id:
-                print(f"Test set contains so-far-unknown user: {u}, assigning id: {next_user_idx}")
-                if test_set_users_start_index == 0:
-                    test_set_users_start_index = next_user_idx
-                user_to_user_id[u] = next_user_idx
-                user_id_to_user[next_user_idx] = u
-                user_estimated_rating = extended_rating_matrix.mean(axis=0, keepdims=True)
-                extended_rating_matrix = np.concatenate([extended_rating_matrix, user_estimated_rating], axis=0)            
-                unseen_items_mask = np.concatenate([unseen_items_mask, np.ones((1, num_items), dtype=np.bool8)])
-                next_user_idx += 1
-
-            test_set_users.append(user_to_user_id[u])
-            
-        users = np.arange(extended_rating_matrix.shape[0]) # re-evaluate users because there can be new users in test set
-
-        if args.cache_dir:
-            cache = {
-                "items": items,
-                "users": users,
-                "users_viewed_item": users_viewed_item,
-                "item_to_item_id": item_to_item_id,
-                "item_id_to_item": item_id_to_item,
-                "extended_rating_matrix": extended_rating_matrix,
-                "similarity_matrix": similarity_matrix,
-                "unseen_items_mask": unseen_items_mask,
-                "test_set_users_start_index": test_set_users_start_index,
-                "user_to_user_id": user_to_user_id,
-                "user_id_to_user": user_id_to_user
-            }
-            save_cache(cache_path, cache)
-
+    users = np.arange(extended_rating_matrix.shape[0]) # re-evaluate users because there can be new users in test set
+    
+    if args.cache_dir:
+        cache = {
+            "items": items,
+            "users": users,
+            "users_viewed_item": users_viewed_item,
+            "item_to_item_id": item_to_item_id,
+            "item_id_to_item": item_id_to_item,
+            "extended_rating_matrix": extended_rating_matrix,
+            "similarity_matrix": similarity_matrix,
+            "unseen_items_mask": unseen_items_mask,
+#                "test_set_users_start_index": test_set_users_start_index,
+            "user_to_user_id": user_to_user_id,
+            "user_id_to_user": user_id_to_user
+        }
+        save_cache(cache_path, cache)
+    """
     metadata_distance_matrix = None
     if args.metadata_path:
         print(f"Parsing metadata from path: '{args.metadata_path}'")
         metadata_distance_matrix = parse_metadata(args.metadata_path, item_to_item_id)
 
-    return items, users, \
+    return items, itemIDs, users, user_IDS, \
         users_viewed_item, item_to_item_id, \
         item_id_to_item, extended_rating_matrix, \
         similarity_matrix, unseen_items_mask, \
-        test_set_users_start_index, metadata_distance_matrix, \
+        None, \
+        metadata_distance_matrix, \
         user_id_to_user, user_to_user_id
 
 def build_normalization(normalization_factory, shift):
@@ -215,6 +222,7 @@ def build_normalization(normalization_factory, shift):
         return normalization_factory()
 
 def prepare_normalization(args, normalization_factory, rating_matrix, distance_matrix, users_viewed_item, shift):
+    """
     cache_path = os.path.join(args.cache_dir, f"sup_norm_{normalization_factory.__name__}_{shift}_{args.seed}_{args.baseline}_{args.diversity}.pckl")
     if args.cache_dir and os.path.exists(cache_path):
         cache = load_cache(cache_path)
@@ -222,31 +230,32 @@ def prepare_normalization(args, normalization_factory, rating_matrix, distance_m
         norm_diversity = cache["norm_diversity"]
         norm_novelty = cache["norm_novelty"]
     else:
-        num_users = rating_matrix.shape[0]
+    """
+    num_users = rating_matrix.shape[0]
 
-        relevance_data_points = rating_matrix.T
+    relevance_data_points = rating_matrix.T
+    
+    upper_triangular_indices = np.triu_indices(distance_matrix.shape[0], k=1)
+    upper_triangular_nonzero = distance_matrix[upper_triangular_indices]
         
-        upper_triangular_indices = np.triu_indices(distance_matrix.shape[0], k=1)
-        upper_triangular_nonzero = distance_matrix[upper_triangular_indices]
-            
-        diversity_data_points = np.expand_dims(upper_triangular_nonzero, axis=1)
-        novelty_data_points = np.expand_dims(1.0 - users_viewed_item / num_users, axis=1)
+    diversity_data_points = np.expand_dims(upper_triangular_nonzero, axis=1)
+    novelty_data_points = np.expand_dims(1.0 - users_viewed_item / num_users, axis=1)
 
-        norm_relevance = build_normalization(normalization_factory, shift)
-        norm_relevance.train(relevance_data_points)
-        norm_diversity = build_normalization(normalization_factory, shift)
-        norm_diversity.train(diversity_data_points)
-        norm_novelty = build_normalization(normalization_factory, shift)
-        norm_novelty.train(novelty_data_points)
-
-        if args.cache_dir:
-            cache = {
-                "norm_relevance": norm_relevance,
-                "norm_diversity": norm_diversity,
-                "norm_novelty": norm_novelty
-            }
-            save_cache(cache_path, cache)
-
+    norm_relevance = build_normalization(normalization_factory, shift)
+    norm_relevance.train(relevance_data_points)
+    norm_diversity = build_normalization(normalization_factory, shift)
+    norm_diversity.train(diversity_data_points)
+    norm_novelty = build_normalization(normalization_factory, shift)
+    norm_novelty.train(novelty_data_points)
+    """
+    if args.cache_dir:
+        cache = {
+            "norm_relevance": norm_relevance,
+            "norm_diversity": norm_diversity,
+            "norm_novelty": norm_novelty
+        }
+        save_cache(cache_path, cache)
+    """
     return [norm_relevance, norm_diversity, norm_novelty]
 
 def custom_evaluate_voting(top_k, rating_matrix, distance_matrix, users_viewed_item, normalizations, obj_weights, discount_sequences):
@@ -385,6 +394,46 @@ def custom_evaluate_voting(top_k, rating_matrix, distance_matrix, users_viewed_i
         "per-user-errors": per_user_errors
     }
 
+def predict_for_user(user, user_index, items, extended_rating_matrix, distance_matrix,\
+                      users_viewed_item, normalizations, mask, algorithm_factory, args, obj_weights, num_users):
+    start_time = time.perf_counter()
+    mandate_allocation = algorithm_factory(obj_weights, args.masking_value)
+    users_partial_lists= np.full((1,args.k), -1, dtype=np.int32)
+    supports_partial_lists = []
+    for i in range(args.k):
+        iter_start_time = time.perf_counter()
+        print(f"Predicting for i: {i + 1} out of: {args.k}")
+        # Calculate support values
+        #supports = get_supports(users_partial_lists, items, extended_rating_matrix[user_index:user_index+1],\
+        #                         distance_matrix, users_viewed_item, k=i+1, num_users=num_users)
+        supports = get_supports(users_partial_lists, items, extended_rating_matrix[user_index:user_index+1],\
+                            distance_matrix, users_viewed_item, k=i+1, num_users=num_users)
+        
+        # Normalize the supports
+        assert supports.shape[0] == 3, "expecting 3 objectives, if updated, update code below"
+
+        # Discount sequence can be [1] * K, i.e. 1.0 at every position
+        # 0 -> relevance, 1 -> diversity, 2 -> novelty
+        supports[0, :, :] = normalizations[0](supports[0].T, userID=user_index).T * args.discount_sequences[0][i]
+        supports[1, :, :] = normalizations[1](supports[1].reshape(-1, 1)).reshape((supports.shape[1], -1)) * args.discount_sequences[1][i]
+        supports[2, :, :] = normalizations[2](supports[2].reshape(-1, 1)).reshape((supports.shape[1], -1)) * args.discount_sequences[2][i]
+        
+        # Mask out the already recommended items
+        np.put_along_axis(mask, users_partial_lists[:, :i], 0, 1)
+
+        # Get the per-user top-k recommendations
+        users_partial_lists[:, i] = mandate_allocation(mask, supports)
+
+        # For explanations, get supports of each item w.r.t. objectives
+        item_supports = np.squeeze(supports[:, 0, users_partial_lists[0, i]])
+        item_supports = [item_support * 100 for item_support in item_supports]
+        supports_partial_lists.append(item_supports)
+
+        print(f"i: {i + 1} done, took: {time.perf_counter() - iter_start_time}")
+    print(f"Prediction done, took: {time.perf_counter() - start_time}")
+
+    return users_partial_lists, supports_partial_lists
+
 def main(args):
     for arg_name in dir(args):
         if arg_name[0] != '_':
@@ -400,8 +449,9 @@ def main(args):
 
     algorithm_factory = globals()[args.algorithm]
     print(f"Using '{args.algorithm}' algorithm")
-
-    items, users, users_viewed_item, item_to_item_id, item_id_to_item, extended_rating_matrix, similarity_matrix, unseen_items_mask, test_set_users_start_index, metadata_distance_matrix, user_id_to_user, user_to_user_id = get_baseline(args, globals()[args.baseline])
+ 
+    items, itemIDs, users, userIDs, users_viewed_item, item_to_item_id, item_id_to_item, extended_rating_matrix, similarity_matrix, \
+        unseen_items_mask, test_set_users_start_index, metadata_distance_matrix, user_id_to_user, user_to_user_id = get_baseline(args, globals()[args.baseline])
     if args.diversity == "cb":
         print("Using content based diversity")
         assert args.metadata_path, "Metadata path must be specified when using cb diversity"
@@ -414,45 +464,50 @@ def main(args):
     #extended_rating_matrix = (extended_rating_matrix - 1.0) / 4.0
 
     # Prepare normalizations
-    start_time = time.perf_counter()
-    normalizations = prepare_normalization(args, normalization_factory, extended_rating_matrix, distance_matrix, users_viewed_item, args.shift)
-    print(f"Preparing normalizations took: {time.perf_counter() - start_time}")
+    
 
     num_users = users.size
-    users_partial_lists = np.full((num_users, args.k), -1, dtype=np.int32)
     
     obj_weights = args.weights
     obj_weights /= obj_weights.sum()
-    mandate_allocation = algorithm_factory(obj_weights, args.masking_value)
 
     start_time = time.perf_counter()
 
+
+
     # Masking already recommended users and SEEN items
-    mask = unseen_items_mask.copy()
+    mask = unseen_items_mask.copy() # 1 for unseen, 0 for seen (shape=[NUM_USERS, NUM_ITEMS])
+    mandate_allocation = algorithm_factory(obj_weights, args.masking_value) # Algorithm implementation (./mandate_allocation/*.py)
+ #   users_partial_lists= np.full((num_users, args.k), -1, dtype=np.int32) # Output tensor (shape=[NUM_USERS, K])
+
+
+    # extended_rating_matrix -> same as rating matrix, but missing entries are replaced by baseline predictions (shape=[NUM_USERS, NUM_ITEMS])
+    # distance_matrix -> distance between every pair of items (shape=[NUM_ITEMS, NUM_ITEMS])
+    # users_vievew_item => np.array, for each item we count number of users who saw it (based on training data)
+
+    # List of normalizations (relevance normalization, diversity normalization, novelty normalization)
+    # args.shift can be 0
+    # normalization_factory is either cdf or standardization, defined in ./normalization/cdf.py, ./normalization/standardization.py
+    start_time = time.perf_counter()
+    userindex = -3
     
-    for i in range(args.k):
-        iter_start_time = time.perf_counter()
-        print(f"Predicting for i: {i + 1} out of: {args.k}")
-        # Calculate support values
-        supports = get_supports(users_partial_lists, items, extended_rating_matrix, distance_matrix, users_viewed_item, k=i+1)
-        
-        # Normalize the supports
-        assert supports.shape[0] == 3, "expecting 3 objectives, if updated, update code below"
-        
-        supports[0, :, :] = normalizations[0](supports[0].T).T * args.discount_sequences[0][i]
-        supports[1, :, :] = normalizations[1](supports[1].reshape(-1, 1)).reshape((supports.shape[1], -1)) * args.discount_sequences[1][i]
-        supports[2, :, :] = normalizations[2](supports[2].reshape(-1, 1)).reshape((supports.shape[1], -1)) * args.discount_sequences[2][i]
-        
-        # Mask out the already recommended items
-        np.put_along_axis(mask, users_partial_lists[:, :i], 0, 1)
 
-        # Get the per-user top-k recommendations
-        users_partial_lists[:, i] = mandate_allocation(mask, supports)
 
-        print(f"i: {i + 1} done, took: {time.perf_counter() - iter_start_time}")
+
+
+
+
+    normalizations = prepare_normalization(args, normalization_factory, extended_rating_matrix, distance_matrix, users_viewed_item, args.shift)
+    print(f"Preparing normalizations took: {time.perf_counter() - start_time}")
+# For every position in the recommendation list of length 10
+#    predict_for_user(users[userindex], userindex, items, extended_rating_matrix, distance_matrix,users_viewed_item,\
+#      normalizations, unseen_items_mask[userindex:userindex+1].copy(), mandate_allocation,args,obj_weights, len(users))
+
+    
 
     print(f"### Whole prediction took: {time.perf_counter() - start_time} ###")
-    print(f"Lists: {users_partial_lists.tolist()}")
+    """
+ #   print(f"Lists: {users_partial_lists.tolist()}")
     print(f"Item ID to Item: {item_id_to_item.items()}")
     mapped_lists = np.fromiter(map(item_id_to_item.__getitem__, users_partial_lists.flatten()), dtype=np.int32).reshape(users_partial_lists.shape).tolist()
     print(f"Mapped lists: {mapped_lists}")
@@ -470,27 +525,53 @@ def main(args):
         results["user-id-to-user"] = user_id_to_user
         results["user-to-user-id"] = user_to_user_id
         results["args"] = args
+        
         save_cache(results_path, results)
         for artifact_path in glob.glob(os.path.join(args.artifact_dir, f"*{RUN_ID}*")):
             print(f"Logging artifact: {artifact_path}")
             log_artifact(artifact_path)
+        """
         #log_artifacts(args.artifact_dir)
 
-if __name__ == "__main__":
+    return extended_rating_matrix, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, mask, algorithm_factory, normalizations, args
+
+def save_ratings_from_db_to_file():
+    import pypyodbc as odbc
+    import pandas as pd
+    DriverName = "SQL Server"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#27616899\\tsql\\query"
+    DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
+    connectionstring=f"""DRIVER={{{DriverName}}};
+        SERVER={ServerName};
+        DATABASE={DatabaseName};
+        Trusted_Connection=yes;"""
+    conn = odbc.connect(connectionstring)
+    df = pd.read_sql_query('SELECT  * FROM ratings', conn)
+    df = df.drop(columns=["id","date"])
+#    df = df.rename(columns={"userid": "user", "itemid": "item", "ratingscore": "feedback_value"})
+    print(df)
+    df.to_csv("ratings.csv", index=False,  header=False)
+    conn.close()
+
+
+
+
+def init():
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("--k", type=int, default=10)
-    parser.add_argument("--train_path", type=str, default="/Users/pdokoupil/Downloads/filmtrust-folds/randomfilmtrustfolds/0/train.dat")
-    parser.add_argument("--test_path", type=str, default="/Users/pdokoupil/Downloads/filmtrust-folds/randomfilmtrustfolds/0/test.dat")
+    parser.add_argument("--train_path", type=str, default="ratings.csv")
+    #    parser.add_argument("--test_path", type=str, default="/Users/pdokoupil/Downloads/filmtrust-folds/randomfilmtrustfolds/0/test.dat")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--weights", type=str, default="0.3,0.3,0.3")
     parser.add_argument("--normalization", type=str, default="cdf_threshold_shift")
     parser.add_argument("--algorithm", type=str, default="exactly_proportional_fuzzy_dhondt_2")
     parser.add_argument("--masking_value", type=float, default=-1e6)
     parser.add_argument("--baseline", type=str, default="MatrixFactorization")
-    parser.add_argument("--metadata_path", type=str, default="/Users/pdokoupil/Downloads/ml-1m/movies.dat")
+    parser.add_argument("--metadata_path", type=str, default="movies.csv")
     parser.add_argument("--diversity", type=str, default="cf")
     parser.add_argument("--shift", type=float, default=-0.1)
-    parser.add_argument("--cache_dir", type=str, default=".")
+    #    parser.add_argument("--cache_dir", type=str, default=".")
     parser.add_argument("--artifact_dir", type=str, default=None)
     parser.add_argument("--output_path_prefix", type=str, default=None)
     parser.add_argument("--discounts", type=str, default="1,1,1")
@@ -500,6 +581,7 @@ if __name__ == "__main__":
     args.discounts = [float(d) for d in args.discounts.split(",")]
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k, num=args.k, endpoint=False) for d in args.discounts], axis=0)
 
+    """
     if not args.artifact_dir:
         print("Artifact directory is not specified, trying to set it")
         if not RUN_ID:
@@ -511,8 +593,11 @@ if __name__ == "__main__":
                 print(f"Set artifact directory to: {args.artifact_dir}")
             else:
                 print("Output path prefix is not set, skipping setting of artifact directory")
-
+    """
+    save_ratings_from_db_to_file()
     np.random.seed(args.seed)
     random.seed(args.seed)
+    return main(args)
 
-    main(args)
+if __name__ == "__main__":
+    init()
