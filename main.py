@@ -40,8 +40,10 @@ from caserec.utils.process_data import ReadFile
 from caserec.recommenders.rating_prediction.itemknn import ItemKNN
 from caserec.recommenders.rating_prediction.matrixfactorization import MatrixFactorization
 from caserec.recommenders.rating_prediction.base_rating_prediction import BaseRatingPrediction
+from EASEModel import EASE
 
-
+import pypyodbc as odbc
+import pandas as pd
 
 
 
@@ -105,11 +107,71 @@ def parse_metadata(metadata_path, item_to_item_id):
 
     return metadata_distances
 
+
+def get_EASE(args):
+    ease = EASE(args.df)
+    ease.fit(implicit=False)
+    similarity_matrix = ease.compute_similarity(transpose=True)
+    num_users = ease.X.shape[0]
+    num_items = ease.B.shape[0]
+    user_IDs = ease.user_enc.inverse_transform(list(range(num_users))).tolist()
+    itemIDs = ease.item_enc.inverse_transform(list(range(num_items))).tolist()
+    unseen_items_mask = np.ones((num_users, num_items), dtype=np.bool8)
+    unseen_items_mask[ease.X.todense() > 0.0] = 0 # Mask out already seem items
+
+    item_to_item_id = dict()
+    item_id_to_item = dict()
+
+    items = np.arange(num_items)
+    users = np.arange(num_users)
+
+    users_viewed_item = np.zeros_like(items, dtype=np.int32)
+    Xt= ease.X.T.toarray()
+    for idx, item in enumerate(itemIDs):
+        item_to_item_id[item] = idx
+        item_id_to_item[idx] = item
+        debug = [val> 0 for val in Xt[idx]]
+        users_viewed_item[idx] = sum([val> 0 for val in Xt[idx]])
+
+    user_to_user_id = dict()
+    user_id_to_user = dict()
+
+    for idx, user in enumerate(user_IDs):
+        user_to_user_id[user] = idx
+        user_id_to_user[idx] = user
+
+    extended_rating_matrix = ease.computeFullPredictionMatrix()
+    extended_rating_matrix*=10
+    extended_rating_matrix[extended_rating_matrix<0.0]=0
+    """
+    for u_id in range(extended_rating_matrix.shape[0]):
+        for i_id in range(extended_rating_matrix.shape[1]):
+            if ease.X[u_id, i_id] != 0.0:
+                extended_rating_matrix[u_id, i_id] = ease.X[u_id, i_id]
+            extended_rating_matrix[u_id, i_id]*=10
+    """
+    metadata_distance_matrix = None
+    if args.metadata_path:
+        print(f"Parsing metadata from path: '{args.metadata_path}'")
+        metadata_distance_matrix = parse_metadata(args.metadata_path, item_to_item_id)
+
+    return items, itemIDs, users, user_IDs, \
+        users_viewed_item, item_to_item_id, \
+        item_id_to_item, extended_rating_matrix, \
+        similarity_matrix, unseen_items_mask, \
+        None, \
+        metadata_distance_matrix, \
+        user_id_to_user, user_to_user_id
+
+
+
+
 def get_baseline(args, baseline_factory):
     
 
     print(f"Calculating baseline '{baseline_factory.__name__}'")
     baseline = baseline_factory(args.train_path, sep=",")
+
     BaseRatingPrediction.compute(baseline)
     baseline.init_model()
     print(f"Training baseline '{baseline_factory.__name__}'")
@@ -449,8 +511,11 @@ def main(args):
 
     algorithm_factory = globals()[args.algorithm]
     print(f"Using '{args.algorithm}' algorithm")
- 
-    items, itemIDs, users, userIDs, users_viewed_item, item_to_item_id, item_id_to_item, extended_rating_matrix, similarity_matrix, \
+    if((globals()[args.baseline]) is EASE):
+        items,itemIDs, users, userIDs, users_viewed_item, item_to_item_id, item_id_to_item, extended_rating_matrix, similarity_matrix, \
+        unseen_items_mask, test_set_users_start_index, metadata_distance_matrix, user_id_to_user, user_to_user_id = get_EASE(args)
+    else:
+        items, itemIDs, users, userIDs, users_viewed_item, item_to_item_id, item_id_to_item, extended_rating_matrix, similarity_matrix, \
         unseen_items_mask, test_set_users_start_index, metadata_distance_matrix, user_id_to_user, user_to_user_id = get_baseline(args, globals()[args.baseline])
     if args.diversity == "cb":
         print("Using content based diversity")
@@ -535,11 +600,9 @@ def main(args):
 
     return extended_rating_matrix, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, mask, algorithm_factory, normalizations, args
 
-def save_ratings_from_db_to_file():
-    import pypyodbc as odbc
-    import pandas as pd
+def get_ratings():
     DriverName = "SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#27616899\\tsql\\query"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#9E6DE69C\\tsql\\query"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
     connectionstring=f"""DRIVER={{{DriverName}}};
         SERVER={ServerName};
@@ -548,10 +611,13 @@ def save_ratings_from_db_to_file():
     conn = odbc.connect(connectionstring)
     df = pd.read_sql_query('SELECT  * FROM ratings', conn)
     df = df.drop(columns=["id","date"])
-#    df = df.rename(columns={"userid": "user", "itemid": "item", "ratingscore": "feedback_value"})
-    print(df)
-    df.to_csv("ratings.csv", index=False,  header=False)
     conn.close()
+    return df
+
+def save_ratings_from_db_to_file():
+    df = get_ratings()
+    df.to_csv("ratings.csv", index=False,  header=False)
+    
 
 
 
@@ -567,7 +633,7 @@ def init():
     parser.add_argument("--normalization", type=str, default="cdf_threshold_shift")
     parser.add_argument("--algorithm", type=str, default="exactly_proportional_fuzzy_dhondt_2")
     parser.add_argument("--masking_value", type=float, default=-1e6)
-    parser.add_argument("--baseline", type=str, default="MatrixFactorization")
+    parser.add_argument("--baseline", type=str, default="EASE")#MatrixFactorization")
     parser.add_argument("--metadata_path", type=str, default="movies.csv")
     parser.add_argument("--diversity", type=str, default="cf")
     parser.add_argument("--shift", type=float, default=-0.1)
@@ -576,7 +642,6 @@ def init():
     parser.add_argument("--output_path_prefix", type=str, default=None)
     parser.add_argument("--discounts", type=str, default="1,1,1")
     args = parser.parse_args()
-
     args.weights = np.fromiter(map(float, args.weights.split(",")), dtype=np.float32)
     args.discounts = [float(d) for d in args.discounts.split(",")]
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k, num=args.k, endpoint=False) for d in args.discounts], axis=0)
@@ -594,8 +659,7 @@ def init():
             else:
                 print("Output path prefix is not set, skipping setting of artifact directory")
     """
-    save_ratings_from_db_to_file()
-    np.random.seed(args.seed)
+    args.df = get_ratings()
     random.seed(args.seed)
     return main(args)
 
