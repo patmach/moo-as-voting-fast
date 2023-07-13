@@ -31,6 +31,8 @@ from normalization.cdf_threshold_shift import cdf_threshold_shift
 
 from support.rating_based_relevance_support import rating_based_relevance_support
 from support.intra_list_diversity_support import intra_list_diversity_support
+from support.maximal_diversity_support import maximal_diversity_support
+
 from support.popularity_complement_support import popularity_complement_support
 
 from mlflow import log_metric, log_param, log_artifacts, log_artifact, set_tracking_uri, set_experiment, start_run
@@ -50,6 +52,7 @@ import pandas as pd
 def get_supports(users_partial_lists, items, extended_rating_matrix, distance_matrix, users_viewed_item, k, num_users):
     rel_supps = rating_based_relevance_support(extended_rating_matrix)
     div_supps = intra_list_diversity_support(users_partial_lists, items, distance_matrix, k)
+    div_supps = maximal_diversity_support(users_partial_lists, items, distance_matrix, k)
     nov_supps = popularity_complement_support(users_viewed_item,users_partial_lists.shape[0], num_users)
     return np.stack([rel_supps, div_supps, nov_supps])
 
@@ -130,7 +133,6 @@ def get_EASE(args):
     for idx, item in enumerate(itemIDs):
         item_to_item_id[item] = idx
         item_id_to_item[idx] = item
-        debug = [val> 0 for val in Xt[idx]]
         users_viewed_item[idx] = sum([val> 0 for val in Xt[idx]])
 
     user_to_user_id = dict()
@@ -151,7 +153,7 @@ def get_EASE(args):
             extended_rating_matrix[u_id, i_id]*=10
     """
     metadata_distance_matrix = None
-    if args.metadata_path:
+    if hasattr(args, "metadata_path") and args.metadata_path:
         print(f"Parsing metadata from path: '{args.metadata_path}'")
         metadata_distance_matrix = parse_metadata(args.metadata_path, item_to_item_id)
 
@@ -602,7 +604,7 @@ def main(args):
 
 def get_ratings():
     DriverName = "SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#9E6DE69C\\tsql\\query"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#AD0C64B6\\tsql\\query"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
     connectionstring=f"""DRIVER={{{DriverName}}};
         SERVER={ServerName};
@@ -634,7 +636,7 @@ def init():
     parser.add_argument("--algorithm", type=str, default="exactly_proportional_fuzzy_dhondt_2")
     parser.add_argument("--masking_value", type=float, default=-1e6)
     parser.add_argument("--baseline", type=str, default="EASE")#MatrixFactorization")
-    parser.add_argument("--metadata_path", type=str, default="movies.csv")
+    #parser.add_argument("--metadata_path", type=str, default="movies.csv")
     parser.add_argument("--diversity", type=str, default="cf")
     parser.add_argument("--shift", type=float, default=-0.1)
     #    parser.add_argument("--cache_dir", type=str, default=".")
