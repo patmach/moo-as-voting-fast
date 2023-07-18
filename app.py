@@ -10,26 +10,21 @@ import threading
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["DEBUG"] = True
-extended_rating_matrix, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs,\
-      mask, algorithm_factory, normalizations, args = None, None, None, None, None,None,None, None, None, None, None
+extended_rating_matrix,users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs,\
+      algorithm_factory, normalizations, args = None, None, None, None, None,None,None, None, None, None, None
 computing = False
 @app.before_first_request
 def init():
-    global computing, extended_rating_matrix, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, mask, algorithm_factory, normalizations, args
+    global computing, extended_rating_matrix, users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, algorithm_factory, normalizations, args
     start_time =time.perf_counter()
     if(not computing):
         computing = True
-        extended_rating_matrix, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, mask, algorithm_factory, normalizations, args = main.init()
+        extended_rating_matrix,users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, \
+            algorithm_factory, normalizations, args = main.init()
         computing=False
         print(f"Init done, took: {time.perf_counter() - start_time}")
-    threading.Timer(60.0, init).start()
+    threading.Timer(6000.0, init).start()
 
-
-
-@app.route('/train')
-def start():
-    global extended_rating_matrix, users_viewed_item, distance_matrix, items,itemIDs, users, user_IDS, mask, algorithm_factory, normalizations, args
-    extended_rating_matrix, users_viewed_item, distance_matrix, items, itemIDs, users, user_IDS, mask, algorithm_factory, normalizations, args = main.init()
 
 
 @app.route('/getRecommendations/<user_id>', methods=["POST", "GET"])
@@ -48,7 +43,7 @@ def index(user_id):
         blacklistindices = [itemIDs.index(int(item_id)) for item_id in blackListItemIDs if int(item_id) in itemIDs]
 
         userindex = userIDs.index(int(user_id))
-        user_mask =  mask[userindex:userindex+1].copy()
+        user_mask =  [np.ones(len(items),dtype=np.bool8)]
         if(len(whiteListItemIDs)>0):
             user_mask[0] = np.zeros(len( user_mask[0]))
             for i in whitelistindices:
@@ -56,8 +51,9 @@ def index(user_id):
         for i in blacklistindices:
             user_mask[0][i]=0
     
-        result, support = main.predict_for_user(users[userindex], userindex, items, extended_rating_matrix, distance_matrix,\
-                        users_viewed_item, normalizations, user_mask, algorithm_factory,args, metrics, len(users))
+        result, support = main.predict_for_user(users[userindex], userindex, items, extended_rating_matrix, users_profiles,\
+                        distance_matrix, users_viewed_item, normalizations, np.array(user_mask), algorithm_factory,args,\
+                              metrics, len(users))
         result = np.squeeze(result)
         for i in range(len(support)):
             for j in range(len(support[0])):
