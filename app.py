@@ -1,3 +1,4 @@
+import copy
 import main
 import numpy as np
 import time
@@ -31,17 +32,23 @@ def init():
 def index(user_id):
     json_data = []
     result=[]
+    client_args=copy.deepcopy(args)
     if(request.is_json):
         json_data = request.get_json()
         whiteListItemIDs = json_data["whiteListItemIDs"]
         blackListItemIDs = json_data["blackListItemIDs"]
-        args.k = json_data["count"]
-        args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k, num=args.k, endpoint=False) for d in args.discounts], axis=0)
+        client_args.k = json_data["count"]
+        client_args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**client_args.k, num=client_args.k, endpoint=False) for d in client_args.discounts], axis=0)
         metrics  = np.array([importance / sum(json_data["metrics"]) for importance in json_data["metrics"]])
         
         whitelistindices = [itemIDs.index(int(item_id)) for item_id in whiteListItemIDs if int(item_id) in itemIDs]
         blacklistindices = [itemIDs.index(int(item_id)) for item_id in blackListItemIDs if int(item_id) in itemIDs]
-
+        metric_variants = json_data["metricVariantsCodes"]
+        if(len(metric_variants)==3):
+            if (metric_variants[1] is not None) and (metric_variants[1]!=""):
+                client_args.diversity = metric_variants[1]
+            if (metric_variants[2] is not None) and (metric_variants[2]!=""):
+                client_args.novelty = metric_variants[2]
         userindex = userIDs.index(int(user_id))
         user_mask =  [np.ones(len(items),dtype=np.bool8)]
         if(len(whiteListItemIDs)>0):
@@ -52,7 +59,7 @@ def index(user_id):
             user_mask[0][i]=0
     
         result, support = main.predict_for_user(users[userindex], userindex, items, extended_rating_matrix, users_profiles,\
-                        distance_matrix, users_viewed_item, normalizations, np.array(user_mask), algorithm_factory,args,\
+                        distance_matrix, users_viewed_item, normalizations, np.array(user_mask), algorithm_factory,client_args,\
                               metrics, len(users))
         result = np.squeeze(result)
         for i in range(len(support)):

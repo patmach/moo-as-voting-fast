@@ -12,10 +12,12 @@ class cdf_threshold_shift:
     def __call__(self, supports, ignore_shift=False, userID=None):
         if ignore_shift:
             return self.transformer.transform(supports)
-        if not (userID is None):
+        
+        if userID is not None:
             part_transformer = copy.deepcopy(self.transformer)
             part_transformer.quantiles_=self.transformer.quantiles_[:,userID].reshape(self.transformer.quantiles_.shape[0],1)
             part_transformer.n_features_in_=1
+
             # supports have shape [num_users, num_data_points] or [num_data_points]
             transformed_supports = part_transformer.transform(supports)
             # Shift only values that are below threshold
