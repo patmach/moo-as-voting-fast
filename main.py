@@ -75,9 +75,9 @@ def get_supports(args, users_partial_lists, items, extended_rating_matrix,users_
     elif (args.novelty == "popularity_based_log_novelty"):
         nov_supps = popularity_based_log_novelty_support(users_viewed_item,users_partial_lists.shape[0], num_users)
     elif (args.novelty == "maximal_distance_based_novelty"):
-        nov_supps =  maximal_distance_based_novelty_support(users_profiles, items, distance_matrix, k)
+        nov_supps =  maximal_distance_based_novelty_support(users_profiles, items, distance_matrix)
     elif (args.novelty == "intra_list_distance_based_novelty"):
-        nov_supps =  intra_list_distance_based_novelty_support(users_profiles, items, distance_matrix, k)
+        nov_supps =  intra_list_distance_based_novelty_support(users_profiles, items, distance_matrix)
 
     return np.stack([rel_supps, div_supps, nov_supps])
 
@@ -149,7 +149,7 @@ def parse_metadata(metadata_path, item_to_item_id, rating_matrix=None):
     
 
 
-    return metadata_distances, user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id
+    return metadata_distances, user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id, all_genres
 
 
 def get_EASE(args):
@@ -200,7 +200,7 @@ def get_EASE(args):
     metadata_distance_matrix, user_genre_prob, genres_prob_all,metadata_matrix, genre_to_genre_id = None, None, None, None, None
     if hasattr(args, "metadata_path") and args.metadata_path:
         print(f"Parsing metadata from path: '{args.metadata_path}'")
-        metadata_distance_matrix, user_genre_prob, genres_prob_all,metadata_matrix, genre_to_genre_id = \
+        metadata_distance_matrix, user_genre_prob, genres_prob_all,metadata_matrix, genre_to_genre_id, all_genres = \
             parse_metadata(args.metadata_path, item_to_item_id, ease.X)
 
     return items, itemIDs, users, user_IDs, \
@@ -211,7 +211,8 @@ def get_EASE(args):
         metadata_distance_matrix, \
         user_id_to_user, user_to_user_id,\
         user_genre_prob, genres_prob_all,\
-        metadata_matrix, genre_to_genre_id
+        metadata_matrix, genre_to_genre_id,\
+        all_genres
 
 
 
@@ -300,67 +301,68 @@ def compute_all_normalizations(args, normalization_factory, extended_rating_matr
                                            users_viewed_item, items, users):
     normalization = dict()
     shift = args.shift
-    norm_args = copy.deepcopy(args)
-    norm_args.diversity="binomial_diversity"
-    norm_args.novelty="popularity_complement"
-    normalization["relevance"], normalization[norm_args.diversity], normalization[norm_args.novelty] =\
-          prepare_normalization(norm_args, normalization_factory, extended_rating_matrix, distance_matrix, \
-                                           users_viewed_item, shift, items, users)
-    norm_args = copy.deepcopy(args)
-    norm_args.diversity="intra_list_diversity"
-    norm_args.novelty="popularity_based_log_novelty"
-    normalization["relevance"], normalization[norm_args.diversity], normalization[norm_args.novelty] =\
-          prepare_normalization(norm_args, normalization_factory, extended_rating_matrix, distance_matrix, \
-                                           users_viewed_item, shift, items, users)
-    normalization["intra_list_distance_based_novelty"]=normalization["intra_list_diversity"]
-    normalization["maximal_diversity"]=normalization["intra_list_diversity"]
-    normalization["maximal_distance_based_novelty"]=normalization["intra_list_diversity"]
+    normalization["relevance"] = prepare_relevance_normalization(normalization_factory, extended_rating_matrix, shift)
+    for diversity_type in ["intra_list_diversity","maximal_diversity","binomial_diversity"]:
+        normalization[diversity_type] = prepare_diversity_normalization(diversity_type, normalization_factory, \
+                                                                        distance_matrix, shift, items, users)
+    for novelty_type in ["popularity_complement","maximal_distance_based_novelty","intra_list_distance_based_novelty",\
+                         "popularity_based_log_novelty"]:
+        normalization[novelty_type] = prepare_novelty_normalization(novelty_type, normalization_factory, extended_rating_matrix,\
+                                                                    distance_matrix, users_viewed_item, shift, items)
     return normalization
 
-def prepare_normalization(args, normalization_factory, rating_matrix, distance_matrix, users_viewed_item, shift, items, users):
-    num_users = rating_matrix.shape[0]
+
+def prepare_relevance_normalization(normalization_factory, rating_matrix, shift):
 
     relevance_data_points = rating_matrix.T
-    
-    upper_triangular_indices = np.triu_indices(distance_matrix.shape[0], k=1)
-    upper_triangular_nonzero = distance_matrix[upper_triangular_indices]        
-    novelty_data_points=[]
-    diversity_data_points=[]
 
-    if(args.novelty=="popularity_complement"):        
-        novelty_data_points = np.expand_dims(1.0 - users_viewed_item / num_users, axis=1)
-    elif(args.novelty=="popularity_based_log_novelty"):
-        novelty_data_points = np.expand_dims( - np.log2(users_viewed_item / num_users), axis=1)
-    else:
-        novelty_data_points = np.expand_dims(upper_triangular_nonzero, axis=1)
-
-    users_partial_lists= np.full((1,20), -1, dtype=np.int32)
-    if(args.diversity=="binomial_diversity"):
-        diversity_data_points=[]
-        user_index = random.choice(list(range(len(users))))
-        for i in range(20):        
-            diversity_data_points.extend(binomial_diversity_support(users_partial_lists, items, user_index, i+1))
-            users_partial_lists[0, i] = np.random.choice([np.argmax(diversity_data_points[i]),np.random.choice(list(range(len(items))))],\
-                                                        p=[0.15, 0.85])
-        diversity_data_points=np.expand_dims(random.choices(np.array(diversity_data_points).flatten(), k = len(items)),axis=1)
-    else:
-        diversity_data_points = np.expand_dims(upper_triangular_nonzero, axis=1)
     norm_relevance = build_normalization(normalization_factory, shift)
     norm_relevance.train(relevance_data_points)
+
+    return norm_relevance
+
+def prepare_diversity_normalization(diversity_type, normalization_factory, distance_matrix, shift, items, users):
+    diversity_data_points=[]
+    users_partial_lists= np.full((1,15), -1, dtype=np.int32)
+    diversity_data_points=[]
+    user_index = random.choice(list(range(len(users))))
+    for i in range(15):        
+        if(diversity_type=="binomial_diversity"):
+            diversity_data_points.extend(binomial_diversity_support(users_partial_lists, items, user_index, i+1))
+        elif (diversity_type=="maximal_diversity"):
+            diversity_data_points.extend(maximal_diversity_support(users_partial_lists,items, distance_matrix, i+1))
+        elif (diversity_type=="intra_list_diversity"):
+            diversity_data_points.extend(intra_list_diversity_support(users_partial_lists,items, distance_matrix, i+1))
+        users_partial_lists[0, i] = np.random.choice([np.argmax(diversity_data_points[i]),np.random.choice(list(range(len(items))))],\
+                                                    p=[0.2, 0.8])
+    diversity_data_points=np.expand_dims(random.choices(np.array(diversity_data_points).flatten(), k = len(items)),axis=1)
+
+    
     norm_diversity = build_normalization(normalization_factory, shift)
     norm_diversity.train(diversity_data_points)
+    return norm_diversity
+
+def prepare_novelty_normalization(novelty_type, normalization_factory, rating_matrix, distance_matrix, users_viewed_item, shift, items):
+    num_users = rating_matrix.shape[0] 
+    novelty_data_points=[]
+    if(novelty_type=="popularity_complement"):        
+        novelty_data_points = np.expand_dims(1.0 - users_viewed_item / num_users, axis=1)
+    elif(novelty_type=="popularity_based_log_novelty"):
+        novelty_data_points = np.expand_dims( - np.log2(users_viewed_item / num_users), axis=1)
+    else:
+        novelty_data_points= [] 
+        for i in range(10):
+            user_list = np.expand_dims(random.choices(items, k = i*5 + 1), axis=0)
+            if(novelty_type=="maximal_distance_based_novelty"):
+                novelty_data_points.extend(maximal_distance_based_novelty_support(user_list, items, distance_matrix))
+            elif (novelty_type=="intra_list_distance_based_novelty"):
+                novelty_data_points.extend(intra_list_distance_based_novelty_support(user_list, items, distance_matrix))
+        novelty_data_points=np.expand_dims(random.choices(np.array(novelty_data_points).flatten(), k = len(items)),axis=1)
+
     norm_novelty = build_normalization(normalization_factory, shift)
     norm_novelty.train(novelty_data_points)
-    """
-    if args.cache_dir:
-        cache = {
-            "norm_relevance": norm_relevance,
-            "norm_diversity": norm_diversity,
-            "norm_novelty": norm_novelty
-        }
-        save_cache(cache_path, cache)
-    """
-    return [norm_relevance, norm_diversity, norm_novelty]
+
+    return norm_novelty
 
 def custom_evaluate_voting(top_k, rating_matrix, distance_matrix, users_viewed_item, normalizations, obj_weights, discount_sequences):
     start_time = time.perf_counter()
@@ -535,10 +537,12 @@ def predict_for_user(user, user_index, items, extended_rating_matrix, users_prof
         item_supports = np.squeeze(supports[:, 0, users_partial_lists[0, i]])
         item_supports = [item_support * 100 for item_support in item_supports]
         supports_partial_lists.append(item_supports)
-
+        print(args.diversity + ", " + args.novelty)
+        print(item_supports)
         print(f"i: {i + 1} done, took: {time.perf_counter() - iter_start_time}")
     print(f"Prediction done, took: {time.perf_counter() - start_time}")
-
+    print("average\n")
+    print(np.average(np.array(supports_partial_lists), axis=0))
     return users_partial_lists, supports_partial_lists
 
 def main(args):
@@ -559,8 +563,8 @@ def main(args):
     if((globals()[args.baseline]) is EASE):
         items,itemIDs, users, userIDs, users_viewed_item, item_to_item_id, item_id_to_item, extended_rating_matrix,users_profiles,\
               similarity_matrix, test_set_users_start_index, metadata_distance_matrix, user_id_to_user, user_to_user_id, \
-                user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id = get_EASE(args)
-        set_params_bin_diversity(user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id)
+                user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id, all_genres = get_EASE(args)
+        set_params_bin_diversity(user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id, all_genres)
 
     else:
         items, itemIDs, users, userIDs, users_viewed_item, item_to_item_id, item_id_to_item, extended_rating_matrix, similarity_matrix, \
@@ -598,66 +602,27 @@ def main(args):
     # args.shift can be 0
     # normalization_factory is either cdf or standardization, defined in ./normalization/cdf.py, ./normalization/standardization.py
     start_time = time.perf_counter()
-    userindex = -3
-    
-
-
-
-
-
 
     normalizations = compute_all_normalizations(args, normalization_factory, extended_rating_matrix, distance_matrix, \
                                            users_viewed_item, items, users)
     print(f"Preparing normalizations took: {time.perf_counter() - start_time}")
-# For every position in the recommendation list of length 10
-#    predict_for_user(users[userindex], userindex, items, extended_rating_matrix, distance_matrix,users_viewed_item,\
-#      normalizations, unseen_items_mask[userindex:userindex+1].copy(), mandate_allocation,args,obj_weights, len(users))
-
-    
 
     print(f"### Whole prediction took: {time.perf_counter() - start_time} ###")
-    """
- #   print(f"Lists: {users_partial_lists.tolist()}")
-    print(f"Item ID to Item: {item_id_to_item.items()}")
-    mapped_lists = np.fromiter(map(item_id_to_item.__getitem__, users_partial_lists.flatten()), dtype=np.int32).reshape(users_partial_lists.shape).tolist()
-    print(f"Mapped lists: {mapped_lists}")
-
-    results = custom_evaluate_voting(users_partial_lists, extended_rating_matrix, distance_matrix, users_viewed_item, normalizations, obj_weights, args.discount_sequences)
-
-    if args.artifact_dir:
-        print(f"Saving artifacts, run_id: {RUN_ID}")
-        results_path = os.path.join(args.artifact_dir, f"{RUN_ID}_results.pckl")
-        print(f"Saving results to artifact dir: {args.artifact_dir} as {results_path}")
-        results["top-k-lists"] = users_partial_lists.tolist()
-        results["item-id-to-item"] = item_id_to_item
-        results["item-to-item-id"] = item_to_item_id
-        results["top-k-lists-mapped"] = mapped_lists
-        results["user-id-to-user"] = user_id_to_user
-        results["user-to-user-id"] = user_to_user_id
-        results["args"] = args
-        
-        save_cache(results_path, results)
-        for artifact_path in glob.glob(os.path.join(args.artifact_dir, f"*{RUN_ID}*")):
-            print(f"Logging artifact: {artifact_path}")
-            log_artifact(artifact_path)
-        """
-        #log_artifacts(args.artifact_dir)
 
     return extended_rating_matrix, users_profiles,users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, \
         algorithm_factory, normalizations, args
 
-def get_ratings():
-    DriverName = "SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#C5A58FB3\\tsql\\query"
-    DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
-    connectionstring=f"""DRIVER={{{DriverName}}};
-        SERVER={ServerName};
-        DATABASE={DatabaseName};
-        Trusted_Connection=yes;"""
+
+def get_ratings(connectionstring):
     conn = odbc.connect(connectionstring)
     df = pd.read_sql_query('SELECT  * FROM ratings', conn)
     df = df.drop(columns=["id","date"])
-    conn.close()
+    return df
+
+def get_ratings_of_user(connectionstring, userID):
+    conn = odbc.connect(connectionstring)
+    df = pd.read_sql_query(f'SELECT  * FROM ratings where userid = {userID}', conn)
+    df = df.drop(columns=["id","date"])
     return df
 
 def save_ratings_from_db_to_file():
@@ -682,7 +647,7 @@ def init():
     args.baseline="EASE"
     args.metadata_path="movies.csv"
     args.type_of_items_distance="cf"
-    args.shift=-0.1
+    args.shift=0.0
     args.artifact_dir=None
     args.output_path_prefix=None
     args.discounts="1,1,1"
@@ -690,6 +655,15 @@ def init():
     args.discounts = [float(d) for d in args.discounts.split(",")]
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k, num=args.k, endpoint=False) for d in args.discounts], axis=0)
 
+
+    DriverName = "SQL Server"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#640CC067\\tsql\\query"
+    DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
+    args.connectionstring=f"""DRIVER={{{DriverName}}};
+        SERVER={ServerName};
+        DATABASE={DatabaseName};
+        Trusted_Connection=yes;"""
+    
     """
     if not args.artifact_dir:
         print("Artifact directory is not specified, trying to set it")
@@ -703,7 +677,7 @@ def init():
             else:
                 print("Output path prefix is not set, skipping setting of artifact directory")
     """
-    args.df = get_ratings()
+    args.df = get_ratings(args.connectionstring)
     random.seed(args.seed)
     return main(args)
 

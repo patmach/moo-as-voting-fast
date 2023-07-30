@@ -6,13 +6,16 @@ user_genre_prob=None
 genres_prob_all=None
 metadata_matrix=None
 genre_to_genre_id = None
+all_genres=None
 
-def set_params_bin_diversity(user_genre_prob_param,genres_prob_all_param,metadata_matrix_param,genre_to_genre_id_param):
-    global user_genre_prob, genres_prob_all,metadata_matrix,genre_to_genre_id
+def set_params_bin_diversity(user_genre_prob_param,genres_prob_all_param,metadata_matrix_param,genre_to_genre_id_param,\
+                             all_genres_param):
+    global user_genre_prob, genres_prob_all,metadata_matrix,genre_to_genre_id, all_genres
     user_genre_prob = user_genre_prob_param
     genres_prob_all = genres_prob_all_param
     metadata_matrix = metadata_matrix_param
     genre_to_genre_id = genre_to_genre_id_param
+    all_genres = all_genres_param
 
     
 def binomial_diversity_support_for_item(users_partial_lists, item, user_index, k):
@@ -32,6 +35,11 @@ def binomial_diversity_support_for_item(users_partial_lists, item, user_index, k
     return coverage*non_redundancy
 
 def binomial_diversity_support(users_partial_lists, items, user_index, k):
+    
     result = np.array([binomial_diversity_support_for_item(users_partial_lists, item, user_index,k) for item in items])
-    return np.expand_dims(result,axis=0)
+    if (k == 1):
+        return np.expand_dims(result - result.min(),axis=0)
+    current = binomial_diversity_support_for_item(users_partial_lists, users_partial_lists[:,k-2], user_index,k-1)
+    return np.expand_dims(result - current,axis=0)
+    
 

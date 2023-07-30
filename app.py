@@ -24,7 +24,7 @@ def init():
             algorithm_factory, normalizations, args = main.init()
         computing=False
         print(f"Init done, took: {time.perf_counter() - start_time}")
-    threading.Timer(6000.0, init).start()
+    threading.Timer(3600.0, init).start()
 
 
 
@@ -50,13 +50,13 @@ def index(user_id):
             if (metric_variants[2] is not None) and (metric_variants[2]!=""):
                 client_args.novelty = metric_variants[2]
         userindex = userIDs.index(int(user_id))
-        user_mask =  [np.ones(len(items),dtype=np.bool8)]
+        user_mask = [np.ones(len(items),dtype=np.bool8)]
         if(len(whiteListItemIDs)>0):
-            user_mask[0] = np.zeros(len( user_mask[0]))
+            user_mask = [np.zeros(len( user_mask[0]),dtype=np.bool8)]
             for i in whitelistindices:
-                user_mask[0][i]=1
+                user_mask[0][i]=True
         for i in blacklistindices:
-            user_mask[0][i]=0
+            user_mask[0][i]=False
     
         result, support = main.predict_for_user(users[userindex], userindex, items, extended_rating_matrix, users_profiles,\
                         distance_matrix, users_viewed_item, normalizations, np.array(user_mask), algorithm_factory,client_args,\
@@ -65,8 +65,6 @@ def index(user_id):
         for i in range(len(support)):
             for j in range(len(support[0])):
                 support[i][j] = max(support[i][j],0) 
-        #sums = [sum(support[i]) for i in range(len(result))]
-        #result = {itemIDs[int(result[i])]: (support[i]/sums[i]*100).tolist() for i in range(len(result))}
         result = {itemIDs[int(result[i])]: support[i] for i in range(len(result))}
     return json.dumps(result)
 
