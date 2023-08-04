@@ -17,7 +17,13 @@ def set_params_bin_diversity(user_genre_prob_param,genres_prob_all_param,metadat
     genre_to_genre_id = genre_to_genre_id_param
     all_genres = all_genres_param
 
-    
+def recompute_user_genres_prob(user_index, rated):
+    user_genre_prob[user_index] = np.zeros(len(user_genre_prob[user_index]), dtype=float)
+    for j in rated:
+        user_genre_prob[user_index]+=metadata_matrix[j]
+    user_genre_prob[user_index] /= len(rated)
+    debug = 1
+
 def binomial_diversity_support_for_item(users_partial_lists, item, user_index, k):
     users_partial_lists[:,k-1] = item
     probabilities = (1- alpha) * genres_prob_all + alpha*user_genre_prob[user_index]
@@ -30,6 +36,7 @@ def binomial_diversity_support_for_item(users_partial_lists, item, user_index, k
     more_than_zero = 1 - ((1-prob_redundancy)**k)
     sums_redundancy = np.array([sum([math.comb(k, j)*(prob_redundancy[i]**j)*((1-prob_redundancy[i])**(k-j)) / more_than_zero[i]\
                                       for j in range(1,values_redundancy[i])]) for i in range(len(values_redundancy))])
+    
     non_redundancy = np.prod(1 - sums_redundancy) ** (1.0/values_redundancy.shape[0]) if values_redundancy.shape[0] > 0 else 1
 
     return coverage*non_redundancy
