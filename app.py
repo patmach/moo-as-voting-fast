@@ -7,21 +7,24 @@ from flask import Flask
 from flask import request
 import threading
 
+from support.binomial_diversity_support import recompute_user_genres_prob
+
     
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["DEBUG"] = True
 extended_rating_matrix,users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs,\
-      algorithm_factory, normalizations, args = None, None, None, None, None,None,None, None, None, None, None
+      algorithm_factory, normalizations, args, ease_B = None, None, None, None, None,None,None, None, None, None, None, None
 computing = False
 @app.before_first_request
 def init():
-    global computing, extended_rating_matrix, users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, algorithm_factory, normalizations, args
+    global computing, extended_rating_matrix, users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs,\
+          algorithm_factory, normalizations, args, ease_B
     start_time =time.perf_counter()
     if(not computing):
         computing = True
         extended_rating_matrix,users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, \
-            algorithm_factory, normalizations, args = main.init()
+            algorithm_factory, normalizations, args, ease_B = main.init()
         computing=False
         print(f"Init done, took: {time.perf_counter() - start_time}")
     threading.Timer(3600.0, init).start()
@@ -44,12 +47,21 @@ def index(user_id):
         whitelistindices = [itemIDs.index(int(item_id)) for item_id in whiteListItemIDs if int(item_id) in itemIDs]
         blacklistindices = [itemIDs.index(int(item_id)) for item_id in blackListItemIDs if int(item_id) in itemIDs]
         metric_variants = json_data["metricVariantsCodes"]
-        if(len(metric_variants)==3):
+        if(len(metric_variants)>2):
             if (metric_variants[1] is not None) and (metric_variants[1]!=""):
                 client_args.diversity = metric_variants[1]
             if (metric_variants[2] is not None) and (metric_variants[2]!=""):
                 client_args.novelty = metric_variants[2]
-        userindex = userIDs.index(int(user_id))
+        user_id = int(user_id)
+        userindex = userIDs.index(user_id)
+        if isinstance(user_id, int):
+            rated = main.get_ratings_of_user(args.connectionstring, user_id)["itemid"].unique()
+            rated = list(map(itemIDs.index, rated))
+            user_X = np.zeros(len(items),dtype=np.int32)
+            user_X[rated] = 1
+            extended_rating_matrix[userindex] = user_X.dot(ease_B)
+            if (client_args.diversity == "binomial_diversity"):
+                recompute_user_genres_prob(userindex, rated)
         user_mask = [np.ones(len(items),dtype=np.bool8)]
         if(len(whiteListItemIDs)>0):
             user_mask = [np.zeros(len( user_mask[0]),dtype=np.bool8)]
