@@ -383,7 +383,8 @@ def prepare_calibration_normalization( normalization_factory, distance_matrix, s
     users_partial_lists= np.full((1,15), -1, dtype=np.int32)
     calibration_data_points=[]
     user_index = random.choice(list(range(len(users))))
-    for i in range(15):        
+    for i in range(15):
+        support = calibration_support(users_partial_lists, items, user_index, i+1)
         calibration_data_points.extend(calibration_support(users_partial_lists, items, user_index, i+1))
         users_partial_lists[0, i] = np.random.choice([np.argmax(calibration_data_points[i]),np.random.choice(list(range(len(items))))],\
                                                     p=[0.2, 0.8])
@@ -689,7 +690,7 @@ def init():
 
 
     DriverName = "SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#53699C9C\\tsql\\query"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#E7792AC7\\tsql\\query"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
     args.connectionstring=f"""DRIVER={{{DriverName}}};
         SERVER={ServerName};

@@ -2,3 +2,6 @@ mlruns
 *.pyc
 __pycache__
 .DS_Store
+values.csv
+values1000.csv
+values1_0.csv
