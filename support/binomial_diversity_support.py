@@ -8,6 +8,10 @@ metadata_matrix=None
 genre_to_genre_id = None
 all_genres=None
 
+def get_user_genre_prob():
+    global user_genre_prob
+    return user_genre_prob
+
 def set_params_bin_diversity(user_genre_prob_param,genres_prob_all_param,metadata_matrix_param,genre_to_genre_id_param,\
                              all_genres_param):
     global user_genre_prob, genres_prob_all,metadata_matrix,genre_to_genre_id, all_genres
@@ -18,7 +22,7 @@ def set_params_bin_diversity(user_genre_prob_param,genres_prob_all_param,metadat
     all_genres = all_genres_param
 
 def recompute_user_genres_prob(user_index, rated):
-    user_genre_prob[user_index] = np.zeros(len(user_genre_prob[user_index]), dtype=float)
+    user_genre_prob[user_index] = np.zeros(len(genres_prob_all), dtype=float)
     for j in rated:
         user_genre_prob[user_index]+=metadata_matrix[j]
     user_genre_prob[user_index] /= len(rated)

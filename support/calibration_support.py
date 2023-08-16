@@ -15,11 +15,16 @@ def calibration_support_for_item(users_partial_lists, item, p_prob, q_prob, k, a
     if (used_genres_sum > 0):
         q_prob += (1-alpha) * (used_genres.flatten() / used_genres_sum)
     result = p_prob * np.log2(np.divide(p_prob, q_prob, where=q_prob!=0), where=p_prob>0)
-    debug = result.sum()
-    return 1 / result.sum()
+    calibration = np.abs(result.sum())
+    return - calibration 
 
 def calibration_support(users_partial_lists, items, user_index, k, alpha = 0.01):
-    p_prob = user_genre_prob[user_index] / user_genre_prob[user_index].sum()
+    p_prob = user_genre_prob[user_index]
+    sum_user_genre_prob = user_genre_prob[user_index].sum()
+    if sum_user_genre_prob > 0:
+        p_prob = user_genre_prob[user_index] / sum_user_genre_prob
+    else: 
+        p_prob = np.zeros(len(user_genre_prob[0]), dtype=np.float32)
     q_prob = alpha * p_prob
     result = np.array([calibration_support_for_item(users_partial_lists, item, p_prob,q_prob,k, alpha) for item in items])
     if (k == 1):
