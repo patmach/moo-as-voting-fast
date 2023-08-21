@@ -690,7 +690,7 @@ def init():
 
 
     DriverName = "SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#E7792AC7\\tsql\\query"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#22DC573B\\tsql\\query"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
     args.connectionstring=f"""DRIVER={{{DriverName}}};
         SERVER={ServerName};
