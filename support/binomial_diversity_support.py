@@ -26,7 +26,6 @@ def recompute_user_genres_prob(user_index, rated):
     for j in rated:
         user_genre_prob[user_index]+=metadata_matrix[j]
     user_genre_prob[user_index] /= len(rated)
-    debug = 1
 
 def binomial_diversity_support_for_item(users_partial_lists, item, user_index, k):
     users_partial_lists[:,k-1] = item

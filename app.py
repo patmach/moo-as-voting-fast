@@ -6,31 +6,36 @@ import json
 from flask import Flask
 from flask import request
 import threading
+import datetime
 
 from support.binomial_diversity_support import recompute_user_genres_prob, get_user_genre_prob
 
     
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config["DEBUG"] = True
+app.config["DEBUG"] = False
 extended_rating_matrix,users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs,\
       algorithm_factory, normalizations, args, ease_B = None, None, None, None, None,None,None, None, None, None, None, None
+last_time = datetime.datetime.min
 computing = False
-
 lock = threading.Lock()
 
 @app.before_first_request
 def init():
-    global computing, extended_rating_matrix, users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs,\
+    global computing, last_time, extended_rating_matrix, users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs,\
           algorithm_factory, normalizations, args, ease_B
     start_time =time.perf_counter()
-    if(not computing):
+    difference =  datetime.datetime.now() - last_time
+    days, seconds = difference.days, difference.seconds
+    hours = days * 24 + seconds // 3600
+    if(not computing) and (hours > 2):
+        last_time = datetime.datetime.now()
         computing = True
         extended_rating_matrix,users_profiles, users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, \
             algorithm_factory, normalizations, args, ease_B = main.init()
         computing=False
         print(f"Init done, took: {time.perf_counter() - start_time}")
-    threading.Timer(3600.0, init).start()
+        threading.Timer(3600.0 * 24, init).start()
 
 
 
@@ -95,15 +100,16 @@ def index(user_id):
         result = np.squeeze(result)
         for i in range(len(support)):
             for j in range(len(support[0])):
-                support[i][j] = max(support[i][j],0) 
+                support[i][j] = max(np.nan_to_num(support[i][j]),0) 
         result = {itemIDs[int(result[i])]: support[i] for i in range(len(result))}
     return json.dumps(result)
 
 
-@app.route('/x')
-def start2():
-    main.init()
-    return main.init()
+@app.route('/start')
+def start():
+    return ""
 
-app.run(debug=True)
+
+if __name__ == "__main__":
+    app.run(threaded=True)
 

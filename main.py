@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 import pickle
 import random
 import time
@@ -68,7 +69,7 @@ def get_supports(args, obj_weights, users_partial_lists, items, extended_rating_
         rel_supps = rating_based_relevance_support(extended_rating_matrix)
     if (obj_weights[3]>0):
         pop_supps = popularity_support(users_viewed_item,users_partial_lists.shape[0], num_users)
-    if (obj_weights[4]>0):
+    if (obj_weights[4]>0) and (len(users_profiles[0]) > 0):
         cal_supps = calibration_support(users_partial_lists, items, user_index, k)
     if (obj_weights[1]>0):
         if (args.diversity == "intra_list_diversity"):
@@ -82,9 +83,9 @@ def get_supports(args, obj_weights, users_partial_lists, items, extended_rating_
             nov_supps = popularity_complement_support(users_viewed_item,users_partial_lists.shape[0], num_users)
         elif (args.novelty == "popularity_based_log_novelty"):
             nov_supps = popularity_based_log_novelty_support(users_viewed_item,users_partial_lists.shape[0], num_users)
-        elif (args.novelty == "maximal_distance_based_novelty"):
+        elif (args.novelty == "maximal_distance_based_novelty") and (len(users_profiles[0]) > 0):
             nov_supps =  maximal_distance_based_novelty_support(users_profiles, items, distance_matrix)
-        elif (args.novelty == "intra_list_distance_based_novelty"):
+        elif (args.novelty == "intra_list_distance_based_novelty") and (len(users_profiles[0]) > 0):
             nov_supps =  intra_list_distance_based_novelty_support(users_profiles, items, distance_matrix)
 
     return np.stack([rel_supps, div_supps, nov_supps, pop_supps, cal_supps])
@@ -161,6 +162,7 @@ def parse_metadata(metadata_path, item_to_item_id, rating_matrix=None):
 
 
 def get_EASE(args):
+    print("training EASE",file=sys.stderr)
     ease = EASE(args.df)
     ease.fit(implicit=False)
     similarity_matrix = ease.compute_similarity(transpose=True)
@@ -207,7 +209,7 @@ def get_EASE(args):
     """
     metadata_distance_matrix, user_genre_prob, genres_prob_all,metadata_matrix, genre_to_genre_id = None, None, None, None, None
     if hasattr(args, "metadata_path") and args.metadata_path:
-        print(f"Parsing metadata from path: '{args.metadata_path}'")
+        print(f"Parsing metadata from path: '{args.metadata_path}'",file=sys.stderr)
         metadata_distance_matrix, user_genre_prob, genres_prob_all,metadata_matrix, genre_to_genre_id, all_genres = \
             parse_metadata(args.metadata_path, item_to_item_id, ease.X)
 
@@ -286,7 +288,7 @@ def get_baseline(args, baseline_factory):
 
     metadata_distance_matrix = None
     if args.metadata_path:
-        print(f"Parsing metadata from path: '{args.metadata_path}'")
+        print(f"Parsing metadata from path: '{args.metadata_path}'",file=sys.stderr)
         metadata_distance_matrix = parse_metadata(args.metadata_path, item_to_item_id)
         
     
@@ -322,21 +324,28 @@ def compute_all_normalizations_old(args, normalization_factory, extended_rating_
     normalization["calibration"] = prepare_calibration_normalization_old( normalization_factory, distance_matrix, shift, items, users)
     return normalization
 
-def compute_all_normalizations(args, normalization_factory, extended_rating_matrix, ease_X, distance_matrix, \
+def compute_all_normalizations(args, normalization_factory, extended_rating_matrix, ease_X, ease_B, distance_matrix, \
                                            users_viewed_item, items, users):
     normalization = dict()
     shift = args.shift
-    normalization["relevance"] = prepare_relevance_normalization(normalization_factory, extended_rating_matrix, ease_X, shift)
+    print("prepare relevance normalization", file=sys.stderr)
+
+    normalization["relevance"] = prepare_relevance_normalization(normalization_factory, extended_rating_matrix,\
+                                                                 ease_X, ease_B, shift)
 
     for diversity_type in ["intra_list_diversity","maximal_diversity","binomial_diversity"]:
+        print(f"prepare {diversity_type} normalization", file=sys.stderr)
         normalization[diversity_type] = prepare_diversity_normalization(diversity_type, normalization_factory, \
                                                                         distance_matrix, shift, items, users)
     for novelty_type in ["popularity_complement","maximal_distance_based_novelty","intra_list_distance_based_novelty",\
                             "popularity_based_log_novelty"]:
+        print(f"prepare {novelty_type} normalization", file=sys.stderr)
         normalization[novelty_type] = prepare_novelty_normalization(novelty_type, normalization_factory, extended_rating_matrix,\
                                                                     ease_X, distance_matrix, users_viewed_item, shift, items)
+    print("prepare popularity normalization", file=sys.stderr)
     normalization["popularity"] = prepare_popularity_normalization(normalization_factory, users_viewed_item, shift,\
                                                                         extended_rating_matrix.shape[0])
+    print("prepare calibration normalization", file=sys.stderr)
     normalization["calibration"] = prepare_calibration_normalization( normalization_factory, distance_matrix, shift, items, users)
     return normalization
 
@@ -350,21 +359,35 @@ def prepare_relevance_normalization_old(normalization_factory, rating_matrix, sh
     return norm_relevance
 
 
-def prepare_relevance_normalization(normalization_factory, rating_matrix, ease_x, shift,\
+def prepare_relevance_normalization(normalization_factory, rating_matrix, ease_x, ease_B, shift,\
                                     borders=[0,10,20,30,40,50,60,75,90,110,140,180,250, 330, 400, 500, 600, 700]):
     borders.append(borders[-1]+2000) #random big value
     norm_relevances=[]
     ease_x = ease_x.toarray()
-    temp_rating_matrix = copy.deepcopy(rating_matrix) #check which type of copy
     indices = np.nonzero(ease_x)
-    temp_rating_matrix[indices] = 0.0 #DECIDE IF KEEP
     sums_per_row = (ease_x != 0).sum(1)
+    
     for i in range(len(borders) - 1):
-        possible_users = [index for index,value in enumerate(sums_per_row) if (value >= borders[i]) and value < borders[i+1]]  
-        if len(possible_users) == 0:
+        relevance_data_points = []
+        temp_rating_matrix = copy.deepcopy(rating_matrix)
+        possible_users = [index for index,value in enumerate(sums_per_row) if (value >= borders[i])]        
+        if len(possible_users) < 1:
             borders[i+1] = borders[i]
             continue
-        relevance_data_points = np.expand_dims(random.choices(np.array(temp_rating_matrix[possible_users,:]).flatten(),
+        if (len(possible_users) > 100):
+            possible_users = random.sample(possible_users, k=100)
+        for user in possible_users:
+            
+            indices = [index for index,value in enumerate(ease_x[user]) if value > 0]
+            if len(indices) > borders[i+1]:
+                indices = random.sample(indices, k=random.randint(borders[i], borders[i+1]))
+            user_X = np.zeros(rating_matrix.shape[1],dtype=np.float64)
+            user_X[indices] = ease_x[user, indices]   
+            temp_rating_matrix[user] = user_X.dot(ease_B)
+            mask = np.ones(temp_rating_matrix.shape[1], dtype=bool)
+            mask[indices] = False
+            relevance_data_points.extend(temp_rating_matrix[user, mask])
+        relevance_data_points = np.expand_dims(random.choices(np.array(relevance_data_points).flatten(),
                                                               k =ease_x.shape[1]),axis=1)
         norm_relevance = build_normalization(normalization_factory, shift)
         norm_relevance.train(relevance_data_points)
@@ -460,6 +483,9 @@ def prepare_novelty_normalization(novelty_type, normalization_factory, rating_ma
         borders.append(min(1000, borders[-1]+100)) #random big value
         for i in range(len(borders) - 1):
             possible_users = [index for index,value in enumerate(sums_per_row) if value > borders[i]]     
+            if len(possible_users) < 1:
+                borders[i+1] = borders[i]
+                continue
             novelty_data_points= []        
             for user in possible_users:
                 user_list= np.nonzero(ease_X[user,:])[0]
@@ -496,7 +522,7 @@ def prepare_calibration_normalization( normalization_factory, distance_matrix, s
             support = calibration_support(users_partial_lists[user_index:user_index+1], items, user_index, i+1)
             calibration_data_points.extend(support)
             users_partial_lists[user_index, i] = np.random.choice([np.argmax(support),np.random.choice(list(range(len(items))))],\
-                                                        p=[0.1, 0.9])
+                                                        p=[0.4, 0.6])
         calibration_data_points = np.array(calibration_data_points).flatten()
         calibration_data_points=np.expand_dims(random.sample(list(calibration_data_points), k = len(items)),axis=1)
         norm_calibration = build_normalization(normalization_factory, shift)
@@ -699,9 +725,9 @@ def predict_for_user(user, user_index, items, extended_rating_matrix, users_prof
         print(args.diversity + ", " + args.novelty)
         print(item_supports)
         print(f"i: {i + 1} done, took: {time.perf_counter() - iter_start_time}")
-    print(f"Prediction done, took: {time.perf_counter() - start_time}")
+    print(f"Prediction done, took: {time.perf_counter() - start_time}",file=sys.stderr)
     print("average\n")
-    print(np.average(np.array(supports_partial_lists), axis=0))
+    print(np.average(np.array(supports_partial_lists), axis=0),file=sys.stderr)
     return users_partial_lists, supports_partial_lists
 
 def main(args):
@@ -711,14 +737,14 @@ def main(args):
             print(f"\t{arg_name}={arg_value}")
 
     if not args.normalization:
-        print(f"Using Identity normalization")
+        print(f"Using Identity normalization",file=sys.stderr)
         normalization_factory = identity
     else:
-        print(f"Using {args.normalization} normalization")
+        print(f"Using {args.normalization} normalization",file=sys.stderr)
         normalization_factory = globals()[args.normalization]
 
     algorithm_factory = globals()[args.algorithm]
-    print(f"Using '{args.algorithm}' algorithm")
+    print(f"Using '{args.algorithm}' algorithm",file=sys.stderr)
 #    if((globals()[args.baseline]) is EASE):
     items,itemIDs, users, userIDs, users_viewed_item, item_to_item_id, item_id_to_item, extended_rating_matrix,users_profiles,\
             similarity_matrix, test_set_users_start_index, metadata_distance_matrix, user_id_to_user, user_to_user_id, \
@@ -750,7 +776,7 @@ def main(args):
 
     start_time = time.perf_counter()
 
-    mandate_allocation = algorithm_factory(obj_weights, args.masking_value) # Algorithm implementation (./mandate_allocation/*.py)
+ #   mandate_allocation = algorithm_factory(obj_weights, args.masking_value) # Algorithm implementation (./mandate_allocation/*.py)
  #   users_partial_lists= np.full((num_users, args.k), -1, dtype=np.int32) # Output tensor (shape=[NUM_USERS, K])
 
 
@@ -765,30 +791,31 @@ def main(args):
 
 #    normalizations = compute_all_normalizations_old(args, normalization_factory, extended_rating_matrix, distance_matrix, \
 #                                           users_viewed_item, items, users)
-    normalizations = compute_all_normalizations(args, normalization_factory, extended_rating_matrix, ease_X, distance_matrix, \
-                                           users_viewed_item, items, users)
-    print(f"Preparing normalizations took: {time.perf_counter() - start_time}")
-
-    print(f"### Whole prediction took: {time.perf_counter() - start_time} ###")
+    normalizations = compute_all_normalizations(args, normalization_factory, extended_rating_matrix, ease_X, ease_B,\
+                                                 distance_matrix, users_viewed_item, items, users)
+    print(f"Preparing normalizations took: {time.perf_counter() - start_time}",file=sys.stderr)
 
     return extended_rating_matrix, users_profiles,users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, \
         algorithm_factory, normalizations, args, ease_B
 
 def get_ratings(connectionstring):
     conn = odbc.connect(connectionstring)
-    df = pd.read_sql_query('SELECT  * FROM ratings', conn)
-    df = df.drop(columns=["id","date"])
+    df = pd.read_sql_query('SELECT  UserID, ItemID, RatingScore FROM ratings', conn)
+    df.columns = df.columns.str.lower()
+#    df = df.drop(columns=["id","date"])
+    conn.close()
     return df
 
 def get_positive_ratings_of_user(connectionstring, userID):
     conn = odbc.connect(connectionstring)
-    df = pd.read_sql_query(f'SELECT  * FROM ratings where ratingscore > 5 and userid = {userID}', conn)
-    df = df.drop(columns=["id","date"])
+    df = pd.read_sql_query(f"""SELECT  UserID, ItemID, RatingScore FROM ratings 
+                           where ratingscore > 5 and userid = {userID}""", conn)
+    df.columns = df.columns.str.lower()
+#    df = df.drop(columns=["id","date"])
+    conn.close()
     return df
 
-def save_ratings_from_db_to_file():
-    df = get_ratings()
-    df.to_csv("ratings.csv", index=False,  header=False)
+
     
 
 
@@ -816,28 +843,36 @@ def init():
     args.discounts = [float(d) for d in args.discounts.split(",")]
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k, num=args.k, endpoint=False) for d in args.discounts], axis=0)
 
-
-    DriverName = "SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#C50E8C9A\\tsql\\query"
+#    DriverName = "SQL Server"
+    DriverName = "ODBC Driver 18 for SQL Server"
+#    ServerName =  "np:\\\\.\\pipe\LOCALDB#7E0FB3A1\\tsql\\query"
+    ServerName = "sql-server-db"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
+    Username = 'RS'
+    file = open('pswd.txt',mode='r')    
+    Password = file.read()
+    file.close()
     args.connectionstring=f"""DRIVER={{{DriverName}}};
         SERVER={ServerName};
         DATABASE={DatabaseName};
-        Trusted_Connection=yes;"""
-    
+        UID={Username};
+        PWD={Password};
+        TrustServerCertificate=yes;
     """
-    if not args.artifact_dir:
-        print("Artifact directory is not specified, trying to set it")
-        if not RUN_ID:
-            print("Not inside mlflow's run, leaving artifact directory empty")
-        else:
-            print(f"Inside mlflow's run {RUN_ID} setting artifact directory")
-            if args.output_path_prefix:
-                args.artifact_dir = os.path.join(args.output_path_prefix, RUN_ID)
-                print(f"Set artifact directory to: {args.artifact_dir}")
-            else:
-                print("Output path prefix is not set, skipping setting of artifact directory")
-    """
+    retrycount = 0
+    while retrycount < 50:
+        try:
+           conn = odbc.connect(args.connectionstring)
+           conn.close()
+           break
+        except Exception as e:
+            print(e,file=sys.stderr)
+            seconds = 90
+            print (f"Retry after {seconds} sec",file=sys.stderr)
+            retrycount += 1
+            time.sleep(seconds)
+
+
     args.df = get_ratings(args.connectionstring)
     random.seed(args.seed)
     return main(args)
