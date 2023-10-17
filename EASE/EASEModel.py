@@ -50,7 +50,7 @@ class EASE(AutoencoderRS):
         values = (
             np.ones(df.shape[0])
             if implicit
-            else df['ratingscore'] / 10
+            else df['ratingscore'] / 10.0
         )
         self.X = csr_matrix((values, (users, items)))   
         self.B = self.computeB(lambda_)

@@ -3,6 +3,15 @@ import numpy as np
 user_genre_prob=None
 metadata_matrix=None
 
+def get_user_genre_prob():
+    global user_genre_prob
+    return user_genre_prob
+
+def set_user_genre_prob(user_index, value):
+    global user_genre_prob
+    user_genre_prob[user_index] = value
+
+
 def set_params_calibration(user_genre_prob_param,metadata_matrix_param,):
     global user_genre_prob, metadata_matrix
     user_genre_prob = user_genre_prob_param
@@ -16,7 +25,10 @@ def calibration_support_for_item(users_partial_lists, item, p_prob, q_prob, k, a
         q_prob += (1-alpha) * (used_genres.flatten() / used_genres_sum)
     result = p_prob * np.log2(np.divide(p_prob, q_prob, where=q_prob!=0), where=p_prob>0)
     calibration = np.abs(result.sum())
-    return - calibration 
+    if np.isnan(calibration):# can't be computed
+        return - 1000.0 # small magic number
+    else: 
+        return - calibration
 
 def calibration_support(users_partial_lists, items, user_index, k, alpha = 0.01):
     p_prob = user_genre_prob[user_index]

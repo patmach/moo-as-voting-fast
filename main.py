@@ -843,10 +843,10 @@ def init():
     args.discounts = [float(d) for d in args.discounts.split(",")]
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k, num=args.k, endpoint=False) for d in args.discounts], axis=0)
 
-#    DriverName = "SQL Server"
-    DriverName = "ODBC Driver 18 for SQL Server"
-#    ServerName =  "np:\\\\.\\pipe\LOCALDB#7E0FB3A1\\tsql\\query"
-    ServerName = "sql-server-db"
+    DriverName = "SQL Server"
+#    DriverName = "ODBC Driver 18 for SQL Server"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#C5BC52BF\\tsql\\query"
+#    ServerName = "sql-server-db"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
     Username = 'RS'
     file = open('pswd.txt',mode='r')    
@@ -860,7 +860,7 @@ def init():
         TrustServerCertificate=yes;
     """
     retrycount = 0
-    while retrycount < 50:
+    while retrycount < 100:
         try:
            conn = odbc.connect(args.connectionstring)
            conn.close()
@@ -868,6 +868,8 @@ def init():
         except Exception as e:
             print(e,file=sys.stderr)
             seconds = 90
+            print (f"SQL server wasn't started yet. Or database wasn't restorted yet if its first run of the docker compose app.",\
+                   file=sys.stderr)
             print (f"Retry after {seconds} sec",file=sys.stderr)
             retrycount += 1
             time.sleep(seconds)

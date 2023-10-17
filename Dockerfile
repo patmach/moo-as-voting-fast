@@ -20,8 +20,6 @@ RUN pip install -r /requirements.txt
 RUN pip install gunicorn
 RUN pip install protobuf==3.20.*
 
-#RUN ls - l /opt/mssql/lib/ && sleep 20
-#RUN cat libsqlvdi.so && sleep 20
 COPY . /app
 WORKDIR /app
 ENTRYPOINT "./gunicorn.sh"
