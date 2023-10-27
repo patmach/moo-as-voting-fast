@@ -44,8 +44,7 @@ def binomial_diversity_support_for_item(users_partial_lists, item, user_index, k
 
     return coverage*non_redundancy
 
-def binomial_diversity_support(users_partial_lists, items, user_index, k):
-    
+def binomial_diversity_support(users_partial_lists, items, user_index, k):   
     result = np.array([binomial_diversity_support_for_item(users_partial_lists, item, user_index,k) for item in items])
     if (k == 1):
         return np.expand_dims(result - result.min(),axis=0)

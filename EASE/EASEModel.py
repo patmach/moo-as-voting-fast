@@ -33,7 +33,7 @@ class EASE(AutoencoderRS):
         return B
     
     
-    def fit(self, lambda_: float = 1000, implicit=True):
+    def fit(self, lambda_: float = 1000, implicit=True, positive = True):
         """
         Parameters
         ----------
@@ -45,14 +45,17 @@ class EASE(AutoencoderRS):
             True - using 1 and 0, False using value from column RatingScore, by default True
         """
         df = self.df
-        df['ratingscore'] = df['ratingscore'].apply(lambda x: x if x>5 else 0)
+        if positive:
+            df['ratingscore'] = df['ratingscore'].apply(lambda x: x if x > 5 else 0)
+        else :
+            df['ratingscore'] = df['ratingscore'].apply(lambda x: (x - 5) * 2 if x != 5 else 0.01)
         users, items = self._get_users_and_items(df)
         values = (
             np.ones(df.shape[0])
             if implicit
             else df['ratingscore'] / 10.0
         )
-        self.X = csr_matrix((values, (users, items)))   
+        self.X = csr_matrix((values, (users, items)))
         self.B = self.computeB(lambda_)
 
         
