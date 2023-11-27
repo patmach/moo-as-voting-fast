@@ -104,7 +104,7 @@ def get_supports(args, obj_weights, users_partial_lists, items, extended_rating_
     default = np.repeat(np.zeros(len(items))[np.newaxis, :], users_partial_lists.shape[0], axis=0)
     rel_supps = div_supps = nov_supps = pop_supps = cal_supps =  default
     if (obj_weights[0]>0):
-        if (args.diversity == "also_negative"):
+        if (args.relevance == "also_negative"):
             rel_supps = rating_based_relevance_support(neg_extended_rating_matrix)
         else:
             rel_supps = rating_based_relevance_support(extended_rating_matrix)
@@ -1304,7 +1304,7 @@ def init():
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k , num=args.k, endpoint=False) for d in args.discounts], axis=0)
     DriverName = "SQL Server"
 #    DriverName = "ODBC Driver 18 for SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#BC8E3537\\tsql\\query"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#5DDDE5E3\\tsql\\query"
 #    ServerName = "sql-server-db"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
     Username = 'RS'
