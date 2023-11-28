@@ -535,7 +535,7 @@ def prepare_relevance_normalization_old(normalization_factory, rating_matrix, sh
 
 
 def prepare_relevance_normalization(normalization_factory, rating_matrix, ease_X, ease_B, shift,\
-                                    borders=[0,3,5,8,10,15,20,30,40,50,60,75,90,110,140]):
+                                    borders=[0,2,5,8,10,15,20,30,40,50,60,75,90,110,140]):
     """
     Prepares normalization of relevance variant, corresponding to number of items rated by the user
 
@@ -705,7 +705,7 @@ def prepare_novelty_normalization_old(novelty_type, normalization_factory, ratin
 
 def prepare_novelty_normalization(novelty_type, normalization_factory, rating_matrix, ease_x, distance_matrix,\
                                   users_viewed_item, shift, items, \
-                                borders=[0,3,5,8,10,15,20,30,40,50,60,75,90,110,140]):
+                                borders=[0,2,5,8,10,15,20,30,40,50,60,75,90,110,140]):
     """
     Prepares normalization of all novelty variants, corresponding to number of items rated by the user
 
@@ -1304,7 +1304,7 @@ def init():
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k , num=args.k, endpoint=False) for d in args.discounts], axis=0)
     DriverName = "SQL Server"
 #    DriverName = "ODBC Driver 18 for SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#5DDDE5E3\\tsql\\query"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#61DEE72F\\tsql\\query"
 #    ServerName = "sql-server-db"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
     Username = 'RS'
