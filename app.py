@@ -1,6 +1,7 @@
 import copy
 import sys
 import main
+import results
 import numpy as np
 import time
 import json 
@@ -42,6 +43,9 @@ def init():
     threading.Timer((y - x).seconds, init).start()
 
 
+@app.route('/Results', methods=["POST", "GET"])
+def graphs():
+    results.process()
 
 @app.route('/getRecommendations/<user_id>', methods=["POST", "GET"])
 def index(user_id):

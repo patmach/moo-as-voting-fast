@@ -1,0 +1,11 @@
+only_positive;intra_list_diversity;intra_list_distance_based_novelty;avg_ratings;;56;14;21;6;3;Buttons;162566
+only_positive;intra_list_diversity;intra_list_distance_based_novelty;avg_ratings;;56;14;21;6;3;Buttons;162566
+only_positive;intra_list_diversity;intra_list_distance_based_novelty;avg_ratings;;34;32;14;19;1;Buttons;162566
+only_positive;intra_list_diversity;intra_list_distance_based_novelty;avg_ratings;;34;32;14;19;1;Drag and drop;162566
+only_positive;intra_list_diversity;intra_list_distance_based_novelty;avg_ratings;;33;6;13;20;26;Drag and drop;162566
+only_positive;intra_list_diversity;intra_list_distance_based_novelty;avg_ratings;;33;6;13;20;26;Textboxes;162566
+only_positive;intra_list_diversity;intra_list_distance_based_novelty;avg_ratings;;60;13;7;9;11;Textboxes;162566
+only_positive;intra_list_diversity;intra_list_distance_based_novelty;avg_ratings;;60;13;7;9;11;Sliders;162566
+only_positive;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;63;6;9;22;0;Sliders;162566
+also_negative;maximal_diversity;maximal_distance_based_novelty;num_of_ratings;;63;6;9;22;0;Sliders;162566
+also_negative;maximal_diversity;maximal_distance_based_novelty;num_of_ratings;;23;17;51;6;3;Sliders;162566
