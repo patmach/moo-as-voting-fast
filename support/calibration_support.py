@@ -72,7 +72,7 @@ def calibration_support_for_item(users_partial_lists, item, p_prob, k, alpha = 0
     used_genres_sum = used_genres.sum()
     q_prob = alpha * p_prob
     if (used_genres_sum > 0):
-        q_prob += (1-alpha) * (used_genres.flatten() / used_genres_sum)
+        q_prob += (1-alpha) * (used_genres.flatten() / k)
     result = p_prob * np.log2(np.divide(p_prob, q_prob, where=q_prob!=0), where=p_prob>0)
     calibration = np.abs(result.sum())
     if np.isnan(calibration):# can't be computed
@@ -105,11 +105,6 @@ def calibration_support(users_partial_lists, items, user_index, k, alpha = 0.01)
         computed calibration for all items
     """
     p_prob = user_genre_prob[user_index]
-    sum_user_genre_prob = user_genre_prob[user_index].sum()
-    if sum_user_genre_prob > 0:
-        p_prob = user_genre_prob[user_index] / sum_user_genre_prob
-    else: 
-        p_prob = np.zeros(len(user_genre_prob[0]), dtype=np.float32)
     result = np.array([calibration_support_for_item(users_partial_lists, item, p_prob,k, alpha) for item in items])
     if (k == 1):
         return np.expand_dims(result - result.min(),axis=0)

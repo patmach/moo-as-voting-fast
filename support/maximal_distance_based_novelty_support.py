@@ -18,4 +18,6 @@ def maximal_distance_based_novelty_support(user_list, items, distance_matrix):
         computed maximal distance based novelty for all items
     """
     user_list = np.array(user_list[0]).reshape(1, len(user_list[0]))
+    if (user_list.shape[1] == 0):
+        return np.array([1.0] * len(items)).reshape(1, len(items))
     return distance_matrix[user_list[:,:,np.newaxis], items].min(axis=1)

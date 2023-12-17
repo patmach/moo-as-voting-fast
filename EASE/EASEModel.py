@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from multiprocessing import Pool, cpu_count
-from AutoencoderRS import AutoencoderRS
+from EASE.AutoencoderRS import AutoencoderRS
 from itertools import starmap
 
 class EASE(AutoencoderRS):
@@ -45,15 +45,17 @@ class EASE(AutoencoderRS):
             True - using 1 and 0, False using value from column RatingScore, by default True
         """
         df = self.df
+        max = df['ratingscore'].max()
         if only_positive:
-            df['modifiedratingscore'] = df['ratingscore'].apply(lambda x: x if x > 5 else 0)
+            
+            df['modifiedratingscore'] = df['ratingscore'].apply(lambda x: x if x > (max/2) else 0)
         else :
-            df['modifiedratingscore'] = df['ratingscore'].apply(lambda x: (x - 5) * 2 if x != 5 else 0.01)
+            df['modifiedratingscore'] = df['ratingscore'].apply(lambda x: (x - (max/2)) * 2 if x != (max/2) else 0.01)
         users, items = self._get_users_and_items(df)
         values = (
             np.ones(df.shape[0])
             if implicit
-            else df['modifiedratingscore'] / 10.0
+            else df['modifiedratingscore'] / float(max)
         )
         self.X = csr_matrix((values, (users, items)))
         self.B = self.computeB(lambda_)
