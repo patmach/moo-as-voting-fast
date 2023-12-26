@@ -4,6 +4,7 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+from textwrap import wrap
 import textwrap
 
 
@@ -50,9 +51,9 @@ def wrap_labels(ax, width, break_long_words=False):
 
 def get_connection_string():
     DriverName = "SQL Server"
-    #    DriverName = "ODBC Driver 18 for SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#C06C6D74\\tsql\\query"
-#    ServerName = "sql-server-db"
+    #DriverName = "ODBC Driver 18 for SQL Server"
+    ServerName =  "localhost,1401"#"np:\\\\.\\pipe\LOCALDB#ED18BEF1\\tsql\\query"
+    #ServerName = "sql-server-db"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
     Username = 'RS'
     file = open('pswd.txt',mode='r')    
@@ -187,7 +188,7 @@ def get_possible_answers_to_question(questionid, questionType):
     allAnswers = get_table("Answers")
 
     if (questionType == 0):
-        answersToQuestion = LikertScale
+        answersToQuestion = [answer for answer in LikertScale]
         answersToQuestion.reverse()
     elif (questionType == 1):
         answersToQuestion = list(allAnswers[allAnswers["questionid"] == questionid]["text"].unique())
@@ -200,11 +201,11 @@ def process_one_question(questionid, userAnswers, firstUserActs, allAnswers):
     sectionname = first["sectionname"]
     questionType = first["answertype"]
     answersToQuestion = get_possible_answers_to_question(questionid, questionType)
-    process_one_question_all_answers(questionid, q_userAnswers, sectionname, answersToQuestion)
+    process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion)
     process_one_question_type_of_act(questionid, sectionname, firstUserActs, q_userAnswers, questiontext, answersToQuestion)
     process_one_question_other_question(questionid, sectionname, firstUserActs,userAnswers, q_userAnswers, questiontext, answersToQuestion)
 
-def process_one_question_all_answers(questionid, q_userAnswers, sectionname, answersToQuestion):
+def process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion):
     counts = []
     for possibleAnswer in answersToQuestion:
         counts.append(len(q_userAnswers[q_userAnswers["answer"] == possibleAnswer]))
@@ -216,7 +217,7 @@ def process_one_question_all_answers(questionid, q_userAnswers, sectionname, ans
     g = sns.barplot(data=q_userAnswers, x="answer",y="count")
     for bin_,i in zip(g.patches, cm):
         bin_.set_facecolor(i)
-    g.set(title=f"{sectionname}: {questionid}")
+    g.set(title=("\n".join(wrap(questiontext, 60))))
     wrap_labels(g, 12)
     plt.savefig(os.path.join("Results",f"{questionid}_answers.png"), bbox_inches='tight')
     plt.close('all')
@@ -237,13 +238,14 @@ def process_one_question_type_of_act(questionid, sectionname, firstUserActs, q_u
                 data.append(pd.DataFrame({
                     "answer" : [possibleAnswer],
                     "count" : [len(type_userAnswers_by_act)],
-                    actName: [typeOfAct.replace("_"," ")]
+                    actName: ["\n".join(wrap(typeOfAct.replace("_"," "), 25))]
                 }))
         type_userAnswers = pd.concat(data)
         cm = sns.color_palette("plasma",len(type_userAnswers[actName].unique()))
         g = sns.barplot(data=type_userAnswers, x="answer", y="count", hue = actName, palette=cm)
-        g.set(title=f"{sectionname}: {questionid}")
+        g.set(title=("\n".join(wrap(questiontext, 40))))
         wrap_labels(g, 12)
+        sns.move_legend(g, "upper left", bbox_to_anchor=(1, 1))
         plt.savefig(os.path.join("Results",f"by_type_of_act_{questionid}_answers.png"), bbox_inches='tight')
         plt.close('all')
         plt.clf()
@@ -263,10 +265,11 @@ def process_one_question_other_question(questionid, sectionname, firstUserActs,u
         dependent_userAnswers = userAnswers[userAnswers["questionid"] == qid]
         sname = dependent_userAnswers.iloc[0]["sectionname"]
         qtype = dependent_userAnswers.iloc[0]["answertype"]
+        qtext = dependent_userAnswers.iloc[0]["questiontext"]
         dependent_userAnswers = dependent_userAnswers.add_suffix(f'_{qid}')
         dependent_userAnswers = dependent_userAnswers.rename(columns={f"userid_{qid}":"userid"})
         dependent_userAnswers = pd.merge(q_userAnswers, dependent_userAnswers, on="userid")
-        dependent_answerColumn = f"Answer to {sname}: {qid}"
+        dependent_answerColumn = "\n".join(wrap(qtext, 40))
         dependent_userAnswers.rename(columns={f"answer_{qid}" : dependent_answerColumn}, inplace=True)
         answersToDependentQuestion = get_possible_answers_to_question(qid,qtype)
         data = []
@@ -278,13 +281,14 @@ def process_one_question_other_question(questionid, sectionname, firstUserActs,u
                 data.append(pd.DataFrame({
                     "answer" : [possibleAnswer],
                     "count" : [len(dependent_userAnswers_by_dependent)],
-                    dependent_answerColumn: [possibleDependentAnswer]
+                    dependent_answerColumn: ["\n".join(wrap(possibleDependentAnswer, 25))]
                 }))
         dependent_userAnswers = pd.concat(data)
         cm = sns.color_palette("plasma",len(dependent_userAnswers[dependent_answerColumn].unique()))
         g = sns.barplot(data=dependent_userAnswers, x="answer", y="count", hue = dependent_answerColumn, palette=cm)
-        g.set(title=f"{sectionname}: {questionid}")
+        g.set(title=("\n".join(wrap(questiontext, 60))))
         wrap_labels(g, 12)
+        sns.move_legend(g, "upper left", bbox_to_anchor=(1, 1))
         plt.savefig(os.path.join("Results",f"by_{qid}_answers_{questionid}.png"), bbox_inches='tight')
         plt.close('all')
         plt.clf()

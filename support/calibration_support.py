@@ -73,7 +73,8 @@ def calibration_support_for_item(users_partial_lists, item, p_prob, k, alpha = 0
     q_prob = alpha * p_prob
     if (used_genres_sum > 0):
         q_prob += (1-alpha) * (used_genres.flatten() / k)
-    result = p_prob * np.log2(np.divide(p_prob, q_prob, where=q_prob!=0), where=p_prob>0)
+    result = p_prob * np.log2(np.divide(p_prob, q_prob, out=np.zeros(len(p_prob)), where=q_prob!=0), \
+                               out=np.zeros(len(p_prob)), where=p_prob>0)
     calibration = np.abs(result.sum())
     if np.isnan(calibration):# can't be computed
         return - 1000.0 # small magic number

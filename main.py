@@ -430,26 +430,40 @@ def build_normalization(normalization_factory, shift):
 
 
 """
-def compute_all_normalizations_old(args, normalization_factory, extended_rating_matrix, distance_matrix, \
-                                           users_viewed_item, items, users):
+def compute_all_normalizations_old(args, normalization_factory, extended_rating_matrix, neg_extended_rating_matrix,\
+                                ease_X, ease_B, neg_ease_X, neg_ease_B, distance_matrix, users_viewed_item, items,\
+                                    users, avg_ratings):
     normalization = dict()
     shift = args.shift
-    normalization["relevance"] = prepare_relevance_normalization_old(normalization_factory, extended_rating_matrix,\
-                                                                     shift)
-    for diversity_type in ["intra_list_diversity","maximal_diversity","binomial_diversity"]:
-        normalization[diversity_type] = prepare_diversity_normalization_old(diversity_type, normalization_factory, \
-                                                                        distance_matrix, shift, items, users)
-    for novelty_type in ["popularity_complement","maximal_distance_based_novelty","intra_list_distance_based_novelty",\
-                         "popularity_based_log_novelty"]:
-        normalization[novelty_type] = prepare_novelty_normalization_old(novelty_type, normalization_factory, extended_rating_matrix,\
-                                                                    distance_matrix, users_viewed_item, shift, items)
+    print("prepare relevance normalization", file=sys.stderr)
     
-    normalization["popularity"] = prepare_popularity_normalization(normalization_factory, users_viewed_item, shift,\
-                                                                     extended_rating_matrix.shape[0])
-    normalization["calibration"] = prepare_calibration_normalization_old( normalization_factory, distance_matrix, shift, items, users)
+    normalization["only_positive"] = prepare_relevance_normalization_old(normalization_factory, extended_rating_matrix,\
+                                                                 shift)
+
+    normalization["also_negative"] = prepare_relevance_normalization_old(normalization_factory, neg_extended_rating_matrix,\
+                                                                  shift)
+
+    for diversity_type in ["intra_list_diversity","maximal_diversity","binomial_diversity"]:
+        print(f"prepare {diversity_type} normalization", file=sys.stderr)
+        normalization[diversity_type] = prepare_diversity_normalization_old(diversity_type, normalization_factory, \
+                                                                        distance_matrix, shift, items, users,\
+                                                                        args.k)
+    for novelty_type in ["popularity_complement","maximal_distance_based_novelty","intra_list_distance_based_novelty"]:
+        print(f"prepare {novelty_type} normalization", file=sys.stderr)
+        normalization[novelty_type] = prepare_novelty_normalization_old(novelty_type, normalization_factory, extended_rating_matrix,\
+                                                                    neg_ease_X, distance_matrix, users_viewed_item, shift, items,\
+                                                                        users)
+    print("prepare popularity normalization", file=sys.stderr)
+    for popularity_type in ["num_of_ratings", "avg_ratings"]:
+        normalization[popularity_type] = prepare_popularity_normalization(normalization_factory, users_viewed_item, shift,\
+                                                                        extended_rating_matrix.shape[0], avg_ratings,\
+                                                                            popularity_type)
+    print("prepare calibration normalization", file=sys.stderr)
+    normalization["calibration"] = prepare_calibration_normalization_old( normalization_factory, distance_matrix, shift,\
+                                                                     items, users, args.k)
+    save_cache(os.path.join("cache", "normalizations_old.pckl"), normalization)
     return normalization
 """
-
 
 def compute_all_normalizations(args, normalization_factory, extended_rating_matrix, neg_extended_rating_matrix,\
                                 ease_X, ease_B, neg_ease_X, neg_ease_B, distance_matrix, users_viewed_item, items,\
@@ -524,13 +538,13 @@ def compute_all_normalizations(args, normalization_factory, extended_rating_matr
 
 """
 def prepare_relevance_normalization_old(normalization_factory, rating_matrix, shift):
-
-    relevance_data_points = rating_matrix.T
-
+    relevance_data_points = rating_matrix
+    relevance_data_points = np.expand_dims(random.sample(list(np.array(relevance_data_points).flatten()),
+                                                              k = rating_matrix.shape[1]),axis=1)
     norm_relevance = build_normalization(normalization_factory, shift)
     norm_relevance.train(relevance_data_points)
 
-    return norm_relevance
+    return [norm_relevance]
 """
 
 
@@ -597,25 +611,26 @@ def prepare_relevance_normalization(normalization_factory, rating_matrix, ease_X
     return norm_relevances
 
 
-"""
-def prepare_diversity_normalization_old(diversity_type, normalization_factory, distance_matrix, shift, items, users):
-    users_partial_lists= np.full((1,15), -1, dtype=np.int32)
+
+def prepare_diversity_normalization_old(diversity_type, normalization_factory, distance_matrix, shift, items, users, k):
+    users_partial_lists= np.full((1,k), -1, dtype=np.int32)
     diversity_data_points=[]
-    user_index = random.choice(list(range(len(users))))
-    for i in range(15):
-        if(diversity_type=="binomial_diversity"):
-            diversity_data_points.extend(binomial_diversity_support(users_partial_lists, items, user_index, i+1))
-        elif (diversity_type=="maximal_diversity"):
-            diversity_data_points.extend(maximal_diversity_support(users_partial_lists,items, distance_matrix, i+1))
-        elif (diversity_type=="intra_list_diversity"):
-            diversity_data_points.extend(intra_list_diversity_support(users_partial_lists,items, distance_matrix, i+1))
-        users_partial_lists[0, i] = np.random.choice([np.argmax(diversity_data_points[i]),np.random.choice(list(range(len(items))))],\
-                                                    p=[0.2, 0.8])
+    possible_users = random.sample(list(users), 100)
+    for user in possible_users:
+        for i in range(k):
+            if(diversity_type=="binomial_diversity"):
+                diversity_data_points.extend(binomial_diversity_support(users_partial_lists, items, user, i+1))
+            elif (diversity_type=="maximal_diversity"):
+                diversity_data_points.extend(maximal_diversity_support(users_partial_lists,items, distance_matrix, i+1))
+            elif (diversity_type=="intra_list_diversity"):
+                diversity_data_points.extend(intra_list_diversity_support(users_partial_lists,items, distance_matrix, i+1))
+            users_partial_lists[0, i] = np.random.choice([np.argmax(diversity_data_points[i]),np.random.choice(list(range(len(items))))],\
+                                                        p=[0.2, 0.8])
     diversity_data_points=np.expand_dims(random.sample(list(np.array(diversity_data_points).flatten()), k = len(items)),axis=1)
     norm_diversity = build_normalization(normalization_factory, shift)
     norm_diversity.train(diversity_data_points)
-    return norm_diversity
-"""
+    return [norm_diversity]
+
 
 
 def prepare_diversity_normalization(diversity_type, normalization_factory, distance_matrix, shift, items, users,\
@@ -677,30 +692,31 @@ def prepare_diversity_normalization(diversity_type, normalization_factory, dista
     return norm_diversities
 
 
-"""
-def prepare_novelty_normalization_old(novelty_type, normalization_factory, rating_matrix, distance_matrix, users_viewed_item,\
-                                      shift, items):
+
+def prepare_novelty_normalization_old(novelty_type, normalization_factory, rating_matrix, ease_x, distance_matrix,\
+                                  users_viewed_item, shift, items, users):
     num_users = rating_matrix.shape[0] 
     novelty_data_points=[]
     if(novelty_type=="popularity_complement"):        
         novelty_data_points = np.expand_dims(1.0 - users_viewed_item / num_users, axis=1)
-    elif(novelty_type=="popularity_based_log_novelty"):
-        novelty_data_points = np.expand_dims( - np.log2(users_viewed_item / num_users), axis=1)
+        norm_novelty = build_normalization(normalization_factory, shift)
+        norm_novelty.train(novelty_data_points)
+        return [norm_novelty]
     else:
-        novelty_data_points= [] 
-        for i in range(10):
-            user_list = np.expand_dims(random.sample(items, k = i*5 + 1), axis=0)
+        ease_X = ease_x.toarray()
+        selected_users = random.sample(list(users), k=100)    
+        novelty_data_points= []        
+        for user in selected_users:
+            user_list= np.nonzero(ease_X[user,:])
             if(novelty_type=="maximal_distance_based_novelty"):
                 novelty_data_points.extend(maximal_distance_based_novelty_support(user_list, items, distance_matrix))
             elif (novelty_type=="intra_list_distance_based_novelty"):
                 novelty_data_points.extend(intra_list_distance_based_novelty_support(user_list, items, distance_matrix))
-        novelty_data_points=np.expand_dims(random.sample(np.array(novelty_data_points).flatten(), k = len(items)),axis=1)
+        novelty_data_points=np.expand_dims(random.sample(list(np.array(novelty_data_points).flatten()), k = len(items)),axis=1)
+        norm_novelty = build_normalization(normalization_factory, shift)
+        norm_novelty.train(novelty_data_points)
+        return [norm_novelty]
 
-    norm_novelty = build_normalization(normalization_factory, shift)
-    norm_novelty.train(novelty_data_points)
-
-    return norm_novelty
-"""
 
 
 def prepare_novelty_normalization(novelty_type, normalization_factory, rating_matrix, ease_x, distance_matrix,\
@@ -859,20 +875,28 @@ def prepare_calibration_normalization( normalization_factory, distance_matrix, s
     return norm_calibrations
 
 
-"""
-def prepare_calibration_normalization_old( normalization_factory, distance_matrix, shift, items, users):
-    users_partial_lists= np.full((1,15), -1, dtype=np.int32)
+
+def prepare_calibration_normalization_old( normalization_factory, distance_matrix, shift, items, users, recommendations_list_len):
     calibration_data_points=[]
-    user_index = random.choice(list(range(len(users))))
-    for i in range(15):
-        calibration_data_points.extend(calibration_support(users_partial_lists, items, user_index, i+1))
-        users_partial_lists[0, i] = np.random.choice([np.argmax(calibration_data_points[i]),np.random.choice(list(range(len(items))))],\
-                                                    p=[0.2, 0.8])
-    calibration_data_points=np.expand_dims(random.sample(list(np.array(calibration_data_points).flatten()), k = len(items)),axis=1)
+    selected_users = random.sample(list(users), k=100)
+    users_partial_lists= np.full((len(users),recommendations_list_len*4), -1, dtype=np.int32)
+    index = -1
+    ranks = list(range(recommendations_list_len))
+    for i in ranks: 
+        index += 1
+        calibration_data_points = []      
+        for user_index in selected_users:
+            support = calibration_support(users_partial_lists[user_index:user_index+1], items, user_index, i+1)
+            calibration_data_points.extend(support)
+            users_partial_lists[user_index, i] = np.random.choice([np.argmax(support),np.random.choice(list(range(len(items))))],\
+                                                    p=[0.4, 0.6])
+            support[0,users_partial_lists[user_index, i]] = 0
+    calibration_data_points = np.array(calibration_data_points).flatten()
+    calibration_data_points=np.expand_dims(random.sample(list(calibration_data_points), k = len(items)),axis=1)
     norm_calibration = build_normalization(normalization_factory, shift)
     norm_calibration.train(calibration_data_points)
-    return norm_calibration
-"""
+    return [norm_calibration]
+
 """
 def custom_evaluate_voting(top_k, rating_matrix, distance_matrix, users_viewed_item, normalizations, obj_weights, discount_sequences):
     start_time = time.perf_counter()
@@ -1175,7 +1199,7 @@ def main(args):
     args, ease_B, neg_ease_B
 
 
-def get_ratings(connectionstring):
+def get_ratings(connectionstring, only_MovieLens = False):
     """
     Retrieves all ratings from database
 
@@ -1190,13 +1214,16 @@ def get_ratings(connectionstring):
         Dataframe with columns userid, itemid, ratingscore
     """    
     conn = odbc.connect(connectionstring)
-    df = pd.read_sql_query('SELECT  UserID, ItemID, RatingScore FROM ratings', conn)
+    query = "SELECT  UserID, ItemID, RatingScore FROM ratings"
+    if (only_MovieLens):
+        query += " r join users u on u.id = r.userid where u.username like '%movielens%' "
+    df = pd.read_sql_query(query, conn)
     df.columns = df.columns.str.lower()
     conn.close()
     return df
 
 
-def get_ratings_of_user(connectionstring, userID, only_positive=True):
+def get_ratings_of_user(connectionstring, userID, only_positive=True, order=False):
     """
     Retrieves ratings from one user from database
 
@@ -1213,13 +1240,15 @@ def get_ratings_of_user(connectionstring, userID, only_positive=True):
     -------
     pd.DataFrame
         Dataframe with columns userid, itemid, ratingscore
-    """    
+    """        
     conn = odbc.connect(connectionstring)
     query = f"""SELECT  UserID, ItemID, RatingScore 
                            FROM ratings
                            where userid = {userID} """
     if (only_positive):
         query += " and ratingscore > 5 "    
+    if (order):
+        query += " order by date " 
     df = pd.read_sql_query(query, conn)
     df.columns = df.columns.str.lower()
     conn.close()
@@ -1276,7 +1305,7 @@ def try_to_connect_to_db(connectionstring):
 
 
 
-def init():
+def init(only_MovieLens = False):
     """
     Initilization of the recommender - specifying arguments, connect to db, train the model and prepare normalizations
     """
@@ -1304,7 +1333,7 @@ def init():
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k , num=args.k, endpoint=False) for d in args.discounts], axis=0)
     DriverName = "SQL Server"
 #    DriverName = "ODBC Driver 18 for SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#78BEE246\\tsql\\query"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#524C3D33\\tsql\\query"
 #    ServerName = "sql-server-db"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
     Username = 'RS'
@@ -1319,7 +1348,7 @@ def init():
         TrustServerCertificate=yes;
     """
     try_to_connect_to_db(args.connectionstring)
-    args.df = get_ratings(args.connectionstring)
+    args.df = get_ratings(args.connectionstring, only_MovieLens)
     random.seed(args.seed)
     return main(args)
 

@@ -24,7 +24,7 @@ lock = threading.Lock()
 
 
 @app.before_first_request
-def init():
+def init(only_MovieLens = False):
     """
     Initialization of the recommender - computation of all needed datasets
     Called before first requets on worker
@@ -35,12 +35,13 @@ def init():
     start_time =time.perf_counter()
     extended_rating_matrix, neg_extended_rating_matrix, pos_users_profiles, neg_users_profiles,\
         users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, algorithm_factory,\
-            normalizations, args, ease_B, neg_ease_B = main.init()
+            normalizations, args, ease_B, neg_ease_B = main.init(only_MovieLens)
     print(f"Init done, took: {time.perf_counter() - start_time}")
-    x=datetime.datetime.now()
-    y = x + datetime.timedelta(days=1)
-    y = y.replace(hour=3, minute=30, second=0, microsecond=0)
-    threading.Timer((y - x).seconds, init).start()
+    if not only_MovieLens:
+        x=datetime.datetime.now()
+        y = x + datetime.timedelta(days=1)
+        y = y.replace(hour=3, minute=30, second=0, microsecond=0)
+        threading.Timer((y - x).seconds, init).start()
 
 
 @app.route('/Results', methods=["POST", "GET"])
