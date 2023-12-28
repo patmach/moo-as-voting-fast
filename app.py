@@ -1,7 +1,7 @@
 import copy
 import sys
 import main
-import results
+import ResultsScript.results as results
 import numpy as np
 import time
 import json 

@@ -41,6 +41,17 @@ QuestionSectionsDependency = {
 LikertScale = ["Strongly agree", "Agree", "Neutral / Don't Know", "Disagree", "Strongly disagree"]
 
 def wrap_labels(ax, width, break_long_words=False):
+    """
+    wraps labels by newlines
+    Parameters
+    ----------
+    ax : _type_
+        graph or its axis
+    width : int
+        maximum width for one line of text
+    break_long_words : bool, optional
+        If true breaks long words, by default False
+    """
     labels = []
     for label in ax.get_xticklabels():
         text = label.get_text()
@@ -50,6 +61,9 @@ def wrap_labels(ax, width, break_long_words=False):
 
 
 def get_connection_string():
+    """
+        Connects to the database
+    """
     DriverName = "SQL Server"
     #DriverName = "ODBC Driver 18 for SQL Server"
     ServerName =  "localhost,1401"#"np:\\\\.\\pipe\LOCALDB#ED18BEF1\\tsql\\query"
@@ -69,19 +83,51 @@ def get_connection_string():
     return connectionstring
 
 def get_table(table_name):
+    """
+
+    Parameters
+    ----------
+    table_name : str
+        name of the table in database
+
+    Returns
+    -------
+    pd.DataFrame
+        Content of the database table
+    """
     conn = odbc.connect(get_connection_string())
     df = pd.read_sql_query('SELECT  * FROM ' + table_name, conn)
     df.columns = df.columns.str.lower()
     conn.close()
     return df
 
-def not_null_lists(s,d):
+def not_null_lists(f,s):
+    """
+    Parameters
+    ----------
+    s : list
+        first list
+    d : list
+        second list
+
+    Returns
+    -------
+    list
+        list where value of each index corresponds to value in s with the same index. 
+        If the value in s with the same index is null the the value in d with the same index is inserted.
+    """
     list = []
-    for i in range(len(s)):
-        list.append(s[i] if not pd.isna(s[i]) else d[i])
+    for i in range(len(f)):
+        list.append(f[i] if not pd.isna(f[i]) else s[i])
     return list
 
 def get_userAnswers():
+    """
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with all needed information about users answers
+    """
     userAnswers = get_table("UserAnswers")
     questions = get_table("Questions").rename(columns={"id": "questionid", "text":"questiontext"})
     answers = get_table("Answers").rename(columns={"id": "answerid", "text":"answertext"}).drop(columns=["questionid"])
@@ -97,6 +143,12 @@ def get_userAnswers():
     return userAnswers
 
 def get_first_user_acts():
+    """
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    """
     acts = get_table("Acts").rename(columns={"id": "actid", "code":"actcode"})
     colnames=["userid","actid","date"] 
     userActs = pd.read_csv("Logs/UserActs.txt", sep=';', names=colnames)
@@ -108,6 +160,12 @@ def get_first_user_acts():
 
 
 def get_recommender_queries():
+    """
+    Returns
+    -------
+    pd.DataFrame
+        All queries to the recommender called by user
+    """
     colnames=["relevance type","diversity type","novelty type","popularity type","calibration type",
               "relevance","diversity","novelty","popularity","calibration","tweak mechanism", "user ID", "date"] 
     recommenderqueries = pd.read_csv("Logs/RecommenderQueries.txt", sep=';', names=colnames)
@@ -127,12 +185,18 @@ def get_recommender_queries():
     return bymetrics
 
 def process():
+    """
+    Compute all results and save them as graphs
+    """
     process_questions()
     process_metrics()
-    x=1
+    print("DONE!")
 
 
 def process_metrics():
+    """
+    Compute all stats objectives weights in recommender queries and save them as graphs
+    """
     recommenderqueries = get_recommender_queries()
     cm = sns.color_palette("plasma",len(recommenderqueries["Metric"].unique()))
     g = sns.violinplot(data = recommenderqueries, x= "Metric", y= "Metric importance",
@@ -155,6 +219,15 @@ def process_metrics():
     
 
 def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
+    """
+    Compute all stats objectives weights per used metric variant and used mechanism
+    Parameters
+    ----------
+    recommenderqueries : pd.DataFrame
+        All queries to the recommender called by user
+    cm : _RGBColorPalette
+        Color palette used
+    """
     for metric in recommenderqueries["Metric"].unique():
         metric_recommenderqueries = recommenderqueries[recommenderqueries["Metric"] == metric]
         if(len(metric_recommenderqueries["Metric variant"].unique()) > 1):
@@ -176,15 +249,29 @@ def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
             plt.cla() 
 
 def process_questions():
+    """
+    Compute all results from user answers and save them as graphs
+    """
     userAnswers = get_userAnswers()
     firstUserActs = get_first_user_acts()
     questions = get_table("Questions")
-    allAnswers = get_table("Answers")
 
     for questionid in questions["id"]:
-        process_one_question(questionid,userAnswers, firstUserActs, allAnswers)
+        process_one_question(questionid,userAnswers, firstUserActs)
 
 def get_possible_answers_to_question(questionid, questionType):
+    """
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    questionType : int
+        Type of the question
+    Returns
+    -------
+    list
+        Possible answers to the question
+    """
     allAnswers = get_table("Answers")
 
     if (questionType == 0):
@@ -194,7 +281,19 @@ def get_possible_answers_to_question(questionid, questionType):
         answersToQuestion = list(allAnswers[allAnswers["questionid"] == questionid]["text"].unique())
     return answersToQuestion
 
-def process_one_question(questionid, userAnswers, firstUserActs, allAnswers):
+def process_one_question(questionid, userAnswers, firstUserActs):
+    """
+    Compute results from user answers to one question and save them as graphs
+
+    Parameters
+    ----------
+    questionid : int
+        ID of questions
+    userAnswers : pd.DataFrame
+        Dataset with user answers
+    firstUserActs : pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    """
     q_userAnswers = userAnswers[userAnswers["questionid"] == questionid]   
     first = q_userAnswers.iloc[0]
     questiontext = first["questiontext"]
@@ -203,9 +302,22 @@ def process_one_question(questionid, userAnswers, firstUserActs, allAnswers):
     answersToQuestion = get_possible_answers_to_question(questionid, questionType)
     process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion)
     process_one_question_type_of_act(questionid, sectionname, firstUserActs, q_userAnswers, questiontext, answersToQuestion)
-    process_one_question_other_question(questionid, sectionname, firstUserActs,userAnswers, q_userAnswers, questiontext, answersToQuestion)
+    process_one_question_other_question(questionid, sectionname,userAnswers, q_userAnswers, questiontext, answersToQuestion)
 
 def process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion):
+    """
+    Saves graph of user answers to the question
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    """
     counts = []
     for possibleAnswer in answersToQuestion:
         counts.append(len(q_userAnswers[q_userAnswers["answer"] == possibleAnswer]))
@@ -224,7 +336,26 @@ def process_one_question_all_answers(questionid, q_userAnswers, questiontext, an
     plt.clf()
     plt.cla()
 
+
 def process_one_question_type_of_act(questionid, sectionname, firstUserActs, q_userAnswers, questiontext, answersToQuestion):
+    """
+    Saves graph of user answers to the question based on first act from group of acts
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    sectionname : str
+        name of the questions section where this question belongs
+    firstUserActs : pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    """
     for typeOfAct in FirstActTypeToQuestionSection[sectionname]:
         type_userActs = firstUserActs[firstUserActs["typeofact"] == typeOfAct]
         type_userAnswers = pd.merge(q_userAnswers, type_userActs, how="left", on=["userid"])
@@ -252,8 +383,27 @@ def process_one_question_type_of_act(questionid, sectionname, firstUserActs, q_u
         plt.cla()
         #plt.show()
 
-def process_one_question_other_question(questionid, sectionname, firstUserActs,userAnswers, q_userAnswers, questiontext,
+def process_one_question_other_question(questionid, sectionname,userAnswers, q_userAnswers, questiontext,
                                          answersToQuestion):
+    """_summary_
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    userAnswers : pd.DataFrame
+        Dataset with user answers
+    sectionname : str
+        name of the questions section where this question belongs
+    firstUserActs : pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    """
     setOfDependentQuestions = set(userAnswers[(userAnswers["sectionname"] == sectionname)]["questionid"].unique())
     setOfDependentQuestions = setOfDependentQuestions |\
           set(userAnswers[(userAnswers["sectionname"] == "Demographics")]["questionid"].unique())
