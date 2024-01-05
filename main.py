@@ -611,7 +611,7 @@ def prepare_relevance_normalization(normalization_factory, rating_matrix, ease_X
     return norm_relevances
 
 
-
+"""
 def prepare_diversity_normalization_old(diversity_type, normalization_factory, distance_matrix, shift, items, users, k):
     users_partial_lists= np.full((1,k), -1, dtype=np.int32)
     diversity_data_points=[]
@@ -630,7 +630,7 @@ def prepare_diversity_normalization_old(diversity_type, normalization_factory, d
     norm_diversity = build_normalization(normalization_factory, shift)
     norm_diversity.train(diversity_data_points)
     return [norm_diversity]
-
+"""
 
 
 def prepare_diversity_normalization(diversity_type, normalization_factory, distance_matrix, shift, items, users,\
@@ -691,7 +691,7 @@ def prepare_diversity_normalization(diversity_type, normalization_factory, dista
             norm_diversities.append(norm_diversity)
     return norm_diversities
 
-
+"""
 
 def prepare_novelty_normalization_old(novelty_type, normalization_factory, rating_matrix, ease_x, distance_matrix,\
                                   users_viewed_item, shift, items, users):
@@ -716,7 +716,7 @@ def prepare_novelty_normalization_old(novelty_type, normalization_factory, ratin
         norm_novelty = build_normalization(normalization_factory, shift)
         norm_novelty.train(novelty_data_points)
         return [norm_novelty]
-
+"""
 
 
 def prepare_novelty_normalization(novelty_type, normalization_factory, rating_matrix, ease_x, distance_matrix,\
@@ -875,7 +875,7 @@ def prepare_calibration_normalization( normalization_factory, distance_matrix, s
     return norm_calibrations
 
 
-
+"""
 def prepare_calibration_normalization_old( normalization_factory, distance_matrix, shift, items, users, recommendations_list_len):
     calibration_data_points=[]
     selected_users = random.sample(list(users), k=100)
@@ -896,6 +896,7 @@ def prepare_calibration_normalization_old( normalization_factory, distance_matri
     norm_calibration = build_normalization(normalization_factory, shift)
     norm_calibration.train(calibration_data_points)
     return [norm_calibration]
+"""
 
 """
 def custom_evaluate_voting(top_k, rating_matrix, distance_matrix, users_viewed_item, normalizations, obj_weights, discount_sequences):
@@ -1333,7 +1334,7 @@ def init(only_MovieLens = False):
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k , num=args.k, endpoint=False) for d in args.discounts], axis=0)
     DriverName = "SQL Server"
 #    DriverName = "ODBC Driver 18 for SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#3BD2B579\\tsql\\query"
+    ServerName =  "np:\\\\.\\pipe\LOCALDB#2EB6953D\\tsql\\query"
 #    ServerName = "sql-server-db"
     DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
     Username = 'RS'

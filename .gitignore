@@ -11,6 +11,7 @@ values1_0old.csv
 values2_0old.csv
 values1000old.csv
 Results/*
+Logs/*
 NormalizationGraphs2/corr_also_negative_binomial_diversity_intra_list_distance_based_novelty_avg_ratings.png
 NormalizationGraphs2/corr_also_negative_binomial_diversity_intra_list_distance_based_novelty_num_of_ratings.png
 NormalizationGraphs2/corr_also_negative_binomial_diversity_maximal_distance_based_novelty_avg_ratings.png
@@ -159,5 +160,7 @@ Logs/Unblocks.txt
 Logs/UserActs.txt
 Logs/UserActSuggestions.txt
 Logs/UserAnswers.txt
+Logs/RecommenderQueries.txt
+Logs/UserActs.txt
 Logs/RecommenderQueries.txt
 Logs/UserActs.txt
