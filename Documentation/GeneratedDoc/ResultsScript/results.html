@@ -36,6 +36,8 @@ import os
 from textwrap import wrap
 import textwrap
 
+from db_connect import get_connection_string, get_table
+
 date_format= &#34;%d-%m-%Y %H:%M:%S.%f&#34;
 number_of_recommendations = 15
 folder_with_graphs = &#34;Results&#34;
@@ -78,6 +80,7 @@ LikertScale = {&#34;Strongly agree&#34; : 1,
 def wrap_labels(ax, width_x, break_long_words=True, width_y = 60):
     &#34;&#34;&#34;
     wraps labels by newlines
+    
     Parameters
     ----------
     ax : _type_
@@ -103,48 +106,10 @@ def wrap_labels(ax, width_x, break_long_words=True, width_y = 60):
     ax.set_yticklabels(labels, rotation=0)
 
 
-def get_connection_string():
-    &#34;&#34;&#34;
-        Connects to the database
-    &#34;&#34;&#34;
-    DriverName = &#34;SQL Server&#34;
-    ServerName =  &#34;np:\\\\.\\pipe\LOCALDB#6E0416EF\\tsql\\query&#34;
-    ServerName = &#34;localhost,1401&#34;
-    DatabaseName = &#34;aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502&#34;
-    Username = &#39;RS&#39;
-    file = open(&#39;pswd.txt&#39;,mode=&#39;r&#39;)    
-    Password = file.read()
-    file.close()
-    connectionstring=f&#34;&#34;&#34;DRIVER={{{DriverName}}};
-        SERVER={ServerName};
-        DATABASE={DatabaseName};
-        UID={Username};
-        PWD={Password};
-        TrustServerCertificate=yes;
-    &#34;&#34;&#34;
-    return connectionstring
-
-def get_table(table_name):
-    &#34;&#34;&#34;
-
-    Parameters
-    ----------
-    table_name : str
-        name of the table in database
-
-    Returns
-    -------
-    pd.DataFrame
-        Content of the database table
-    &#34;&#34;&#34;
-    conn = odbc.connect(get_connection_string())
-    df = pd.read_sql_query(&#39;SELECT  * FROM &#39; + table_name, conn)
-    df.columns = df.columns.str.lower()
-    conn.close()
-    return df
 
 def not_null_lists(f,s):
     &#34;&#34;&#34;
+
     Parameters
     ----------
     s : list
@@ -165,6 +130,7 @@ def not_null_lists(f,s):
 
 def get_userAnswers():
     &#34;&#34;&#34;
+
     Returns
     -------
     pd.DataFrame
@@ -187,6 +153,7 @@ def get_userAnswers():
 
 def get_first_user_acts():
     &#34;&#34;&#34;
+
     Returns
     -------
     pd.DataFrame
@@ -204,6 +171,7 @@ def get_first_user_acts():
 
 def get_most_used_in_recommender_queries():
     &#34;&#34;&#34;
+
     Returns
     -------
     pd.DataFrame
@@ -233,6 +201,7 @@ def get_recommender_queries_from_file():
 
 def get_recommender_queries_by_metric():
     &#34;&#34;&#34;
+
     Returns
     -------
     pd.DataFrame
@@ -273,6 +242,7 @@ def get_recommender_queries_rating_interaction():
 def process_user_interactions(userid, ratings, interactions, recommenderqueries):
     &#34;&#34;&#34;
     Enrich recommender query dataset of users seen, clicks, ratings and positive ratings 
+    
     Parameters
     ----------
     userid : int
@@ -362,6 +332,7 @@ def process_metrics():
 def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
     &#34;&#34;&#34;
     Compute all stats objectives weights per used metric variant and used mechanism
+
     Parameters
     ----------
     recommenderqueries : pd.DataFrame
@@ -449,7 +420,6 @@ def process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAn
     &#34;&#34;&#34;
     likertScaleQuestionsMeanAndStd = pd.concat(likertScaleQuestionsMeanAndStd)
     likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd.reset_index()
-    print(likertScaleQuestionsMeanAndStd)
     likertScaleQuestionsMeanAndStd.to_csv((os.path.join(folder_with_graphs,f&#34;LikertScaleQuestionsAnswers.csv&#34;)))
     likertScaleAnswers = pd.concat(likertScaleAnswers)
     for section in likertScaleAnswers[&#34;sectionname&#34;].unique():
@@ -468,7 +438,7 @@ def process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAn
         plt.cla()
 
 def get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers):
-    &#34;&#34;&#34;_summary_
+    &#34;&#34;&#34;
 
     Parameters
     ----------
@@ -493,12 +463,14 @@ def get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers):
 
 def get_possible_answers_to_question(questionid, questionType):
     &#34;&#34;&#34;
+    
     Parameters
     ----------
     questionid : int
         ID of the question
     questionType : int
         Type of the question
+    
     Returns
     -------
     list
@@ -544,6 +516,7 @@ def process_one_question(questionid, userAnswers, q_userAnswers, first, firstUse
 def process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion, y_max):
     &#34;&#34;&#34;
     Saves graph of user answers to the question
+    
     Parameters
     ----------
     questionid : int
@@ -733,7 +706,7 @@ def process_one_question_most_used_act_in_query(questionid, sectionname, recomme
 
 def process_one_question_other_question(questionid, sectionname,userAnswers, q_userAnswers, questiontext,
                                          answersToQuestion, y_max):
-    &#34;&#34;&#34;_summary_
+    &#34;&#34;&#34;
 
     Parameters
     ----------
@@ -856,6 +829,7 @@ def number_of_finished_groups_of_acts_by_priority(usersThatAnswered):
 def number_of_recommended_queries(usersThatAnswered):    
     &#34;&#34;&#34;
     Computes mean and std of number of recommended queries made by user
+    
     Parameters
     ----------
     usersThatAnswered : bool
@@ -1018,8 +992,7 @@ if __name__ == &#34;__main__&#34;:
 <span>def <span class="ident">get_Likert_Scale_int_value_mean_and_std_dfs</span></span>(<span>q_userAnswers)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><em>summary</em></p>
-<h2 id="parameters">Parameters</h2>
+<div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>q_userAnswers</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
 <dd>Dataset with user answers to the question</dd>
@@ -1033,7 +1006,7 @@ Dataset with user answers to the question with new column representing number re
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers):
-    &#34;&#34;&#34;_summary_
+    &#34;&#34;&#34;
 
     Parameters
     ----------
@@ -1057,37 +1030,6 @@ Dataset with user answers to the question with new column representing number re
     return  mean_std_df , q_userAnswers</code></pre>
 </details>
 </dd>
-<dt id="moo-as-voting-fast.ResultsScript.results.get_connection_string"><code class="name flex">
-<span>def <span class="ident">get_connection_string</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Connects to the database</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_connection_string():
-    &#34;&#34;&#34;
-        Connects to the database
-    &#34;&#34;&#34;
-    DriverName = &#34;SQL Server&#34;
-    ServerName =  &#34;np:\\\\.\\pipe\LOCALDB#6E0416EF\\tsql\\query&#34;
-    ServerName = &#34;localhost,1401&#34;
-    DatabaseName = &#34;aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502&#34;
-    Username = &#39;RS&#39;
-    file = open(&#39;pswd.txt&#39;,mode=&#39;r&#39;)    
-    Password = file.read()
-    file.close()
-    connectionstring=f&#34;&#34;&#34;DRIVER={{{DriverName}}};
-        SERVER={ServerName};
-        DATABASE={DatabaseName};
-        UID={Username};
-        PWD={Password};
-        TrustServerCertificate=yes;
-    &#34;&#34;&#34;
-    return connectionstring</code></pre>
-</details>
-</dd>
 <dt id="moo-as-voting-fast.ResultsScript.results.get_first_user_acts"><code class="name flex">
 <span>def <span class="ident">get_first_user_acts</span></span>(<span>)</span>
 </code></dt>
@@ -1103,6 +1045,7 @@ Dataset with user answers to the question with new column representing number re
 </summary>
 <pre><code class="python">def get_first_user_acts():
     &#34;&#34;&#34;
+
     Returns
     -------
     pd.DataFrame
@@ -1134,6 +1077,7 @@ Dataset with user answers to the question with new column representing number re
 </summary>
 <pre><code class="python">def get_most_used_in_recommender_queries():
     &#34;&#34;&#34;
+
     Returns
     -------
     pd.DataFrame
@@ -1179,12 +1123,14 @@ Dataset with user answers to the question with new column representing number re
 </summary>
 <pre><code class="python">def get_possible_answers_to_question(questionid, questionType):
     &#34;&#34;&#34;
+    
     Parameters
     ----------
     questionid : int
         ID of the question
     questionType : int
         Type of the question
+    
     Returns
     -------
     list
@@ -1215,6 +1161,7 @@ Dataset with user answers to the question with new column representing number re
 </summary>
 <pre><code class="python">def get_recommender_queries_by_metric():
     &#34;&#34;&#34;
+
     Returns
     -------
     pd.DataFrame
@@ -1278,44 +1225,6 @@ Dataset with user answers to the question with new column representing number re
     return recommenderqueries_new</code></pre>
 </details>
 </dd>
-<dt id="moo-as-voting-fast.ResultsScript.results.get_table"><code class="name flex">
-<span>def <span class="ident">get_table</span></span>(<span>table_name)</span>
-</code></dt>
-<dd>
-<div class="desc"><h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>table_name</code></strong> :&ensp;<code>str</code></dt>
-<dd>name of the table in database</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>pd.DataFrame</code></dt>
-<dd>Content of the database table</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_table(table_name):
-    &#34;&#34;&#34;
-
-    Parameters
-    ----------
-    table_name : str
-        name of the table in database
-
-    Returns
-    -------
-    pd.DataFrame
-        Content of the database table
-    &#34;&#34;&#34;
-    conn = odbc.connect(get_connection_string())
-    df = pd.read_sql_query(&#39;SELECT  * FROM &#39; + table_name, conn)
-    df.columns = df.columns.str.lower()
-    conn.close()
-    return df</code></pre>
-</details>
-</dd>
 <dt id="moo-as-voting-fast.ResultsScript.results.get_userAnswers"><code class="name flex">
 <span>def <span class="ident">get_userAnswers</span></span>(<span>)</span>
 </code></dt>
@@ -1331,6 +1240,7 @@ Dataset with user answers to the question with new column representing number re
 </summary>
 <pre><code class="python">def get_userAnswers():
     &#34;&#34;&#34;
+
     Returns
     -------
     pd.DataFrame
@@ -1375,6 +1285,7 @@ If the value in s with the same index is null the the value in d with the same i
 </summary>
 <pre><code class="python">def not_null_lists(f,s):
     &#34;&#34;&#34;
+
     Parameters
     ----------
     s : list
@@ -1446,9 +1357,8 @@ If the value in s with the same index is null the the value in d with the same i
 <span>def <span class="ident">number_of_recommended_queries</span></span>(<span>usersThatAnswered)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Computes mean and std of number of recommended queries made by user
-Parameters</p>
-<hr>
+<div class="desc"><p>Computes mean and std of number of recommended queries made by user</p>
+<h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>usersThatAnswered</code></strong> :&ensp;<code>bool</code></dt>
 <dd>count only users that answered atleast one question</dd>
@@ -1460,6 +1370,7 @@ Parameters</p>
 <pre><code class="python">def number_of_recommended_queries(usersThatAnswered):    
     &#34;&#34;&#34;
     Computes mean and std of number of recommended queries made by user
+    
     Parameters
     ----------
     usersThatAnswered : bool
@@ -1577,7 +1488,6 @@ and save them as graphs</p>
     &#34;&#34;&#34;
     likertScaleQuestionsMeanAndStd = pd.concat(likertScaleQuestionsMeanAndStd)
     likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd.reset_index()
-    print(likertScaleQuestionsMeanAndStd)
     likertScaleQuestionsMeanAndStd.to_csv((os.path.join(folder_with_graphs,f&#34;LikertScaleQuestionsAnswers.csv&#34;)))
     likertScaleAnswers = pd.concat(likertScaleAnswers)
     for section in likertScaleAnswers[&#34;sectionname&#34;].unique():
@@ -1692,9 +1602,8 @@ and save them as graphs</p>
 <span>def <span class="ident">process_metrics_per_variant_and_per_mechanism</span></span>(<span>recommenderqueries, cm)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Compute all stats objectives weights per used metric variant and used mechanism
-Parameters</p>
-<hr>
+<div class="desc"><p>Compute all stats objectives weights per used metric variant and used mechanism</p>
+<h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>recommenderqueries</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
 <dd>All queries to the recommender called by user</dd>
@@ -1708,6 +1617,7 @@ Parameters</p>
 <pre><code class="python">def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
     &#34;&#34;&#34;
     Compute all stats objectives weights per used metric variant and used mechanism
+
     Parameters
     ----------
     recommenderqueries : pd.DataFrame
@@ -1787,9 +1697,8 @@ Parameters</p>
 <span>def <span class="ident">process_one_question_all_answers</span></span>(<span>questionid, q_userAnswers, questiontext, answersToQuestion, y_max)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Saves graph of user answers to the question
-Parameters</p>
-<hr>
+<div class="desc"><p>Saves graph of user answers to the question</p>
+<h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>questionid</code></strong> :&ensp;<code>int</code></dt>
 <dd>ID of the question</dd>
@@ -1807,6 +1716,7 @@ Parameters</p>
 <pre><code class="python">def process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion, y_max):
     &#34;&#34;&#34;
     Saves graph of user answers to the question
+    
     Parameters
     ----------
     questionid : int
@@ -2069,8 +1979,7 @@ Parameters</p>
 <span>def <span class="ident">process_one_question_other_question</span></span>(<span>questionid, sectionname, userAnswers, q_userAnswers, questiontext, answersToQuestion, y_max)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><em>summary</em></p>
-<h2 id="parameters">Parameters</h2>
+<div class="desc"><h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>questionid</code></strong> :&ensp;<code>int</code></dt>
 <dd>ID of the question</dd>
@@ -2093,7 +2002,7 @@ Parameters</p>
 </summary>
 <pre><code class="python">def process_one_question_other_question(questionid, sectionname,userAnswers, q_userAnswers, questiontext,
                                          answersToQuestion, y_max):
-    &#34;&#34;&#34;_summary_
+    &#34;&#34;&#34;
 
     Parameters
     ----------
@@ -2195,9 +2104,8 @@ Parameters</p>
 <span>def <span class="ident">process_user_interactions</span></span>(<span>userid, ratings, interactions, recommenderqueries)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Enrich recommender query dataset of users seen, clicks, ratings and positive ratings
-Parameters</p>
-<hr>
+<div class="desc"><p>Enrich recommender query dataset of users seen, clicks, ratings and positive ratings </p>
+<h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>userid</code></strong> :&ensp;<code>int</code></dt>
 <dd>ID of user</dd>
@@ -2220,6 +2128,7 @@ Parameters</p>
 <pre><code class="python">def process_user_interactions(userid, ratings, interactions, recommenderqueries):
     &#34;&#34;&#34;
     Enrich recommender query dataset of users seen, clicks, ratings and positive ratings 
+    
     Parameters
     ----------
     userid : int
@@ -2411,9 +2320,8 @@ Parameters</p>
 <span>def <span class="ident">wrap_labels</span></span>(<span>ax, width_x, break_long_words=True, width_y=60)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>wraps labels by newlines
-Parameters</p>
-<hr>
+<div class="desc"><p>wraps labels by newlines</p>
+<h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>ax</code></strong> :&ensp;<code>_type_</code></dt>
 <dd>graph or its axis</dd>
@@ -2429,6 +2337,7 @@ Parameters</p>
 <pre><code class="python">def wrap_labels(ax, width_x, break_long_words=True, width_y = 60):
     &#34;&#34;&#34;
     wraps labels by newlines
+    
     Parameters
     ----------
     ax : _type_
@@ -2473,14 +2382,12 @@ Parameters</p>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="moo-as-voting-fast.ResultsScript.results.get_Likert_Scale_int_value_mean_and_std_dfs" href="#moo-as-voting-fast.ResultsScript.results.get_Likert_Scale_int_value_mean_and_std_dfs">get_Likert_Scale_int_value_mean_and_std_dfs</a></code></li>
-<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_connection_string" href="#moo-as-voting-fast.ResultsScript.results.get_connection_string">get_connection_string</a></code></li>
 <li><code><a title="moo-as-voting-fast.ResultsScript.results.get_first_user_acts" href="#moo-as-voting-fast.ResultsScript.results.get_first_user_acts">get_first_user_acts</a></code></li>
 <li><code><a title="moo-as-voting-fast.ResultsScript.results.get_most_used_in_recommender_queries" href="#moo-as-voting-fast.ResultsScript.results.get_most_used_in_recommender_queries">get_most_used_in_recommender_queries</a></code></li>
 <li><code><a title="moo-as-voting-fast.ResultsScript.results.get_possible_answers_to_question" href="#moo-as-voting-fast.ResultsScript.results.get_possible_answers_to_question">get_possible_answers_to_question</a></code></li>
 <li><code><a title="moo-as-voting-fast.ResultsScript.results.get_recommender_queries_by_metric" href="#moo-as-voting-fast.ResultsScript.results.get_recommender_queries_by_metric">get_recommender_queries_by_metric</a></code></li>
 <li><code><a title="moo-as-voting-fast.ResultsScript.results.get_recommender_queries_from_file" href="#moo-as-voting-fast.ResultsScript.results.get_recommender_queries_from_file">get_recommender_queries_from_file</a></code></li>
 <li><code><a title="moo-as-voting-fast.ResultsScript.results.get_recommender_queries_rating_interaction" href="#moo-as-voting-fast.ResultsScript.results.get_recommender_queries_rating_interaction">get_recommender_queries_rating_interaction</a></code></li>
-<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_table" href="#moo-as-voting-fast.ResultsScript.results.get_table">get_table</a></code></li>
 <li><code><a title="moo-as-voting-fast.ResultsScript.results.get_userAnswers" href="#moo-as-voting-fast.ResultsScript.results.get_userAnswers">get_userAnswers</a></code></li>
 <li><code><a title="moo-as-voting-fast.ResultsScript.results.not_null_lists" href="#moo-as-voting-fast.ResultsScript.results.not_null_lists">not_null_lists</a></code></li>
 <li><code><a title="moo-as-voting-fast.ResultsScript.results.number_of_finished_groups_of_acts_by_priority" href="#moo-as-voting-fast.ResultsScript.results.number_of_finished_groups_of_acts_by_priority">number_of_finished_groups_of_acts_by_priority</a></code></li>

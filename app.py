@@ -9,6 +9,7 @@ from flask import Flask
 from flask import request
 import threading
 import datetime
+from db_connect import get_ratings_of_user
 
 from support.binomial_diversity_support import recompute_user_genres_prob, get_user_genre_prob
 import support.calibration_support as calibration_support
@@ -170,7 +171,7 @@ def get_rated(client_args, user_id, userindex):
         list of items rated by user, list of rating values, list of items positively rated by user
     """
     global pos_users_profiles, neg_users_profiles
-    neg_rated = main.get_ratings_of_user(args.connectionstring, user_id,\
+    neg_rated = get_ratings_of_user(args.connectionstring, user_id,\
                                         only_positive=False)
     pos_rated = neg_rated[neg_rated["ratingscore"] > 5]
     pos_scores = list(pos_rated["ratingscore"].apply(lambda x: x/10.0 if x>5 else 0))

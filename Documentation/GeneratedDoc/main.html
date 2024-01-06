@@ -36,6 +36,7 @@ import types
 import scipy
 import copy
 import mlflow
+from db_connect import get_avg_ratings_of_items, get_connection_string, get_ratings, try_to_connect_to_db
 from support.calibration_support import calibration_support, set_params_calibration
 from support.intra_list_distance_based_novelty_support import intra_list_distance_based_novelty_support
 
@@ -1228,112 +1229,6 @@ def main(args):
     args, ease_B, neg_ease_B
 
 
-def get_ratings(connectionstring, only_MovieLens = False):
-    &#34;&#34;&#34;
-    Retrieves all ratings from database
-
-    Parameters
-    ----------
-    connectionstring : str
-        Connection string to the db
-
-    Returns
-    -------
-    pd.DataFrame
-        Dataframe with columns userid, itemid, ratingscore
-    &#34;&#34;&#34;    
-    conn = odbc.connect(connectionstring)
-    query = &#34;SELECT  UserID, ItemID, RatingScore FROM ratings&#34;
-    if (only_MovieLens):
-        query += &#34; r join users u on u.id = r.userid where u.username like &#39;%movielens%&#39; &#34;
-    df = pd.read_sql_query(query, conn)
-    df.columns = df.columns.str.lower()
-    conn.close()
-    return df
-
-
-def get_ratings_of_user(connectionstring, userID, only_positive=True, order=False):
-    &#34;&#34;&#34;
-    Retrieves ratings from one user from database
-
-    Parameters
-    ----------
-    connectionstring : str
-        Connection string to the db
-    userID : int
-        ID of the user whose ratings will be returned
-    only_positive : bool, optional
-        if true - returns only positive ratings (&gt; 5), by default True
-
-    Returns
-    -------
-    pd.DataFrame
-        Dataframe with columns userid, itemid, ratingscore
-    &#34;&#34;&#34;        
-    conn = odbc.connect(connectionstring)
-    query = f&#34;&#34;&#34;SELECT  UserID, ItemID, RatingScore 
-                           FROM ratings
-                           where userid = {userID} &#34;&#34;&#34;
-    if (only_positive):
-        query += &#34; and ratingscore &gt; 5 &#34;    
-    if (order):
-        query += &#34; order by date &#34; 
-    df = pd.read_sql_query(query, conn)
-    df.columns = df.columns.str.lower()
-    conn.close()
-    return df
-
-
-
-
-def get_avg_ratings_of_items(connectionstring):
-    &#34;&#34;&#34;
-    Retrieve from database dataset with all items (their IDs) and their average score
-
-    Parameters
-    ----------
-    connectionstring : str
-        Connection string to the db
-
-    Returns
-    -------
-    pd.Dataframe
-        Dataframe with columns itemid, averagescore
-    &#34;&#34;&#34;    
-    conn = odbc.connect(connectionstring)
-    df = pd.read_sql_query(f&#34;&#34;&#34;SELECT  ItemID, avg(Cast(RatingScore as Float)) as averagescore 
-                           FROM ratings 
-                           group by ItemID&#34;&#34;&#34;, conn)
-    df.columns = df.columns.str.lower()
-    conn.close()
-    return df
-
-    
-def try_to_connect_to_db(connectionstring):
-    &#34;&#34;&#34;
-    Tries connect to db multiple times - checking if the database correctly started
-    Parameters
-    ----------
-    connectionstring : str
-        Connection string to the db
-    &#34;&#34;&#34;
-    retrycount = 0
-    while retrycount &lt; 100:
-        try:
-           conn = odbc.connect(connectionstring)
-           conn.close()
-           break
-        except Exception as e:
-            print(e,file=sys.stderr)
-            seconds = 90
-            print (f&#34;SQL server wasn&#39;t started yet. Or database wasn&#39;t restorted yet if its first run of the docker compose app.&#34;,\
-                   file=sys.stderr)
-            print (f&#34;Retry after {seconds} sec&#34;,file=sys.stderr)
-            retrycount += 1
-            time.sleep(seconds)
-
-
-
 def init(only_MovieLens = False):
     &#34;&#34;&#34;
     Initilization of the recommender - specifying arguments, connect to db, train the model and prepare normalizations
@@ -1360,22 +1255,8 @@ def init(only_MovieLens = False):
     args.weights = np.fromiter(map(float, args.weights.split(&#34;,&#34;)), dtype=np.float32)
     args.discounts = [float(d) for d in args.discounts.split(&#34;,&#34;)]
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k , num=args.k, endpoint=False) for d in args.discounts], axis=0)
-    DriverName = &#34;SQL Server&#34;
-#    DriverName = &#34;ODBC Driver 18 for SQL Server&#34;
-    ServerName =  &#34;np:\\\\.\\pipe\LOCALDB#2EB6953D\\tsql\\query&#34;
-#    ServerName = &#34;sql-server-db&#34;
-    DatabaseName = &#34;aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502&#34;
-    Username = &#39;RS&#39;
-    file = open(&#39;pswd.txt&#39;,mode=&#39;r&#39;)    
-    Password = file.read()
-    file.close()
-    args.connectionstring=f&#34;&#34;&#34;DRIVER={{{DriverName}}};
-        SERVER={ServerName};
-        DATABASE={DatabaseName};
-        UID={Username};
-        PWD={Password};
-        TrustServerCertificate=yes;
-    &#34;&#34;&#34;
+   
+    args.connectionstring = get_connection_string()
     try_to_connect_to_db(args.connectionstring)
     args.df = get_ratings(args.connectionstring, only_MovieLens)
     random.seed(args.seed)
@@ -1670,146 +1551,6 @@ if __name__ == &#34;__main__&#34;:
     return extended_rating_matrix, ease.X, ease.B, users_viewed_item, users_profiles</code></pre>
 </details>
 </dd>
-<dt id="moo-as-voting-fast.main.get_avg_ratings_of_items"><code class="name flex">
-<span>def <span class="ident">get_avg_ratings_of_items</span></span>(<span>connectionstring)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Retrieve from database dataset with all items (their IDs) and their average score</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>connectionstring</code></strong> :&ensp;<code>str</code></dt>
-<dd>Connection string to the db</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>pd.Dataframe</code></dt>
-<dd>Dataframe with columns itemid, averagescore</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_avg_ratings_of_items(connectionstring):
-    &#34;&#34;&#34;
-    Retrieve from database dataset with all items (their IDs) and their average score
-
-    Parameters
-    ----------
-    connectionstring : str
-        Connection string to the db
-
-    Returns
-    -------
-    pd.Dataframe
-        Dataframe with columns itemid, averagescore
-    &#34;&#34;&#34;    
-    conn = odbc.connect(connectionstring)
-    df = pd.read_sql_query(f&#34;&#34;&#34;SELECT  ItemID, avg(Cast(RatingScore as Float)) as averagescore 
-                           FROM ratings 
-                           group by ItemID&#34;&#34;&#34;, conn)
-    df.columns = df.columns.str.lower()
-    conn.close()
-    return df</code></pre>
-</details>
-</dd>
-<dt id="moo-as-voting-fast.main.get_ratings"><code class="name flex">
-<span>def <span class="ident">get_ratings</span></span>(<span>connectionstring, only_MovieLens=False)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Retrieves all ratings from database</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>connectionstring</code></strong> :&ensp;<code>str</code></dt>
-<dd>Connection string to the db</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>pd.DataFrame</code></dt>
-<dd>Dataframe with columns userid, itemid, ratingscore</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_ratings(connectionstring, only_MovieLens = False):
-    &#34;&#34;&#34;
-    Retrieves all ratings from database
-
-    Parameters
-    ----------
-    connectionstring : str
-        Connection string to the db
-
-    Returns
-    -------
-    pd.DataFrame
-        Dataframe with columns userid, itemid, ratingscore
-    &#34;&#34;&#34;    
-    conn = odbc.connect(connectionstring)
-    query = &#34;SELECT  UserID, ItemID, RatingScore FROM ratings&#34;
-    if (only_MovieLens):
-        query += &#34; r join users u on u.id = r.userid where u.username like &#39;%movielens%&#39; &#34;
-    df = pd.read_sql_query(query, conn)
-    df.columns = df.columns.str.lower()
-    conn.close()
-    return df</code></pre>
-</details>
-</dd>
-<dt id="moo-as-voting-fast.main.get_ratings_of_user"><code class="name flex">
-<span>def <span class="ident">get_ratings_of_user</span></span>(<span>connectionstring, userID, only_positive=True, order=False)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Retrieves ratings from one user from database</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>connectionstring</code></strong> :&ensp;<code>str</code></dt>
-<dd>Connection string to the db</dd>
-<dt><strong><code>userID</code></strong> :&ensp;<code>int</code></dt>
-<dd>ID of the user whose ratings will be returned</dd>
-<dt><strong><code>only_positive</code></strong> :&ensp;<code>bool</code>, optional</dt>
-<dd>if true - returns only positive ratings (&gt; 5), by default True</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>pd.DataFrame</code></dt>
-<dd>Dataframe with columns userid, itemid, ratingscore</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_ratings_of_user(connectionstring, userID, only_positive=True, order=False):
-    &#34;&#34;&#34;
-    Retrieves ratings from one user from database
-
-    Parameters
-    ----------
-    connectionstring : str
-        Connection string to the db
-    userID : int
-        ID of the user whose ratings will be returned
-    only_positive : bool, optional
-        if true - returns only positive ratings (&gt; 5), by default True
-
-    Returns
-    -------
-    pd.DataFrame
-        Dataframe with columns userid, itemid, ratingscore
-    &#34;&#34;&#34;        
-    conn = odbc.connect(connectionstring)
-    query = f&#34;&#34;&#34;SELECT  UserID, ItemID, RatingScore 
-                           FROM ratings
-                           where userid = {userID} &#34;&#34;&#34;
-    if (only_positive):
-        query += &#34; and ratingscore &gt; 5 &#34;    
-    if (order):
-        query += &#34; order by date &#34; 
-    df = pd.read_sql_query(query, conn)
-    df.columns = df.columns.str.lower()
-    conn.close()
-    return df</code></pre>
-</details>
-</dd>
 <dt id="moo-as-voting-fast.main.get_sparse_matrix_indices"><code class="name flex">
 <span>def <span class="ident">get_sparse_matrix_indices</span></span>(<span>matrix)</span>
 </code></dt>
@@ -1974,22 +1715,8 @@ if __name__ == &#34;__main__&#34;:
     args.weights = np.fromiter(map(float, args.weights.split(&#34;,&#34;)), dtype=np.float32)
     args.discounts = [float(d) for d in args.discounts.split(&#34;,&#34;)]
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k , num=args.k, endpoint=False) for d in args.discounts], axis=0)
-    DriverName = &#34;SQL Server&#34;
-#    DriverName = &#34;ODBC Driver 18 for SQL Server&#34;
-    ServerName =  &#34;np:\\\\.\\pipe\LOCALDB#2EB6953D\\tsql\\query&#34;
-#    ServerName = &#34;sql-server-db&#34;
-    DatabaseName = &#34;aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502&#34;
-    Username = &#39;RS&#39;
-    file = open(&#39;pswd.txt&#39;,mode=&#39;r&#39;)    
-    Password = file.read()
-    file.close()
-    args.connectionstring=f&#34;&#34;&#34;DRIVER={{{DriverName}}};
-        SERVER={ServerName};
-        DATABASE={DatabaseName};
-        UID={Username};
-        PWD={Password};
-        TrustServerCertificate=yes;
-    &#34;&#34;&#34;
+   
+    args.connectionstring = get_connection_string()
     try_to_connect_to_db(args.connectionstring)
     args.df = get_ratings(args.connectionstring, only_MovieLens)
     random.seed(args.seed)
@@ -2817,45 +2544,6 @@ if __name__ == &#34;__main__&#34;:
         pickle.dump(cache, f)</code></pre>
 </details>
 </dd>
-<dt id="moo-as-voting-fast.main.try_to_connect_to_db"><code class="name flex">
-<span>def <span class="ident">try_to_connect_to_db</span></span>(<span>connectionstring)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Tries connect to db multiple times - checking if the database correctly started
-Parameters</p>
-<hr>
-<dl>
-<dt><strong><code>connectionstring</code></strong> :&ensp;<code>str</code></dt>
-<dd>Connection string to the db</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def try_to_connect_to_db(connectionstring):
-    &#34;&#34;&#34;
-    Tries connect to db multiple times - checking if the database correctly started
-    Parameters
-    ----------
-    connectionstring : str
-        Connection string to the db
-    &#34;&#34;&#34;
-    retrycount = 0
-    while retrycount &lt; 100:
-        try:
-           conn = odbc.connect(connectionstring)
-           conn.close()
-           break
-        except Exception as e:
-            print(e,file=sys.stderr)
-            seconds = 90
-            print (f&#34;SQL server wasn&#39;t started yet. Or database wasn&#39;t restorted yet if its first run of the docker compose app.&#34;,\
-                   file=sys.stderr)
-            print (f&#34;Retry after {seconds} sec&#34;,file=sys.stderr)
-            retrycount += 1
-            time.sleep(seconds)</code></pre>
-</details>
-</dd>
 </dl>
 </section>
 <section>
@@ -2878,9 +2566,6 @@ Parameters</p>
 <li><code><a title="moo-as-voting-fast.main.compute_all_normalizations" href="#moo-as-voting-fast.main.compute_all_normalizations">compute_all_normalizations</a></code></li>
 <li><code><a title="moo-as-voting-fast.main.get_EASE" href="#moo-as-voting-fast.main.get_EASE">get_EASE</a></code></li>
 <li><code><a title="moo-as-voting-fast.main.get_EASE_with_negative" href="#moo-as-voting-fast.main.get_EASE_with_negative">get_EASE_with_negative</a></code></li>
-<li><code><a title="moo-as-voting-fast.main.get_avg_ratings_of_items" href="#moo-as-voting-fast.main.get_avg_ratings_of_items">get_avg_ratings_of_items</a></code></li>
-<li><code><a title="moo-as-voting-fast.main.get_ratings" href="#moo-as-voting-fast.main.get_ratings">get_ratings</a></code></li>
-<li><code><a title="moo-as-voting-fast.main.get_ratings_of_user" href="#moo-as-voting-fast.main.get_ratings_of_user">get_ratings_of_user</a></code></li>
 <li><code><a title="moo-as-voting-fast.main.get_sparse_matrix_indices" href="#moo-as-voting-fast.main.get_sparse_matrix_indices">get_sparse_matrix_indices</a></code></li>
 <li><code><a title="moo-as-voting-fast.main.get_supports" href="#moo-as-voting-fast.main.get_supports">get_supports</a></code></li>
 <li><code><a title="moo-as-voting-fast.main.init" href="#moo-as-voting-fast.main.init">init</a></code></li>
@@ -2894,7 +2579,6 @@ Parameters</p>
 <li><code><a title="moo-as-voting-fast.main.prepare_popularity_normalization" href="#moo-as-voting-fast.main.prepare_popularity_normalization">prepare_popularity_normalization</a></code></li>
 <li><code><a title="moo-as-voting-fast.main.prepare_relevance_normalization" href="#moo-as-voting-fast.main.prepare_relevance_normalization">prepare_relevance_normalization</a></code></li>
 <li><code><a title="moo-as-voting-fast.main.save_cache" href="#moo-as-voting-fast.main.save_cache">save_cache</a></code></li>
-<li><code><a title="moo-as-voting-fast.main.try_to_connect_to_db" href="#moo-as-voting-fast.main.try_to_connect_to_db">try_to_connect_to_db</a></code></li>
 </ul>
 </li>
 </ul>

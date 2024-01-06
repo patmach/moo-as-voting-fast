@@ -8,7 +8,7 @@ import os
 from textwrap import wrap
 import textwrap
 
-from db_connect import get_connection_string
+from db_connect import get_connection_string, get_table
 
 date_format= "%d-%m-%Y %H:%M:%S.%f"
 number_of_recommendations = 15
@@ -78,25 +78,6 @@ def wrap_labels(ax, width_x, break_long_words=True, width_y = 60):
     ax.set_yticklabels(labels, rotation=0)
 
 
-
-def get_table(table_name):
-    """
-
-    Parameters
-    ----------
-    table_name : str
-        name of the table in database
-
-    Returns
-    -------
-    pd.DataFrame
-        Content of the database table
-    """
-    conn = odbc.connect(get_connection_string())
-    df = pd.read_sql_query('SELECT  * FROM ' + table_name, conn)
-    df.columns = df.columns.str.lower()
-    conn.close()
-    return df
 
 def not_null_lists(f,s):
     """

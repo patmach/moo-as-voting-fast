@@ -1,5 +1,6 @@
 from datetime import datetime
 from app import create_new_user, get_mask, set_rating_matrices_row
+from db_connect import get_ratings_of_user
 import main
 import copy
 import numpy as np
@@ -17,7 +18,7 @@ import support.calibration_support as calibration_support
 
 def get_first_k_rated(user_id, userindex, k):
     """
-    
+
     Parameters
     ----------
     user_id : int
@@ -60,7 +61,7 @@ if __name__ == "__main__":
     #simulated_userIDs = random.sample(list(app.userIDs), k=3)
     simulated_users_ratings = {}
     for id in simulated_userIDs:
-        simulated_users_ratings[id] = main.get_ratings_of_user(app.args.connectionstring, id,\
+        simulated_users_ratings[id] = get_ratings_of_user(app.args.connectionstring, id,\
                                             only_positive=False, order=True)
     random_lengths = []
     k = 15
