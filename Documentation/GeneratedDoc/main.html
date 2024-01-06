@@ -1,0 +1,2907 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>moo-as-voting-fast.main API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>moo-as-voting-fast.main</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import argparse
+import os
+import sys
+import pickle
+import random
+import time
+import types
+import scipy
+import copy
+import mlflow
+from support.calibration_support import calibration_support, set_params_calibration
+from support.intra_list_distance_based_novelty_support import intra_list_distance_based_novelty_support
+
+from support.maximal_distance_based_novelty_support import maximal_distance_based_novelty_support
+from support.popularity_support import popularity_support, set_params_popularity
+RUN_ID = os.environ[mlflow.tracking._RUN_ID_ENV_VAR] if mlflow.tracking._RUN_ID_ENV_VAR in os.environ else None
+
+import glob
+
+import numpy as np
+import pandas as pd
+
+from scipy.spatial.distance import squareform, pdist
+
+from util import calculate_per_user_kl_divergence, calculate_per_user_errors
+
+from mandate_allocation.exactly_proportional_fuzzy_dhondt import exactly_proportional_fuzzy_dhondt
+from mandate_allocation.exactly_proportional_fuzzy_dhondt_2 import exactly_proportional_fuzzy_dhondt_2
+from mandate_allocation.fai_strategy import fai_strategy
+from mandate_allocation.probabilistic_fai_strategy import probabilistic_fai_strategy
+from mandate_allocation.weighted_average_strategy import weighted_average_strategy
+from mandate_allocation.sainte_lague_method import sainte_lague_method
+
+from normalization.cdf import cdf
+from normalization.standardization import standardization
+from normalization.identity import identity
+from normalization.robust_scaler import robust_scaler
+from normalization.cdf_threshold_shift import cdf_threshold_shift
+
+from support.rating_based_relevance_support import rating_based_relevance_support
+from support.intra_list_diversity_support import intra_list_diversity_support
+from support.maximal_diversity_support import maximal_diversity_support
+
+from support.popularity_complement_support import popularity_complement_support
+
+from support.binomial_diversity_support import set_params_bin_diversity, binomial_diversity_support
+import support.binomial_diversity_support
+
+from mlflow import log_metric, log_param, log_artifacts, log_artifact, set_tracking_uri, set_experiment, start_run
+
+from caserec.utils.process_data import ReadFile
+
+from caserec.recommenders.rating_prediction.itemknn import ItemKNN
+from caserec.recommenders.rating_prediction.matrixfactorization import MatrixFactorization
+from caserec.recommenders.rating_prediction.base_rating_prediction import BaseRatingPrediction
+from EASE.EASEModel import EASE
+
+import pypyodbc as odbc
+import pandas as pd
+
+
+
+
+
+def get_supports(args, obj_weights, users_partial_lists, items, extended_rating_matrix, neg_extended_rating_matrix,\
+                 pos_users_profiles, neg_users_profiles, distance_matrix, users_viewed_item, k, num_users, user_index=None):
+    &#34;&#34;&#34;
+    Computes score of the items on given metrics / objectives
+
+    Parameters
+    ----------
+    args : SimpleNamespace
+        All arguments of RS
+    obj_weights : np.ndarray
+        weights given by user to each metric
+    users_partial_lists : np.ndarray
+        items in the list
+    items : np.ndarray
+        array of all items indices
+    extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed from only positive ratings
+    neg_extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed also from negative ratings
+    pos_users_profiles : np.ndarray
+        every row corresponds to user&#39;s list of positively rated items
+    neg_users_profiles : np.ndarray
+        every row corresponds to user&#39;s list of rated items
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    users_viewed_item : np.ndarray
+        contains values how many users have rated each item
+    k : int
+        rank of currently selected item
+    num_users : int
+        number of users
+    user_index : int, optional
+        index in matrices of selected user
+
+    Returns
+    -------
+    list
+        list of supports by the metrics
+    &#34;&#34;&#34;
+    default = np.repeat(np.zeros(len(items))[np.newaxis, :], users_partial_lists.shape[0], axis=0)
+    rel_supps = div_supps = nov_supps = pop_supps = cal_supps =  default
+    if (obj_weights[0]&gt;0):
+        if (args.relevance == &#34;also_negative&#34;):
+            rel_supps = rating_based_relevance_support(neg_extended_rating_matrix)
+        else:
+            rel_supps = rating_based_relevance_support(extended_rating_matrix)
+    if (obj_weights[3]&gt;0):
+        pop_supps = popularity_support(users_viewed_item,users_partial_lists.shape[0], num_users, args.popularity)
+    if (obj_weights[4]&gt;0) and (len(pos_users_profiles[0]) &gt; 0):
+        cal_supps = calibration_support(users_partial_lists, items, user_index, k)
+    if (obj_weights[1]&gt;0):
+        if (args.diversity == &#34;intra_list_diversity&#34;):
+            div_supps = intra_list_diversity_support(users_partial_lists, items, distance_matrix, k)
+        elif (args.diversity == &#34;maximal_diversity&#34;):
+            div_supps = maximal_diversity_support(users_partial_lists, items, distance_matrix, k)
+        elif (args.diversity == &#34;binomial_diversity&#34;):
+            div_supps = binomial_diversity_support(users_partial_lists, items, user_index, k, n_items_to_compute=500)            
+    if (obj_weights[2]&gt;0):    
+        if (args.novelty == &#34;popularity_complement&#34;):
+            nov_supps = popularity_complement_support(users_viewed_item,users_partial_lists.shape[0], num_users)
+        elif (args.novelty == &#34;maximal_distance_based_novelty&#34;) and (len(neg_users_profiles[0]) &gt; 0):
+            nov_supps =  maximal_distance_based_novelty_support(neg_users_profiles, items, distance_matrix)
+        elif (args.novelty == &#34;intra_list_distance_based_novelty&#34;) and (len(neg_users_profiles[0]) &gt; 0):
+            nov_supps =  intra_list_distance_based_novelty_support(neg_users_profiles, items, distance_matrix)
+
+    return np.stack([rel_supps, div_supps, nov_supps, pop_supps, cal_supps])
+
+def get_sparse_matrix_indices(matrix):
+    major_dim, minor_dim = matrix.shape
+    minor_indices = matrix.indices
+
+    major_indices = np.empty(len(minor_indices), dtype=matrix.indices.dtype)
+    scipy.sparse._sparsetools.expandptr(major_dim, matrix.indptr, major_indices)
+    return zip(major_indices, minor_indices)
+
+
+def save_cache(cache_path, cache):
+    &#34;&#34;&#34;
+    Saves python object to file
+
+    Parameters
+    ----------
+    cache_path : str
+        path to the file where the python object will be saved
+    cache : object
+        python object to be saved
+    &#34;&#34;&#34;
+    print(f&#34;Saving cache to: {cache_path}&#34;)
+    with open(cache_path, &#39;wb&#39;) as f:
+        pickle.dump(cache, f)
+
+
+def load_cache(cache_path):
+    &#34;&#34;&#34;
+    Loads python object from file
+
+    Parameters
+    ----------
+    cache_path : str
+        path to the file with saved python object
+
+    Returns
+    -------
+    object
+        saved python object
+    &#34;&#34;&#34;
+    print(f&#34;Loading cache from: {cache_path}&#34;)
+    with open(cache_path, &#39;rb&#39;) as f:
+        cache = pickle.load(f)
+    return cache
+
+
+# Parse movielens metadata
+def parse_metadata(metadata_path, item_to_item_id, rating_matrix=None):
+    &#34;&#34;&#34;
+    Computes datasets needed for computing recommendations for the user from metadata of movies
+
+    Parameters
+    ----------
+    metadata_path : str
+        path to file with metadata
+    item_to_item_id : list
+        list IDs of item placed on their indices used in datasets
+    rating_matrix : nd.array, optional
+        matrix with predictions of all ratings, by default None
+
+    Returns
+    -------
+    list
+        list of datasets needed for computing recommendations for the user
+    &#34;&#34;&#34;
+    all_genres, metadata_matrix, genre_to_genre_id = None, None, None
+    if(support.binomial_diversity_support.metadata_matrix is None):
+        metadata = dict()
+        all_genres = set()
+        movies_df = pd.read_csv(metadata_path)
+        for index, row in movies_df.iterrows():
+            genres = row[&#34;genres&#34;].split(&#34;|&#34;)
+            if genres[0]==&#34;(no genres listed)&#34;:
+                genres=[]
+            all_genres.update(genres)
+            metadata[int(row[&#34;movieId&#34;])] = {
+                &#34;movie_name&#34;: row[&#34;title&#34;],
+                &#34;genres&#34;: genres
+            }
+        genre_to_genre_id = {g:i for i, g in enumerate(all_genres)}
+        metadata_matrix = np.zeros((len(item_to_item_id), len(all_genres)), dtype=np.int32)
+        for movie, data in metadata.items():
+            if movie not in item_to_item_id:
+                continue
+            item_id = item_to_item_id[movie]
+            for g in data[&#34;genres&#34;]:
+                metadata_matrix[item_id, genre_to_genre_id[g]] = 1
+    else:
+        all_genres = support.binomial_diversity_support.all_genres
+        metadata_matrix = support.binomial_diversity_support.metadata_matrix
+        genre_to_genre_id = support.binomial_diversity_support.genre_to_genre_id
+
+    metadata_distances = np.float32(squareform(pdist(metadata_matrix, &#34;cosine&#34;)))
+    metadata_distances[np.isnan(metadata_distances)] = 1.0
+    #metadata_matrix = 1.0 - metadata_matrix
+    genres_prob_all =np.zeros(len(all_genres))
+    user_genre_prob = np.zeros((rating_matrix.shape[0], len(all_genres)))
+    num_user_items=rating_matrix.getnnz( axis=1 )
+
+    
+    for i,j in get_sparse_matrix_indices(rating_matrix):
+        user_genre_prob[i]+=metadata_matrix[j]
+        genres_prob_all+=metadata_matrix[j]
+    user_genre_prob=[user_genre_prob[i]/num_user_items[i] for i in range(user_genre_prob.shape[0])]
+
+    num_all_items = rating_matrix.nnz
+    genres_prob_all/=num_all_items
+
+    return metadata_distances, user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id, all_genres
+
+
+
+def get_EASE_with_negative(args, userIDs, itemIDs):
+    &#34;&#34;&#34;
+    Trains algorithm EASE with also negative ratings and dataset with number of users that have seen each item
+    
+    Parameters
+    ----------
+    args : SimpleNamespace
+        All arguments of RS
+    userIDs : list
+        list of all user IDs
+    itemIDs : _type_
+        list of all item IDs
+
+    Returns
+    -------
+    list
+        list of datasets needed for computing recommendations for the user
+    &#34;&#34;&#34;
+    print(&#34;training EASE&#34;,file=sys.stderr)
+    train = args.df[(args.df[&#34;userid&#34;].isin(userIDs)) &amp; (args.df[&#34;itemid&#34;].isin(itemIDs))]
+    ease = EASE(train)
+    ease.fit(implicit=False, only_positive=False)
+    extended_rating_matrix = ease.computeFullPredictionMatrix()
+    extended_rating_matrix*=10
+    num_users = ease.X.shape[0]
+    num_items = ease.B.shape[0]
+    users_profiles = np.empty(num_users, dtype=object)
+    users_profiles[...] = [[] for _ in range(users_profiles.shape[0])]
+    for i,j in get_sparse_matrix_indices(ease.X):
+        users_profiles[i].append(j)
+    num_items = ease.B.shape[0]
+    itemIDs = ease.item_enc.inverse_transform(list(range(num_items))).tolist()    
+    items = np.arange(num_items)
+    users_viewed_item = np.zeros_like(items, dtype=np.int32)
+    Xt= ease.X.T.toarray()
+    for idx, item in enumerate(itemIDs):
+        users_viewed_item[idx] = sum([val != 0 for val in Xt[idx]])
+    return extended_rating_matrix, ease.X, ease.B, users_viewed_item, users_profiles
+
+
+def get_EASE(args):
+    &#34;&#34;&#34;
+    Trains algorithm EASE with only positive ratings, computes datasets from metadata of items
+    
+    Parameters
+    ----------
+    args : SimpleNamespace
+        All arguments of RS
+
+    Returns
+    ----------
+    list
+        list of datasets needed for computing recommendations for the user
+    &#34;&#34;&#34;
+    print(&#34;training EASE&#34;,file=sys.stderr)
+    ease = EASE(args.df)
+    ease.fit(implicit=False)
+    similarity_matrix = ease.compute_similarity(transpose=True)
+    num_users = ease.X.shape[0]
+    num_items = ease.B.shape[0]
+    user_IDs = ease.user_enc.inverse_transform(list(range(num_users))).tolist()
+    itemIDs = ease.item_enc.inverse_transform(list(range(num_items))).tolist()
+#    unseen_items_mask = np.ones((num_users, num_items), dtype=np.bool8)
+#    unseen_items_mask[ease.X.todense() &gt; 0.0] = 0 # Mask out already seem items
+    users_profiles = np.empty(num_users, dtype=object)
+    users_profiles[...] = [[] for _ in range(users_profiles.shape[0])]
+    for i,j in get_sparse_matrix_indices(ease.X):
+        users_profiles[i].append(j)
+
+    item_to_item_id = dict()
+    item_id_to_item = dict()
+
+    items = np.arange(num_items)
+    users = np.arange(num_users)
+
+    Xt= ease.X.T.toarray()
+    for idx, item in enumerate(itemIDs):
+        item_to_item_id[item] = idx
+        item_id_to_item[idx] = item
+
+
+    user_to_user_id = dict()
+    user_id_to_user = dict()
+
+    for idx, user in enumerate(user_IDs):
+        user_to_user_id[user] = idx
+        user_id_to_user[idx] = user
+
+    extended_rating_matrix = ease.computeFullPredictionMatrix()
+    extended_rating_matrix*=10
+    metadata_distance_matrix, user_genre_prob, genres_prob_all,metadata_matrix, genre_to_genre_id = None, None, None, None, None
+    if hasattr(args, &#34;metadata_path&#34;) and args.metadata_path:
+        print(f&#34;Parsing metadata from path: &#39;{args.metadata_path}&#39;&#34;,file=sys.stderr)
+        metadata_distance_matrix, user_genre_prob, genres_prob_all,metadata_matrix, genre_to_genre_id, all_genres = \
+            parse_metadata(args.metadata_path, item_to_item_id, ease.X)
+
+    return items, itemIDs, users, user_IDs, \
+        extended_rating_matrix, \
+        users_profiles, similarity_matrix, \
+        metadata_distance_matrix, \
+        user_genre_prob, genres_prob_all,\
+        metadata_matrix, genre_to_genre_id,\
+        all_genres, ease.B, ease.X
+
+
+
+&#34;&#34;&#34;
+def get_baseline(args, baseline_factory):
+    
+
+    print(f&#34;Calculating baseline &#39;{baseline_factory.__name__}&#39;&#34;)
+    baseline = baseline_factory(args.train_path, sep=&#34;,&#34;)
+
+    BaseRatingPrediction.compute(baseline)
+    baseline.init_model()
+    print(f&#34;Training baseline &#39;{baseline_factory.__name__}&#39;&#34;)
+
+    if hasattr(baseline, &#34;fit&#34;):
+        baseline.fit()
+    elif hasattr(baseline, &#34;train_baselines&#34;):
+        baseline.train_baselines()
+    else:
+        assert False, &#34;Fit/train_baselines not found for baseline&#34;
+    baseline.create_matrix()
+    similarity_matrix = baseline.compute_similarity(transpose=True)
+
+    train_set = baseline.train_set
+
+    num_items = len(train_set[&#39;items&#39;])
+    num_users = len(train_set[&#39;users&#39;])
+    user_IDS = train_set[&#39;users&#39;]
+    itemIDs = train_set[&#39;items&#39;]
+    
+    item_to_item_id = dict()
+    item_id_to_item = dict()
+
+    items = np.arange(num_items)
+    users = np.arange(num_users)
+
+    users_viewed_item = np.zeros_like(items, dtype=np.int32)
+
+    for idx, item in enumerate(train_set[&#39;items&#39;]):
+        item_to_item_id[item] = idx
+        item_id_to_item[idx] = item
+        users_viewed_item[idx] = len(train_set[&#39;users_viewed_item&#39;][item])
+
+    user_to_user_id = dict()
+    user_id_to_user = dict()
+
+    for idx, user in enumerate(train_set[&#39;users&#39;]):
+        user_to_user_id[user] = idx
+        user_id_to_user[idx] = user
+    
+    if baseline_factory == ItemKNN:
+        print(&#34;Injecting into ItemKNN&#34;)
+        def predict_score_wrapper(u_id, i_id):
+            _, _, res = baseline.predict_scores(user_id_to_user[u_id], [item_id_to_item[i_id]])[0]
+            return res
+        setattr(baseline, &#34;_predict_score&#34;, predict_score_wrapper)
+
+    extended_rating_matrix = baseline.matrix.copy()
+    for u_id in range(extended_rating_matrix.shape[0]):
+        for i_id in range(extended_rating_matrix.shape[1]):
+            if extended_rating_matrix[u_id, i_id] == 0.0:
+                extended_rating_matrix[u_id, i_id] = baseline._predict_score(u_id, i_id)
+
+    metadata_distance_matrix = None
+    if args.metadata_path:
+        print(f&#34;Parsing metadata from path: &#39;{args.metadata_path}&#39;&#34;,file=sys.stderr)
+        metadata_distance_matrix = parse_metadata(args.metadata_path, item_to_item_id)
+        
+    return items, itemIDs, users, user_IDS, \
+        users_viewed_item, item_to_item_id, \
+        item_id_to_item, extended_rating_matrix, \
+        similarity_matrix, \
+        None, \
+        metadata_distance_matrix, \
+        user_id_to_user, user_to_user_id
+
+&#34;&#34;&#34;
+
+
+def build_normalization(normalization_factory, shift):
+    if shift:
+        return normalization_factory(shift)
+    else:
+        return normalization_factory()
+
+
+&#34;&#34;&#34;
+def compute_all_normalizations_old(args, normalization_factory, extended_rating_matrix, neg_extended_rating_matrix,\
+                                ease_X, ease_B, neg_ease_X, neg_ease_B, distance_matrix, users_viewed_item, items,\
+                                    users, avg_ratings):
+    normalization = dict()
+    shift = args.shift
+    print(&#34;prepare relevance normalization&#34;, file=sys.stderr)
+    
+    normalization[&#34;only_positive&#34;] = prepare_relevance_normalization_old(normalization_factory, extended_rating_matrix,\
+                                                                 shift)
+
+    normalization[&#34;also_negative&#34;] = prepare_relevance_normalization_old(normalization_factory, neg_extended_rating_matrix,\
+                                                                  shift)
+
+    for diversity_type in [&#34;intra_list_diversity&#34;,&#34;maximal_diversity&#34;,&#34;binomial_diversity&#34;]:
+        print(f&#34;prepare {diversity_type} normalization&#34;, file=sys.stderr)
+        normalization[diversity_type] = prepare_diversity_normalization_old(diversity_type, normalization_factory, \
+                                                                        distance_matrix, shift, items, users,\
+                                                                        args.k)
+    for novelty_type in [&#34;popularity_complement&#34;,&#34;maximal_distance_based_novelty&#34;,&#34;intra_list_distance_based_novelty&#34;]:
+        print(f&#34;prepare {novelty_type} normalization&#34;, file=sys.stderr)
+        normalization[novelty_type] = prepare_novelty_normalization_old(novelty_type, normalization_factory, extended_rating_matrix,\
+                                                                    neg_ease_X, distance_matrix, users_viewed_item, shift, items,\
+                                                                        users)
+    print(&#34;prepare popularity normalization&#34;, file=sys.stderr)
+    for popularity_type in [&#34;num_of_ratings&#34;, &#34;avg_ratings&#34;]:
+        normalization[popularity_type] = prepare_popularity_normalization(normalization_factory, users_viewed_item, shift,\
+                                                                        extended_rating_matrix.shape[0], avg_ratings,\
+                                                                            popularity_type)
+    print(&#34;prepare calibration normalization&#34;, file=sys.stderr)
+    normalization[&#34;calibration&#34;] = prepare_calibration_normalization_old( normalization_factory, distance_matrix, shift,\
+                                                                     items, users, args.k)
+    save_cache(os.path.join(&#34;cache&#34;, &#34;normalizations_old.pckl&#34;), normalization)
+    return normalization
+&#34;&#34;&#34;
+
+def compute_all_normalizations(args, normalization_factory, extended_rating_matrix, neg_extended_rating_matrix,\
+                                ease_X, ease_B, neg_ease_X, neg_ease_B, distance_matrix, users_viewed_item, items,\
+                                    users, avg_ratings):
+    &#34;&#34;&#34;
+    Prepares normalization of all metrics, sometimes corresponding to rank of the item or to number of items rated by the user
+
+    Parameters
+    ----------
+    args : SimpleNamespace
+        All arguments of RS
+    normalization_factory : factory
+        Factory to create new normalizations
+    extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed from only positive ratings
+    neg_extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed also from negative ratings
+    ease_X : scipy.sparse.csr_matrix
+        input matrix X for EASE retrieved from only positive ratings
+    ease_B : np.ndarray
+        matrix B of EASE computed from only positive ratings
+    neg_ease_X : scipy.sparse.csr_matrix
+        input matrix X for EASE retrieved also from negative ratings
+    neg_ease_B : np.ndarray
+        matrix B of EASE computed also from negative ratings
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    users_viewed_item : np.ndarray
+        contains values how many users have rated each item
+    items : np.ndarray
+        array of all items indices
+    users : np.ndarray
+        array of all users indices
+    avg_ratings : list
+        list with average rating of each item
+
+    Returns
+    -------
+    dict
+        dictionary with lists of recommendations corresponding to each metric variant
+    &#34;&#34;&#34;    
+    normalization = dict()
+    shift = args.shift
+    print(&#34;prepare relevance normalization&#34;, file=sys.stderr)
+    
+    normalization[&#34;only_positive&#34;] = prepare_relevance_normalization(normalization_factory, extended_rating_matrix,\
+                                                                 ease_X, ease_B, shift)
+
+    normalization[&#34;also_negative&#34;] = prepare_relevance_normalization(normalization_factory, neg_extended_rating_matrix,\
+                                                                 neg_ease_X, neg_ease_B, shift)
+
+    for diversity_type in [&#34;intra_list_diversity&#34;,&#34;maximal_diversity&#34;,&#34;binomial_diversity&#34;]:
+        print(f&#34;prepare {diversity_type} normalization&#34;, file=sys.stderr)
+        normalization[diversity_type] = prepare_diversity_normalization(diversity_type, normalization_factory, \
+                                                                        distance_matrix, shift, items, users,\
+                                                                        args.k)
+    for novelty_type in [&#34;popularity_complement&#34;,&#34;maximal_distance_based_novelty&#34;,&#34;intra_list_distance_based_novelty&#34;]:
+        print(f&#34;prepare {novelty_type} normalization&#34;, file=sys.stderr)
+        normalization[novelty_type] = prepare_novelty_normalization(novelty_type, normalization_factory, extended_rating_matrix,\
+                                                                    neg_ease_X, distance_matrix, users_viewed_item, shift, items)
+    print(&#34;prepare popularity normalization&#34;, file=sys.stderr)
+    for popularity_type in [&#34;num_of_ratings&#34;, &#34;avg_ratings&#34;]:
+        normalization[popularity_type] = prepare_popularity_normalization(normalization_factory, users_viewed_item, shift,\
+                                                                        extended_rating_matrix.shape[0], avg_ratings,\
+                                                                            popularity_type)
+    print(&#34;prepare calibration normalization&#34;, file=sys.stderr)
+    normalization[&#34;calibration&#34;] = prepare_calibration_normalization( normalization_factory, distance_matrix, shift,\
+                                                                     items, users, args.k)
+    save_cache(os.path.join(&#34;cache&#34;, &#34;normalizations.pckl&#34;), normalization)
+    return normalization
+
+
+&#34;&#34;&#34;
+def prepare_relevance_normalization_old(normalization_factory, rating_matrix, shift):
+    relevance_data_points = rating_matrix
+    relevance_data_points = np.expand_dims(random.sample(list(np.array(relevance_data_points).flatten()),
+                                                              k = rating_matrix.shape[1]),axis=1)
+    norm_relevance = build_normalization(normalization_factory, shift)
+    norm_relevance.train(relevance_data_points)
+
+    return [norm_relevance]
+&#34;&#34;&#34;
+
+
+def prepare_relevance_normalization(normalization_factory, rating_matrix, ease_X, ease_B, shift,\
+                                    borders=[0,2,5,8,10,15,20,30,40,50,60,75,90,110,140]):
+    &#34;&#34;&#34;
+    Prepares normalization of relevance variant, corresponding to number of items rated by the user
+
+
+    Parameters
+    ----------
+    normalization_factory : factory
+        Factory to create new normalizations
+    rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE
+    ease_X : scipy.sparse.csr_matrix
+        input matrix X for EASE 
+    ease_B : np.ndarray
+        matrix B of EASE
+    shift : float
+        shift in normalization
+    borders: list
+        list of numbers of items rated by the user, normalization will be computed for each interval
+
+    Returns
+    -------
+    list
+        list of normalization of one relevance variant, corresponding to number of items rated by the user
+    &#34;&#34;&#34;    
+    borders.append(borders[-1]+2000) #random big value
+    norm_relevances=[]
+    ease_X = ease_X.toarray()
+    indices = np.nonzero(ease_X)
+    sums_per_row = (ease_X != 0).sum(1)
+    
+    for i in range(len(borders) - 1):
+        relevance_data_points = []
+        temp_rating_matrix = copy.deepcopy(rating_matrix)
+        possible_users = [index for index,value in enumerate(sums_per_row) if (value &gt;= borders[i])]        
+        if len(possible_users) &lt; 1:
+            borders[i+1] = borders[i]
+            continue
+        if (len(possible_users) &gt; 100):
+            possible_users = random.sample(possible_users, k=100)
+        for user in possible_users:
+            
+            indices = [index for index,value in enumerate(ease_X[user]) if value != 0]
+            if len(indices) &gt; borders[i+1]:
+                indices = random.sample(indices, k=random.randint(borders[i], borders[i+1]))
+            user_X = np.zeros(rating_matrix.shape[1],dtype=np.float64)
+            user_X[indices] = ease_X[user, indices]   
+            temp_rating_matrix[user] = user_X.dot(ease_B)
+            mask = np.ones(temp_rating_matrix.shape[1], dtype=bool)
+            mask[indices] = False
+            relevance_data_points.extend(temp_rating_matrix[user, mask])
+        relevance_data_points = np.expand_dims(random.sample(list(np.array(relevance_data_points).flatten()),
+                                                              k =ease_X.shape[1]),axis=1)
+        norm_relevance = build_normalization(normalization_factory, shift)
+        norm_relevance.train(relevance_data_points)
+        if (i+2)==len(borders):
+            norm_relevances.append(norm_relevance)
+        else:
+            norm_relevances.extend([norm_relevance] * (borders[i+1] - borders[i]))
+    return norm_relevances
+
+
+&#34;&#34;&#34;
+def prepare_diversity_normalization_old(diversity_type, normalization_factory, distance_matrix, shift, items, users, k):
+    users_partial_lists= np.full((1,k), -1, dtype=np.int32)
+    diversity_data_points=[]
+    possible_users = random.sample(list(users), 100)
+    for user in possible_users:
+        for i in range(k):
+            if(diversity_type==&#34;binomial_diversity&#34;):
+                diversity_data_points.extend(binomial_diversity_support(users_partial_lists, items, user, i+1))
+            elif (diversity_type==&#34;maximal_diversity&#34;):
+                diversity_data_points.extend(maximal_diversity_support(users_partial_lists,items, distance_matrix, i+1))
+            elif (diversity_type==&#34;intra_list_diversity&#34;):
+                diversity_data_points.extend(intra_list_diversity_support(users_partial_lists,items, distance_matrix, i+1))
+            users_partial_lists[0, i] = np.random.choice([np.argmax(diversity_data_points[i]),np.random.choice(list(range(len(items))))],\
+                                                        p=[0.2, 0.8])
+    diversity_data_points=np.expand_dims(random.sample(list(np.array(diversity_data_points).flatten()), k = len(items)),axis=1)
+    norm_diversity = build_normalization(normalization_factory, shift)
+    norm_diversity.train(diversity_data_points)
+    return [norm_diversity]
+&#34;&#34;&#34;
+
+
+def prepare_diversity_normalization(diversity_type, normalization_factory, distance_matrix, shift, items, users,\
+                                    recommendations_list_len):    
+    &#34;&#34;&#34;
+    Prepares normalization of all diversity variants, corresponding to rank of the item 
+
+
+    Parameters
+    ----------
+    diversity_type : str
+        code of the diversity variant
+    normalization_factory : factory
+        Factory to create new normalizations
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    shift : float
+        shift in normalization
+    items : np.ndarray
+        array of all items indices
+    users : np.ndarray
+        array of all users indices
+    recommendations_list_len : int
+        length of list of recommendations
+
+    Returns
+    -------
+    list
+        list of normalization of one diversity variant, corresponding to rank of the item 
+    &#34;&#34;&#34;    
+    selected_users = random.sample(list(users), k=100)
+    norm_diversities = []
+    ranks = list(range(recommendations_list_len)) +\
+        list(range(recommendations_list_len, recommendations_list_len*4))[0::5]
+    users_partial_lists= np.full((len(users),recommendations_list_len*4), -1, dtype=np.int32)
+    index = -1
+    for i in ranks[:-1]: 
+        index += 1
+        diversity_data_points = []      
+        for user_index in selected_users:
+            if(diversity_type==&#34;binomial_diversity&#34;):
+                support = binomial_diversity_support(users_partial_lists[user_index:user_index+1], items, user_index, i+1)
+            elif (diversity_type==&#34;maximal_diversity&#34;):
+                support = maximal_diversity_support(users_partial_lists[user_index:user_index+1],items, distance_matrix, i+1)
+            elif (diversity_type==&#34;intra_list_diversity&#34;):
+                support = intra_list_diversity_support(users_partial_lists[user_index:user_index+1],items, distance_matrix, i+1)
+            diversity_data_points.extend(support)
+            for j in range(ranks[index], ranks[index+1]):
+                users_partial_lists[user_index, j] = np.random.choice([np.argmax(support),\
+                                                                       np.random.choice(list(range(len(items))))],\
+                                                        p=[0.1, 0.9])
+                support[0,users_partial_lists[user_index, j]] = 0
+        diversity_data_points = np.array(diversity_data_points).flatten()
+        diversity_data_points=np.expand_dims(random.sample(list(diversity_data_points), k = len(items)),axis=1)
+        norm_diversity = build_normalization(normalization_factory, shift)
+        norm_diversity.train(diversity_data_points)
+        for j in range(ranks[index], ranks[index+1]):
+            norm_diversities.append(norm_diversity)
+    return norm_diversities
+
+&#34;&#34;&#34;
+
+def prepare_novelty_normalization_old(novelty_type, normalization_factory, rating_matrix, ease_x, distance_matrix,\
+                                  users_viewed_item, shift, items, users):
+    num_users = rating_matrix.shape[0] 
+    novelty_data_points=[]
+    if(novelty_type==&#34;popularity_complement&#34;):        
+        novelty_data_points = np.expand_dims(1.0 - users_viewed_item / num_users, axis=1)
+        norm_novelty = build_normalization(normalization_factory, shift)
+        norm_novelty.train(novelty_data_points)
+        return [norm_novelty]
+    else:
+        ease_X = ease_x.toarray()
+        selected_users = random.sample(list(users), k=100)    
+        novelty_data_points= []        
+        for user in selected_users:
+            user_list= np.nonzero(ease_X[user,:])
+            if(novelty_type==&#34;maximal_distance_based_novelty&#34;):
+                novelty_data_points.extend(maximal_distance_based_novelty_support(user_list, items, distance_matrix))
+            elif (novelty_type==&#34;intra_list_distance_based_novelty&#34;):
+                novelty_data_points.extend(intra_list_distance_based_novelty_support(user_list, items, distance_matrix))
+        novelty_data_points=np.expand_dims(random.sample(list(np.array(novelty_data_points).flatten()), k = len(items)),axis=1)
+        norm_novelty = build_normalization(normalization_factory, shift)
+        norm_novelty.train(novelty_data_points)
+        return [norm_novelty]
+&#34;&#34;&#34;
+
+
+def prepare_novelty_normalization(novelty_type, normalization_factory, rating_matrix, ease_x, distance_matrix,\
+                                  users_viewed_item, shift, items, \
+                                borders=[0,2,5,8,10,15,20,30,40,50,60,75,90,110,140]):
+    &#34;&#34;&#34;
+    Prepares normalization of all novelty variants, corresponding to number of items rated by the user
+
+
+    Parameters
+    ----------
+    novelty_type : str
+        code of the novelty variant
+    normalization_factory : factory
+        Factory to create new normalizations
+    rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed also from negative ratings    
+    ease_X : scipy.sparse.csr_matrix
+        input matrix X for EASE retrieved also from negative ratings
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    users_viewed_item : np.ndarray
+        contains values how many users have rated each item
+    shift : float
+        shift in normalization
+    items : np.ndarray
+        array of all items indices
+    borders: list
+        list of numbers of items rated by the user, normalization will be computed for each interval
+
+    Returns
+    -------
+    list
+        list of normalization of one novelty variant, corresponding to number of items rated by the user
+    &#34;&#34;&#34;    
+    num_users = rating_matrix.shape[0] 
+    novelty_data_points=[]
+    if(novelty_type==&#34;popularity_complement&#34;):        
+        novelty_data_points = np.expand_dims(1.0 - users_viewed_item / num_users, axis=1)
+        norm_novelty = build_normalization(normalization_factory, shift)
+        norm_novelty.train(novelty_data_points)
+        return [norm_novelty]
+    else:
+        norm_novelties=[]
+        ease_X = ease_x.toarray()
+        sums_per_row = (ease_X != 0).sum(1)
+        borders.append(min(1000, borders[-1]+100)) #random big value
+        for i in range(len(borders) - 1):
+            possible_users = [index for index,value in enumerate(sums_per_row) if value &gt; borders[i]]     
+            if len(possible_users) &lt; 1:
+                borders[i+1] = borders[i]
+                continue
+            novelty_data_points= []        
+            for user in possible_users:
+                user_list= np.nonzero(ease_X[user,:])[0]
+                min_sample_len = max(1, borders[i])
+                max_sample_len = max(1, borders[i+1])
+                user_list = [random.sample(list(user_list), k=min(len(user_list),random.randint(min_sample_len, max_sample_len)))]
+                if(novelty_type==&#34;maximal_distance_based_novelty&#34;):
+                    novelty_data_points.extend(maximal_distance_based_novelty_support(user_list, items, distance_matrix))
+                elif (novelty_type==&#34;intra_list_distance_based_novelty&#34;):
+                    novelty_data_points.extend(intra_list_distance_based_novelty_support(user_list, items, distance_matrix))
+            novelty_data_points=np.expand_dims(random.sample(list(np.array(novelty_data_points).flatten()), k = len(items)),axis=1)
+            norm_novelty = build_normalization(normalization_factory, shift)
+            norm_novelty.train(novelty_data_points)
+            if (i+2)==len(borders):
+                norm_novelties.append(norm_novelty)
+            else:
+                norm_novelties.extend([norm_novelty] * (borders[i+1] - borders[i]))
+        return norm_novelties
+
+
+def prepare_popularity_normalization(normalization_factory, users_viewed_item, shift, num_users, avg_ratings,\
+                                     popularity_type):
+    &#34;&#34;&#34;
+    Prepares normalization of all popularity variants
+
+    Parameters
+    ----------
+    normalization_factory : factory
+        Factory to create new normalizations
+    users_viewed_item : np.ndarray
+        contains values how many users have rated each item
+    shift : float
+        shift in normalization
+    num_users : int
+        number of users
+    avg_ratings : list
+        list with average rating of each item
+    popularity_type : str
+        code of the popularity variant
+
+    Returns
+    -------
+    list
+        list of normalization of one popularity variant
+    &#34;&#34;&#34;    
+    popularity_data_points = []
+    if (popularity_type == &#34;num_of_ratings&#34;):
+        popularity_data_points =  np.expand_dims(users_viewed_item / num_users, axis=1)
+    elif (popularity_type == &#34;avg_ratings&#34;):
+        popularity_data_points =  np.expand_dims(avg_ratings, axis=1)
+    norm_popularity = build_normalization(normalization_factory, shift)
+    norm_popularity.train(popularity_data_points)
+    return norm_popularity
+
+
+def prepare_calibration_normalization( normalization_factory, distance_matrix, shift, items, users, recommendations_list_len):
+    &#34;&#34;&#34;
+    Prepares normalization of all calibration variants, corresponding to rank of the item 
+
+
+    Parameters
+    ----------
+    normalization_factory : factory
+        Factory to create new normalizations
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    shift : float
+        shift in normalization
+    items : np.ndarray
+        array of all items indices
+    users : np.ndarray
+        array of all users indices
+    recommendations_list_len : int
+        length of list of recommendations
+
+    Returns
+    -------
+    list
+        list of normalization of calibration, corresponding to rank of the item 
+    &#34;&#34;&#34;    
+    calibration_data_points=[]
+    norm_calibrations = []
+    selected_users = random.sample(list(users), k=100)
+    ranks = list(range(recommendations_list_len)) +\
+        list(range(recommendations_list_len, recommendations_list_len*4))[0::5]
+    users_partial_lists= np.full((len(users),recommendations_list_len*4), -1, dtype=np.int32)
+    index = -1
+    for i in ranks[:-1]: 
+        index += 1
+        calibration_data_points = []      
+        for user_index in selected_users:
+            support = calibration_support(users_partial_lists[user_index:user_index+1], items, user_index, i+1)
+            calibration_data_points.extend(support)
+            for j in range(ranks[index], ranks[index+1]):
+                users_partial_lists[user_index, j] = np.random.choice([np.argmax(support),np.random.choice(list(range(len(items))))],\
+                                                        p=[0.4, 0.6])
+                support[0,users_partial_lists[user_index, j]] = 0
+        calibration_data_points = np.array(calibration_data_points).flatten()
+        calibration_data_points=np.expand_dims(random.sample(list(calibration_data_points), k = len(items)),axis=1)
+        norm_calibration = build_normalization(normalization_factory, shift)
+        norm_calibration.train(calibration_data_points)
+        for j in range(ranks[index], ranks[index+1]):
+            norm_calibrations.append(norm_calibration)
+    return norm_calibrations
+
+
+&#34;&#34;&#34;
+def prepare_calibration_normalization_old( normalization_factory, distance_matrix, shift, items, users, recommendations_list_len):
+    calibration_data_points=[]
+    selected_users = random.sample(list(users), k=100)
+    users_partial_lists= np.full((len(users),recommendations_list_len*4), -1, dtype=np.int32)
+    index = -1
+    ranks = list(range(recommendations_list_len))
+    for i in ranks: 
+        index += 1
+        calibration_data_points = []      
+        for user_index in selected_users:
+            support = calibration_support(users_partial_lists[user_index:user_index+1], items, user_index, i+1)
+            calibration_data_points.extend(support)
+            users_partial_lists[user_index, i] = np.random.choice([np.argmax(support),np.random.choice(list(range(len(items))))],\
+                                                    p=[0.4, 0.6])
+            support[0,users_partial_lists[user_index, i]] = 0
+    calibration_data_points = np.array(calibration_data_points).flatten()
+    calibration_data_points=np.expand_dims(random.sample(list(calibration_data_points), k = len(items)),axis=1)
+    norm_calibration = build_normalization(normalization_factory, shift)
+    norm_calibration.train(calibration_data_points)
+    return [norm_calibration]
+&#34;&#34;&#34;
+
+&#34;&#34;&#34;
+def custom_evaluate_voting(top_k, rating_matrix, distance_matrix, users_viewed_item, normalizations, obj_weights, discount_sequences):
+    start_time = time.perf_counter()
+    
+    [mer_norm, div_norm, nov_norm] = normalizations
+
+    num_users = top_k.shape[0]    
+
+    normalized_mer = 0.0
+    normalized_diversity = 0.0
+    normalized_novelty = 0.0
+    
+    normalized_per_user_mer = []
+    normalized_per_user_diversity = []
+    normalized_per_user_novelty = []
+
+    normalized_per_user_mer_matrix = mer_norm(np.sum(np.take_along_axis(rating_matrix, top_k, axis=1) * discount_sequences[0], axis=1, keepdims=True).T / discount_sequences[0].sum(), ignore_shift=False).T
+    
+    total_mer = 0.0
+    total_novelty = 0.0
+    total_diversity = 0.0
+    
+    per_user_mer = []
+    per_user_diversity = []
+    per_user_novelty = []
+    n = 0
+    for user_id, user_ranking in enumerate(top_k):
+        
+        relevance = (rating_matrix[user_id][user_ranking] * discount_sequences[0]).sum()
+        novelty = ((1.0 - users_viewed_item[user_ranking] / rating_matrix.shape[0]) * discount_sequences[2]).sum()
+        div_discount = np.repeat(np.expand_dims(discount_sequences[1], axis=0).T, user_ranking.size, axis=1)
+        diversity = (distance_matrix[np.ix_(user_ranking, user_ranking)] * div_discount).sum() / user_ranking.size
+
+        # Per user MER
+        normalized_per_user_mer.append(normalized_per_user_mer_matrix[user_id].item())
+        normalized_mer += normalized_per_user_mer[-1]
+        
+        # Per user Diversity
+        ranking_distances = distance_matrix[np.ix_(user_ranking, user_ranking)] * div_discount
+        triu_indices = np.triu_indices(user_ranking.size, k=1)
+        ranking_distances_mean = ranking_distances[triu_indices].sum() / div_discount[triu_indices].sum()
+        normalized_ranking_distances_mean = div_norm([[ranking_distances_mean]], ignore_shift=False)
+        normalized_per_user_diversity.append(normalized_ranking_distances_mean.item())
+        normalized_diversity += normalized_per_user_diversity[-1]
+
+        # Per user novelty
+        normalized_per_user_novelty.append(nov_norm(((1.0 - users_viewed_item[user_ranking] / num_users) * discount_sequences[2]).sum().reshape(-1, 1) / discount_sequences[2].sum(), ignore_shift=False).item())
+        normalized_novelty += normalized_per_user_novelty[-1]
+        
+        per_user_mer.append(relevance)
+        per_user_diversity.append(diversity)
+        per_user_novelty.append(novelty)
+
+        total_mer += relevance
+        total_diversity += diversity
+        total_novelty += novelty
+        n += 1
+
+    total_mer = total_mer / n
+    total_diversity = total_diversity / n
+    total_novelty = total_novelty / n
+
+    normalized_mer = normalized_mer / n
+    normalized_diversity = normalized_diversity / n
+    normalized_novelty = normalized_novelty / n
+
+    per_user_kl_divergence = calculate_per_user_kl_divergence(normalized_per_user_mer, normalized_per_user_diversity, normalized_per_user_novelty, obj_weights)
+    per_user_mean_absolute_errors, per_user_errors = calculate_per_user_errors(normalized_per_user_mer, normalized_per_user_diversity, normalized_per_user_novelty, obj_weights)
+
+    print(f&#34;per_user_kl_divergence: {per_user_kl_divergence}&#34;)
+    print(f&#34;per_user_mean_absolute_errors: {per_user_mean_absolute_errors}&#34;)
+    print(f&#34;per_user_errors: {per_user_errors}&#34;)
+
+    print(&#34;####################&#34;)
+    print(f&#34;MEAN ESTIMATED RATING: {total_mer}&#34;)
+    print(f&#34;DIVERSITY2: {total_diversity}&#34;)
+    print(f&#34;NOVELTY2: {total_novelty}&#34;)
+    print(&#34;--------------------&#34;)
+    log_metric(&#34;raw_mer&#34;, total_mer)
+    log_metric(&#34;raw_diversity&#34;, total_diversity)
+    log_metric(&#34;raw_novelty&#34;, total_novelty)
+
+    print(f&#34;Normalized MER: {normalized_mer}&#34;)
+    print(f&#34;Normalized DIVERSITY2: {normalized_diversity}&#34;)
+    print(f&#34;Normalized NOVELTY2: {normalized_novelty}&#34;)
+    print(&#34;--------------------&#34;)
+    log_metric(&#34;normalized_mer&#34;, normalized_mer)
+    log_metric(&#34;normalized_diversity&#34;, normalized_diversity)
+    log_metric(&#34;normalized_novelty&#34;, normalized_novelty)
+
+    # Print sum-to-1 results
+    s = normalized_mer + normalized_diversity + normalized_novelty
+    print(f&#34;Sum-To-1 Normalized MER: {normalized_mer / s}&#34;)
+    print(f&#34;Sum-To-1 Normalized DIVERSITY2: {normalized_diversity / s}&#34;)
+    print(f&#34;Sum-To-1 Normalized NOVELTY2: {normalized_novelty / s}&#34;)
+    print(&#34;--------------------&#34;)
+    log_metric(&#34;normalized_sum_to_one_mer&#34;, normalized_mer / s)
+    log_metric(&#34;normalized_sum_to_one_diversity&#34;, normalized_diversity / s)
+    log_metric(&#34;normalized_sum_to_one_novelty&#34;, normalized_novelty / s)
+
+    mean_kl_divergence = np.mean(per_user_kl_divergence)
+    mean_absolute_error = np.mean(per_user_mean_absolute_errors)
+    mean_error = np.mean(per_user_errors)
+
+    print(f&#34;mean_kl_divergence: {mean_kl_divergence}&#34;)
+    print(f&#34;mean_absolute_error: {mean_absolute_error}&#34;)
+    print(f&#34;mean_error: {mean_error}&#34;)
+    print(&#34;####################&#34;)
+    log_metric(&#34;mean_kl_divergence&#34;, mean_kl_divergence)
+    log_metric(&#34;mean_absolute_error&#34;, mean_absolute_error)
+    log_metric(&#34;mean_error&#34;, mean_error)
+
+    print(f&#34;Evaluation took: {time.perf_counter() - start_time}&#34;)
+    return {
+        &#34;mer&#34;: total_mer,
+        &#34;diversity&#34;: total_diversity,
+        &#34;novelty&#34;: total_novelty,
+        &#34;per-user-mer&#34;: per_user_mer,
+        &#34;per-user-diversity&#34;: per_user_diversity,
+        &#34;per-user-novelty&#34;: per_user_novelty,
+        &#34;normalized-mer&#34;: normalized_mer,
+        &#34;normalized-diversity&#34;: normalized_diversity,
+        &#34;normalized-novelty&#34;: normalized_novelty,
+        &#34;normalized-per-user-mer&#34;: normalized_per_user_mer,
+        &#34;normalized-per-user-diversity&#34;: normalized_per_user_diversity,
+        &#34;normalized-per-user-novelty&#34;: normalized_per_user_novelty,
+        &#34;mean-kl-divergence&#34;: mean_kl_divergence,
+        &#34;mean-absolute-error&#34;: mean_absolute_error,
+        &#34;mean-error&#34;: mean_error,
+        &#34;sum-to-1-normalized-mer&#34;: normalized_mer / s,
+        &#34;sum-to-1-normalized-diversity&#34;: normalized_diversity / s,
+        &#34;sum-to-1-normalized-novelty&#34;: normalized_novelty / s,
+        &#34;per-user-kl-divergence&#34;: per_user_kl_divergence,
+        &#34;per-user-mean-absolute-errors&#34;: per_user_mean_absolute_errors,
+        &#34;per-user-errors&#34;: per_user_errors
+    }
+&#34;&#34;&#34;
+
+def predict_for_user(user, user_index, items, extended_rating_matrix, neg_extended_rating_matrix ,\
+                     pos_users_profiles, neg_users_profiles, distance_matrix, users_viewed_item, normalizations, mask, algorithm_factory,\
+                        args, obj_weights, num_users, currentlistindices):
+    &#34;&#34;&#34;
+    Computes recommendations for one user
+    
+    Parameters
+    ----------
+    user : int
+        selected user
+    user_index : int
+        index in matrices of selected user
+    items : np.ndarray
+        array of all items indices
+    extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed from only positive ratings
+    neg_extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed also from negative ratings
+    pos_users_profiles : np.ndarray
+        every row corresponds to user&#39;s list of positively rated items
+    neg_users_profiles : np.ndarray
+        every row corresponds to user&#39;s list of rated items
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    users_viewed_item : np.ndarray
+        contains values how many users have rated each item
+    normalizations : dict
+        every metric variant contains list of normalization (index in list corresponding to rank of the item or number of rated items by the user)
+    mask : np.ndarray
+        contains 1 in the indices of items that can be recommended, 0 otherwise
+    algorithm_factory : factory
+        Factory for creating mandate allocation algorithms
+    args : SimpleNamespace
+        All arguments of RS
+    obj_weights : np.ndarray
+        weights given by user to each metric
+    num_users : int
+        number of users
+    currentlistindices : list
+        indices of items already in the list
+
+    Returns
+    -------
+    np.array, list
+        recommended items and their objectives (=metrics) contribution
+    &#34;&#34;&#34;
+    start_time = time.perf_counter()
+    mandate_allocation = algorithm_factory(obj_weights, args.masking_value)
+    users_partial_lists= np.full((1,len(currentlistindices) + args.k), -1, dtype=np.int32)
+    users_partial_lists[0, :len(currentlistindices)] = currentlistindices
+    supports_partial_lists = []
+    neg_user_profile_count= len(neg_users_profiles[user_index:user_index+1])
+    pos_user_profile_count= len(pos_users_profiles[user_index:user_index+1])
+    user_profile_count = pos_user_profile_count
+    if(args.relevance == &#34;also_negative&#34;):
+        user_profile_count = neg_user_profile_count
+    # Iteratively select item in the list
+    for i in range(len(currentlistindices), len(currentlistindices) + args.k):
+        iter_start_time = time.perf_counter()
+        print(f&#34;Predicting for i: {i + 1} out of: {args.k}&#34;)
+        # Compute support for the metrics
+        supports = get_supports(args, obj_weights, users_partial_lists, items, extended_rating_matrix[user_index:user_index+1],\
+                                neg_extended_rating_matrix[user_index:user_index+1],pos_users_profiles[user_index:user_index+1],\
+                                neg_users_profiles[user_index:user_index+1], distance_matrix, users_viewed_item, k=i+1,\
+                                    num_users=num_users, user_index=user_index)
+        
+        # Normalize the supports
+        assert supports.shape[0] == 5, &#34;expecting 5 objectives, if updated, update code below&#34;
+        
+        supports[0, :, :] = normalizations[args.relevance][min(user_profile_count, len(normalizations[args.relevance])-1)]\
+            (supports[0].T).T * args.discount_sequences[0][i]
+        supports[1, :, :] = normalizations[args.diversity][min(i,len(normalizations[args.diversity])-1)]\
+                                (supports[1].reshape(-1, 1)).reshape((supports.shape[1], -1)) * args.discount_sequences[1][i] 
+        supports[2, :, :] = normalizations[args.novelty][min(neg_user_profile_count, len(normalizations[args.novelty])-1)]\
+                                (supports[2].reshape(-1, 1)).reshape((supports.shape[1], -1)) * args.discount_sequences[2][i]
+        supports[3, :, :] = normalizations[args.popularity](supports[3].reshape(-1, 1)).reshape((supports.shape[1], -1)) \
+                                * args.discount_sequences[3][i] 
+        supports[4, :, :] = normalizations[&#34;calibration&#34;][min(i,len(normalizations[&#34;calibration&#34;])-1)]\
+                                (supports[4].reshape(-1, 1)).reshape((supports.shape[1], -1)) * args.discount_sequences[4][i] 
+        
+        # Mask out the already recommended items
+        np.put_along_axis(mask, users_partial_lists[:, :i], 0, 1)
+
+        # Get the per-user top-k recommendations
+        users_partial_lists[:, i] = mandate_allocation(mask, supports)
+
+        # For explanations, get supports of each item w.r.t. objectives
+        item_supports = np.squeeze(supports[:, 0, users_partial_lists[0, i]])
+        item_supports = [item_support * 100 for item_support in item_supports]
+        supports_partial_lists.append(item_supports)
+        print(args.diversity + &#34;, &#34; + args.novelty)
+        print(item_supports)
+        print(f&#34;i: {i + 1} done, took: {time.perf_counter() - iter_start_time}&#34;)
+    print(f&#34;Prediction done, took: {time.perf_counter() - start_time}&#34;,file=sys.stderr)
+    print(&#34;average\n&#34;)
+    print(np.average(np.array(supports_partial_lists), axis=0),file=sys.stderr)
+    return users_partial_lists[:,len(currentlistindices):], supports_partial_lists
+
+
+def main(args):
+    &#34;&#34;&#34;
+    Trains the algorithm, prepares normalizations
+
+    Parameters
+    ----------
+    args : SimpleNamespace
+        All arguments of RS
+
+    Returns
+    -------
+    list
+        List of objects used for computing recommendations for any user
+    &#34;&#34;&#34;
+    for arg_name in dir(args):
+        if arg_name[0] != &#39;_&#39;:
+            arg_value = getattr(args, arg_name)
+            print(f&#34;\t{arg_name}={arg_value}&#34;)
+
+    if not args.normalization:
+        print(f&#34;Using Identity normalization&#34;,file=sys.stderr)
+        normalization_factory = identity
+    else:
+        print(f&#34;Using {args.normalization} normalization&#34;,file=sys.stderr)
+        normalization_factory = globals()[args.normalization]
+
+    algorithm_factory = globals()[args.algorithm]
+    print(f&#34;Using &#39;{args.algorithm}&#39; algorithm&#34;,file=sys.stderr)
+    items,itemIDs, users, userIDs, extended_rating_matrix, pos_users_profiles, similarity_matrix,\
+          metadata_distance_matrix,user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id, \
+            all_genres, ease_B, ease_X = get_EASE(args)
+    neg_extended_rating_matrix, neg_ease_X, neg_ease_B, users_viewed_item, neg_users_profiles\
+          = get_EASE_with_negative(args, userIDs, itemIDs)
+    set_params_bin_diversity(user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id, all_genres)
+    set_params_calibration(user_genre_prob, metadata_matrix)
+    avg_ratings = get_avg_ratings_of_items(args.connectionstring)
+    avg_ratings = {list(avg_ratings[&#34;itemid&#34;])[i]: list(avg_ratings[&#34;averagescore&#34;])[i] for i in range(len(avg_ratings))} 
+    avg_ratings = [avg_ratings[item_id] for item_id in itemIDs]
+    set_params_popularity(avg_ratings)   
+
+    if args.type_of_items_distance == &#34;cb&#34;:
+        print(&#34;Using content based diversity&#34;)
+        assert args.metadata_path, &#34;Metadata path must be specified when using cb diversity&#34;
+        distance_matrix = metadata_distance_matrix
+    elif args.type_of_items_distance == &#34;cf&#34;:
+        print(&#34;Using collaborative diversity&#34;)
+        distance_matrix = 1.0 - similarity_matrix
+    else:
+        assert False, f&#34;Unknown diversity: {args.type_of_items_distance}&#34;    
+
+    num_users = users.size    
+    obj_weights = args.weights
+    obj_weights /= obj_weights.sum()
+    start_time = time.perf_counter()
+    start_time = time.perf_counter()
+    normalizations = load_cache(os.path.join(&#34;cache&#34;, &#34;normalizations.pckl&#34;))
+    # normalizations = compute_all_normalizations(args, normalization_factory, extended_rating_matrix, neg_extended_rating_matrix,\
+    #                                              ease_X, ease_B, neg_ease_X, neg_ease_B,  distance_matrix, users_viewed_item, items, users,\
+    #                                                 avg_ratings)
+    print(f&#34;Preparing normalizations took: {time.perf_counter() - start_time}&#34;,file=sys.stderr)
+    return extended_rating_matrix, neg_extended_rating_matrix, pos_users_profiles, neg_users_profiles,\
+    users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, algorithm_factory, normalizations,\
+    args, ease_B, neg_ease_B
+
+
+def get_ratings(connectionstring, only_MovieLens = False):
+    &#34;&#34;&#34;
+    Retrieves all ratings from database
+
+    Parameters
+    ----------
+    connectionstring : str
+        Connection string to the db
+
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe with columns userid, itemid, ratingscore
+    &#34;&#34;&#34;    
+    conn = odbc.connect(connectionstring)
+    query = &#34;SELECT  UserID, ItemID, RatingScore FROM ratings&#34;
+    if (only_MovieLens):
+        query += &#34; r join users u on u.id = r.userid where u.username like &#39;%movielens%&#39; &#34;
+    df = pd.read_sql_query(query, conn)
+    df.columns = df.columns.str.lower()
+    conn.close()
+    return df
+
+
+def get_ratings_of_user(connectionstring, userID, only_positive=True, order=False):
+    &#34;&#34;&#34;
+    Retrieves ratings from one user from database
+
+    Parameters
+    ----------
+    connectionstring : str
+        Connection string to the db
+    userID : int
+        ID of the user whose ratings will be returned
+    only_positive : bool, optional
+        if true - returns only positive ratings (&gt; 5), by default True
+
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe with columns userid, itemid, ratingscore
+    &#34;&#34;&#34;        
+    conn = odbc.connect(connectionstring)
+    query = f&#34;&#34;&#34;SELECT  UserID, ItemID, RatingScore 
+                           FROM ratings
+                           where userid = {userID} &#34;&#34;&#34;
+    if (only_positive):
+        query += &#34; and ratingscore &gt; 5 &#34;    
+    if (order):
+        query += &#34; order by date &#34; 
+    df = pd.read_sql_query(query, conn)
+    df.columns = df.columns.str.lower()
+    conn.close()
+    return df
+
+
+
+
+def get_avg_ratings_of_items(connectionstring):
+    &#34;&#34;&#34;
+    Retrieve from database dataset with all items (their IDs) and their average score
+
+    Parameters
+    ----------
+    connectionstring : str
+        Connection string to the db
+
+    Returns
+    -------
+    pd.Dataframe
+        Dataframe with columns itemid, averagescore
+    &#34;&#34;&#34;    
+    conn = odbc.connect(connectionstring)
+    df = pd.read_sql_query(f&#34;&#34;&#34;SELECT  ItemID, avg(Cast(RatingScore as Float)) as averagescore 
+                           FROM ratings 
+                           group by ItemID&#34;&#34;&#34;, conn)
+    df.columns = df.columns.str.lower()
+    conn.close()
+    return df
+
+    
+def try_to_connect_to_db(connectionstring):
+    &#34;&#34;&#34;
+    Tries connect to db multiple times - checking if the database correctly started
+    Parameters
+    ----------
+    connectionstring : str
+        Connection string to the db
+    &#34;&#34;&#34;
+    retrycount = 0
+    while retrycount &lt; 100:
+        try:
+           conn = odbc.connect(connectionstring)
+           conn.close()
+           break
+        except Exception as e:
+            print(e,file=sys.stderr)
+            seconds = 90
+            print (f&#34;SQL server wasn&#39;t started yet. Or database wasn&#39;t restorted yet if its first run of the docker compose app.&#34;,\
+                   file=sys.stderr)
+            print (f&#34;Retry after {seconds} sec&#34;,file=sys.stderr)
+            retrycount += 1
+            time.sleep(seconds)
+
+
+
+def init(only_MovieLens = False):
+    &#34;&#34;&#34;
+    Initilization of the recommender - specifying arguments, connect to db, train the model and prepare normalizations
+    &#34;&#34;&#34;
+    args=types.SimpleNamespace()
+    args.k = 15
+    args.train_path=&#34;ratings.csv&#34;
+    args.seed=42
+    args.weights=&#34;0.3,0.3,0.3&#34;
+    args.normalization=&#34;cdf_threshold_shift&#34;
+    args.algorithm=&#34;exactly_proportional_fuzzy_dhondt_2&#34;
+    args.relevance = &#34;only_positive&#34;
+    args.novelty = &#34;intra_list_distance_based_novelty&#34;
+    args.diversity=&#34;binomial_diversity&#34;
+    args.popularity=&#34;num_of_ratings&#34;
+    args.masking_value=-1e6
+    args.baseline=&#34;EASE&#34;
+    args.metadata_path=&#34;movies.csv&#34;
+    args.type_of_items_distance=&#34;cf&#34;
+    args.shift=0.0
+    args.artifact_dir=None
+    args.output_path_prefix=None
+    args.discounts=&#34;1,1,1,1,1&#34;
+    args.weights = np.fromiter(map(float, args.weights.split(&#34;,&#34;)), dtype=np.float32)
+    args.discounts = [float(d) for d in args.discounts.split(&#34;,&#34;)]
+    args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k , num=args.k, endpoint=False) for d in args.discounts], axis=0)
+    DriverName = &#34;SQL Server&#34;
+#    DriverName = &#34;ODBC Driver 18 for SQL Server&#34;
+    ServerName =  &#34;np:\\\\.\\pipe\LOCALDB#2EB6953D\\tsql\\query&#34;
+#    ServerName = &#34;sql-server-db&#34;
+    DatabaseName = &#34;aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502&#34;
+    Username = &#39;RS&#39;
+    file = open(&#39;pswd.txt&#39;,mode=&#39;r&#39;)    
+    Password = file.read()
+    file.close()
+    args.connectionstring=f&#34;&#34;&#34;DRIVER={{{DriverName}}};
+        SERVER={ServerName};
+        DATABASE={DatabaseName};
+        UID={Username};
+        PWD={Password};
+        TrustServerCertificate=yes;
+    &#34;&#34;&#34;
+    try_to_connect_to_db(args.connectionstring)
+    args.df = get_ratings(args.connectionstring, only_MovieLens)
+    random.seed(args.seed)
+    return main(args)
+
+
+if __name__ == &#34;__main__&#34;:
+    init()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="moo-as-voting-fast.main.build_normalization"><code class="name flex">
+<span>def <span class="ident">build_normalization</span></span>(<span>normalization_factory, shift)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_normalization(normalization_factory, shift):
+    if shift:
+        return normalization_factory(shift)
+    else:
+        return normalization_factory()</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.compute_all_normalizations"><code class="name flex">
+<span>def <span class="ident">compute_all_normalizations</span></span>(<span>args, normalization_factory, extended_rating_matrix, neg_extended_rating_matrix, ease_X, ease_B, neg_ease_X, neg_ease_B, distance_matrix, users_viewed_item, items, users, avg_ratings)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepares normalization of all metrics, sometimes corresponding to rank of the item or to number of items rated by the user</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>SimpleNamespace</code></dt>
+<dd>All arguments of RS</dd>
+<dt><strong><code>normalization_factory</code></strong> :&ensp;<code>factory</code></dt>
+<dd>Factory to create new normalizations</dd>
+<dt><strong><code>extended_rating_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>prediction matrix from algorithm EASE computed from only positive ratings</dd>
+<dt><strong><code>neg_extended_rating_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>prediction matrix from algorithm EASE computed also from negative ratings</dd>
+<dt><strong><code>ease_X</code></strong> :&ensp;<code>scipy.sparse.csr_matrix</code></dt>
+<dd>input matrix X for EASE retrieved from only positive ratings</dd>
+<dt><strong><code>ease_B</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>matrix B of EASE computed from only positive ratings</dd>
+<dt><strong><code>neg_ease_X</code></strong> :&ensp;<code>scipy.sparse.csr_matrix</code></dt>
+<dd>input matrix X for EASE retrieved also from negative ratings</dd>
+<dt><strong><code>neg_ease_B</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>matrix B of EASE computed also from negative ratings</dd>
+<dt><strong><code>distance_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>matrix item x item with values representing distance (size of difference) of the 2 items</dd>
+<dt><strong><code>users_viewed_item</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>contains values how many users have rated each item</dd>
+<dt><strong><code>items</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>array of all items indices</dd>
+<dt><strong><code>users</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>array of all users indices</dd>
+<dt><strong><code>avg_ratings</code></strong> :&ensp;<code>list</code></dt>
+<dd>list with average rating of each item</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>dictionary with lists of recommendations corresponding to each metric variant</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_all_normalizations(args, normalization_factory, extended_rating_matrix, neg_extended_rating_matrix,\
+                                ease_X, ease_B, neg_ease_X, neg_ease_B, distance_matrix, users_viewed_item, items,\
+                                    users, avg_ratings):
+    &#34;&#34;&#34;
+    Prepares normalization of all metrics, sometimes corresponding to rank of the item or to number of items rated by the user
+
+    Parameters
+    ----------
+    args : SimpleNamespace
+        All arguments of RS
+    normalization_factory : factory
+        Factory to create new normalizations
+    extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed from only positive ratings
+    neg_extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed also from negative ratings
+    ease_X : scipy.sparse.csr_matrix
+        input matrix X for EASE retrieved from only positive ratings
+    ease_B : np.ndarray
+        matrix B of EASE computed from only positive ratings
+    neg_ease_X : scipy.sparse.csr_matrix
+        input matrix X for EASE retrieved also from negative ratings
+    neg_ease_B : np.ndarray
+        matrix B of EASE computed also from negative ratings
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    users_viewed_item : np.ndarray
+        contains values how many users have rated each item
+    items : np.ndarray
+        array of all items indices
+    users : np.ndarray
+        array of all users indices
+    avg_ratings : list
+        list with average rating of each item
+
+    Returns
+    -------
+    dict
+        dictionary with lists of recommendations corresponding to each metric variant
+    &#34;&#34;&#34;    
+    normalization = dict()
+    shift = args.shift
+    print(&#34;prepare relevance normalization&#34;, file=sys.stderr)
+    
+    normalization[&#34;only_positive&#34;] = prepare_relevance_normalization(normalization_factory, extended_rating_matrix,\
+                                                                 ease_X, ease_B, shift)
+
+    normalization[&#34;also_negative&#34;] = prepare_relevance_normalization(normalization_factory, neg_extended_rating_matrix,\
+                                                                 neg_ease_X, neg_ease_B, shift)
+
+    for diversity_type in [&#34;intra_list_diversity&#34;,&#34;maximal_diversity&#34;,&#34;binomial_diversity&#34;]:
+        print(f&#34;prepare {diversity_type} normalization&#34;, file=sys.stderr)
+        normalization[diversity_type] = prepare_diversity_normalization(diversity_type, normalization_factory, \
+                                                                        distance_matrix, shift, items, users,\
+                                                                        args.k)
+    for novelty_type in [&#34;popularity_complement&#34;,&#34;maximal_distance_based_novelty&#34;,&#34;intra_list_distance_based_novelty&#34;]:
+        print(f&#34;prepare {novelty_type} normalization&#34;, file=sys.stderr)
+        normalization[novelty_type] = prepare_novelty_normalization(novelty_type, normalization_factory, extended_rating_matrix,\
+                                                                    neg_ease_X, distance_matrix, users_viewed_item, shift, items)
+    print(&#34;prepare popularity normalization&#34;, file=sys.stderr)
+    for popularity_type in [&#34;num_of_ratings&#34;, &#34;avg_ratings&#34;]:
+        normalization[popularity_type] = prepare_popularity_normalization(normalization_factory, users_viewed_item, shift,\
+                                                                        extended_rating_matrix.shape[0], avg_ratings,\
+                                                                            popularity_type)
+    print(&#34;prepare calibration normalization&#34;, file=sys.stderr)
+    normalization[&#34;calibration&#34;] = prepare_calibration_normalization( normalization_factory, distance_matrix, shift,\
+                                                                     items, users, args.k)
+    save_cache(os.path.join(&#34;cache&#34;, &#34;normalizations.pckl&#34;), normalization)
+    return normalization</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.get_EASE"><code class="name flex">
+<span>def <span class="ident">get_EASE</span></span>(<span>args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Trains algorithm EASE with only positive ratings, computes datasets from metadata of items</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>SimpleNamespace</code></dt>
+<dd>All arguments of RS</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>list of datasets needed for computing recommendations for the user</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_EASE(args):
+    &#34;&#34;&#34;
+    Trains algorithm EASE with only positive ratings, computes datasets from metadata of items
+    
+    Parameters
+    ----------
+    args : SimpleNamespace
+        All arguments of RS
+
+    Returns
+    ----------
+    list
+        list of datasets needed for computing recommendations for the user
+    &#34;&#34;&#34;
+    print(&#34;training EASE&#34;,file=sys.stderr)
+    ease = EASE(args.df)
+    ease.fit(implicit=False)
+    similarity_matrix = ease.compute_similarity(transpose=True)
+    num_users = ease.X.shape[0]
+    num_items = ease.B.shape[0]
+    user_IDs = ease.user_enc.inverse_transform(list(range(num_users))).tolist()
+    itemIDs = ease.item_enc.inverse_transform(list(range(num_items))).tolist()
+#    unseen_items_mask = np.ones((num_users, num_items), dtype=np.bool8)
+#    unseen_items_mask[ease.X.todense() &gt; 0.0] = 0 # Mask out already seem items
+    users_profiles = np.empty(num_users, dtype=object)
+    users_profiles[...] = [[] for _ in range(users_profiles.shape[0])]
+    for i,j in get_sparse_matrix_indices(ease.X):
+        users_profiles[i].append(j)
+
+    item_to_item_id = dict()
+    item_id_to_item = dict()
+
+    items = np.arange(num_items)
+    users = np.arange(num_users)
+
+    Xt= ease.X.T.toarray()
+    for idx, item in enumerate(itemIDs):
+        item_to_item_id[item] = idx
+        item_id_to_item[idx] = item
+
+
+    user_to_user_id = dict()
+    user_id_to_user = dict()
+
+    for idx, user in enumerate(user_IDs):
+        user_to_user_id[user] = idx
+        user_id_to_user[idx] = user
+
+    extended_rating_matrix = ease.computeFullPredictionMatrix()
+    extended_rating_matrix*=10
+    metadata_distance_matrix, user_genre_prob, genres_prob_all,metadata_matrix, genre_to_genre_id = None, None, None, None, None
+    if hasattr(args, &#34;metadata_path&#34;) and args.metadata_path:
+        print(f&#34;Parsing metadata from path: &#39;{args.metadata_path}&#39;&#34;,file=sys.stderr)
+        metadata_distance_matrix, user_genre_prob, genres_prob_all,metadata_matrix, genre_to_genre_id, all_genres = \
+            parse_metadata(args.metadata_path, item_to_item_id, ease.X)
+
+    return items, itemIDs, users, user_IDs, \
+        extended_rating_matrix, \
+        users_profiles, similarity_matrix, \
+        metadata_distance_matrix, \
+        user_genre_prob, genres_prob_all,\
+        metadata_matrix, genre_to_genre_id,\
+        all_genres, ease.B, ease.X</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.get_EASE_with_negative"><code class="name flex">
+<span>def <span class="ident">get_EASE_with_negative</span></span>(<span>args, userIDs, itemIDs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Trains algorithm EASE with also negative ratings and dataset with number of users that have seen each item</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>SimpleNamespace</code></dt>
+<dd>All arguments of RS</dd>
+<dt><strong><code>userIDs</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of all user IDs</dd>
+<dt><strong><code>itemIDs</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>list of all item IDs</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>list of datasets needed for computing recommendations for the user</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_EASE_with_negative(args, userIDs, itemIDs):
+    &#34;&#34;&#34;
+    Trains algorithm EASE with also negative ratings and dataset with number of users that have seen each item
+    
+    Parameters
+    ----------
+    args : SimpleNamespace
+        All arguments of RS
+    userIDs : list
+        list of all user IDs
+    itemIDs : _type_
+        list of all item IDs
+
+    Returns
+    -------
+    list
+        list of datasets needed for computing recommendations for the user
+    &#34;&#34;&#34;
+    print(&#34;training EASE&#34;,file=sys.stderr)
+    train = args.df[(args.df[&#34;userid&#34;].isin(userIDs)) &amp; (args.df[&#34;itemid&#34;].isin(itemIDs))]
+    ease = EASE(train)
+    ease.fit(implicit=False, only_positive=False)
+    extended_rating_matrix = ease.computeFullPredictionMatrix()
+    extended_rating_matrix*=10
+    num_users = ease.X.shape[0]
+    num_items = ease.B.shape[0]
+    users_profiles = np.empty(num_users, dtype=object)
+    users_profiles[...] = [[] for _ in range(users_profiles.shape[0])]
+    for i,j in get_sparse_matrix_indices(ease.X):
+        users_profiles[i].append(j)
+    num_items = ease.B.shape[0]
+    itemIDs = ease.item_enc.inverse_transform(list(range(num_items))).tolist()    
+    items = np.arange(num_items)
+    users_viewed_item = np.zeros_like(items, dtype=np.int32)
+    Xt= ease.X.T.toarray()
+    for idx, item in enumerate(itemIDs):
+        users_viewed_item[idx] = sum([val != 0 for val in Xt[idx]])
+    return extended_rating_matrix, ease.X, ease.B, users_viewed_item, users_profiles</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.get_avg_ratings_of_items"><code class="name flex">
+<span>def <span class="ident">get_avg_ratings_of_items</span></span>(<span>connectionstring)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieve from database dataset with all items (their IDs) and their average score</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>connectionstring</code></strong> :&ensp;<code>str</code></dt>
+<dd>Connection string to the db</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.Dataframe</code></dt>
+<dd>Dataframe with columns itemid, averagescore</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_avg_ratings_of_items(connectionstring):
+    &#34;&#34;&#34;
+    Retrieve from database dataset with all items (their IDs) and their average score
+
+    Parameters
+    ----------
+    connectionstring : str
+        Connection string to the db
+
+    Returns
+    -------
+    pd.Dataframe
+        Dataframe with columns itemid, averagescore
+    &#34;&#34;&#34;    
+    conn = odbc.connect(connectionstring)
+    df = pd.read_sql_query(f&#34;&#34;&#34;SELECT  ItemID, avg(Cast(RatingScore as Float)) as averagescore 
+                           FROM ratings 
+                           group by ItemID&#34;&#34;&#34;, conn)
+    df.columns = df.columns.str.lower()
+    conn.close()
+    return df</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.get_ratings"><code class="name flex">
+<span>def <span class="ident">get_ratings</span></span>(<span>connectionstring, only_MovieLens=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieves all ratings from database</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>connectionstring</code></strong> :&ensp;<code>str</code></dt>
+<dd>Connection string to the db</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>Dataframe with columns userid, itemid, ratingscore</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_ratings(connectionstring, only_MovieLens = False):
+    &#34;&#34;&#34;
+    Retrieves all ratings from database
+
+    Parameters
+    ----------
+    connectionstring : str
+        Connection string to the db
+
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe with columns userid, itemid, ratingscore
+    &#34;&#34;&#34;    
+    conn = odbc.connect(connectionstring)
+    query = &#34;SELECT  UserID, ItemID, RatingScore FROM ratings&#34;
+    if (only_MovieLens):
+        query += &#34; r join users u on u.id = r.userid where u.username like &#39;%movielens%&#39; &#34;
+    df = pd.read_sql_query(query, conn)
+    df.columns = df.columns.str.lower()
+    conn.close()
+    return df</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.get_ratings_of_user"><code class="name flex">
+<span>def <span class="ident">get_ratings_of_user</span></span>(<span>connectionstring, userID, only_positive=True, order=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieves ratings from one user from database</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>connectionstring</code></strong> :&ensp;<code>str</code></dt>
+<dd>Connection string to the db</dd>
+<dt><strong><code>userID</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the user whose ratings will be returned</dd>
+<dt><strong><code>only_positive</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>if true - returns only positive ratings (&gt; 5), by default True</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>Dataframe with columns userid, itemid, ratingscore</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_ratings_of_user(connectionstring, userID, only_positive=True, order=False):
+    &#34;&#34;&#34;
+    Retrieves ratings from one user from database
+
+    Parameters
+    ----------
+    connectionstring : str
+        Connection string to the db
+    userID : int
+        ID of the user whose ratings will be returned
+    only_positive : bool, optional
+        if true - returns only positive ratings (&gt; 5), by default True
+
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe with columns userid, itemid, ratingscore
+    &#34;&#34;&#34;        
+    conn = odbc.connect(connectionstring)
+    query = f&#34;&#34;&#34;SELECT  UserID, ItemID, RatingScore 
+                           FROM ratings
+                           where userid = {userID} &#34;&#34;&#34;
+    if (only_positive):
+        query += &#34; and ratingscore &gt; 5 &#34;    
+    if (order):
+        query += &#34; order by date &#34; 
+    df = pd.read_sql_query(query, conn)
+    df.columns = df.columns.str.lower()
+    conn.close()
+    return df</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.get_sparse_matrix_indices"><code class="name flex">
+<span>def <span class="ident">get_sparse_matrix_indices</span></span>(<span>matrix)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_sparse_matrix_indices(matrix):
+    major_dim, minor_dim = matrix.shape
+    minor_indices = matrix.indices
+
+    major_indices = np.empty(len(minor_indices), dtype=matrix.indices.dtype)
+    scipy.sparse._sparsetools.expandptr(major_dim, matrix.indptr, major_indices)
+    return zip(major_indices, minor_indices)</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.get_supports"><code class="name flex">
+<span>def <span class="ident">get_supports</span></span>(<span>args, obj_weights, users_partial_lists, items, extended_rating_matrix, neg_extended_rating_matrix, pos_users_profiles, neg_users_profiles, distance_matrix, users_viewed_item, k, num_users, user_index=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes score of the items on given metrics / objectives</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>SimpleNamespace</code></dt>
+<dd>All arguments of RS</dd>
+<dt><strong><code>obj_weights</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>weights given by user to each metric</dd>
+<dt><strong><code>users_partial_lists</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>items in the list</dd>
+<dt><strong><code>items</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>array of all items indices</dd>
+<dt><strong><code>extended_rating_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>prediction matrix from algorithm EASE computed from only positive ratings</dd>
+<dt><strong><code>neg_extended_rating_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>prediction matrix from algorithm EASE computed also from negative ratings</dd>
+<dt><strong><code>pos_users_profiles</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>every row corresponds to user's list of positively rated items</dd>
+<dt><strong><code>neg_users_profiles</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>every row corresponds to user's list of rated items</dd>
+<dt><strong><code>distance_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>matrix item x item with values representing distance (size of difference) of the 2 items</dd>
+<dt><strong><code>users_viewed_item</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>contains values how many users have rated each item</dd>
+<dt><strong><code>k</code></strong> :&ensp;<code>int</code></dt>
+<dd>rank of currently selected item</dd>
+<dt><strong><code>num_users</code></strong> :&ensp;<code>int</code></dt>
+<dd>number of users</dd>
+<dt><strong><code>user_index</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>index in matrices of selected user</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>list of supports by the metrics</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_supports(args, obj_weights, users_partial_lists, items, extended_rating_matrix, neg_extended_rating_matrix,\
+                 pos_users_profiles, neg_users_profiles, distance_matrix, users_viewed_item, k, num_users, user_index=None):
+    &#34;&#34;&#34;
+    Computes score of the items on given metrics / objectives
+
+    Parameters
+    ----------
+    args : SimpleNamespace
+        All arguments of RS
+    obj_weights : np.ndarray
+        weights given by user to each metric
+    users_partial_lists : np.ndarray
+        items in the list
+    items : np.ndarray
+        array of all items indices
+    extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed from only positive ratings
+    neg_extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed also from negative ratings
+    pos_users_profiles : np.ndarray
+        every row corresponds to user&#39;s list of positively rated items
+    neg_users_profiles : np.ndarray
+        every row corresponds to user&#39;s list of rated items
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    users_viewed_item : np.ndarray
+        contains values how many users have rated each item
+    k : int
+        rank of currently selected item
+    num_users : int
+        number of users
+    user_index : int, optional
+        index in matrices of selected user
+
+    Returns
+    -------
+    list
+        list of supports by the metrics
+    &#34;&#34;&#34;
+    default = np.repeat(np.zeros(len(items))[np.newaxis, :], users_partial_lists.shape[0], axis=0)
+    rel_supps = div_supps = nov_supps = pop_supps = cal_supps =  default
+    if (obj_weights[0]&gt;0):
+        if (args.relevance == &#34;also_negative&#34;):
+            rel_supps = rating_based_relevance_support(neg_extended_rating_matrix)
+        else:
+            rel_supps = rating_based_relevance_support(extended_rating_matrix)
+    if (obj_weights[3]&gt;0):
+        pop_supps = popularity_support(users_viewed_item,users_partial_lists.shape[0], num_users, args.popularity)
+    if (obj_weights[4]&gt;0) and (len(pos_users_profiles[0]) &gt; 0):
+        cal_supps = calibration_support(users_partial_lists, items, user_index, k)
+    if (obj_weights[1]&gt;0):
+        if (args.diversity == &#34;intra_list_diversity&#34;):
+            div_supps = intra_list_diversity_support(users_partial_lists, items, distance_matrix, k)
+        elif (args.diversity == &#34;maximal_diversity&#34;):
+            div_supps = maximal_diversity_support(users_partial_lists, items, distance_matrix, k)
+        elif (args.diversity == &#34;binomial_diversity&#34;):
+            div_supps = binomial_diversity_support(users_partial_lists, items, user_index, k, n_items_to_compute=500)            
+    if (obj_weights[2]&gt;0):    
+        if (args.novelty == &#34;popularity_complement&#34;):
+            nov_supps = popularity_complement_support(users_viewed_item,users_partial_lists.shape[0], num_users)
+        elif (args.novelty == &#34;maximal_distance_based_novelty&#34;) and (len(neg_users_profiles[0]) &gt; 0):
+            nov_supps =  maximal_distance_based_novelty_support(neg_users_profiles, items, distance_matrix)
+        elif (args.novelty == &#34;intra_list_distance_based_novelty&#34;) and (len(neg_users_profiles[0]) &gt; 0):
+            nov_supps =  intra_list_distance_based_novelty_support(neg_users_profiles, items, distance_matrix)
+
+    return np.stack([rel_supps, div_supps, nov_supps, pop_supps, cal_supps])</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.init"><code class="name flex">
+<span>def <span class="ident">init</span></span>(<span>only_MovieLens=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initilization of the recommender - specifying arguments, connect to db, train the model and prepare normalizations</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def init(only_MovieLens = False):
+    &#34;&#34;&#34;
+    Initilization of the recommender - specifying arguments, connect to db, train the model and prepare normalizations
+    &#34;&#34;&#34;
+    args=types.SimpleNamespace()
+    args.k = 15
+    args.train_path=&#34;ratings.csv&#34;
+    args.seed=42
+    args.weights=&#34;0.3,0.3,0.3&#34;
+    args.normalization=&#34;cdf_threshold_shift&#34;
+    args.algorithm=&#34;exactly_proportional_fuzzy_dhondt_2&#34;
+    args.relevance = &#34;only_positive&#34;
+    args.novelty = &#34;intra_list_distance_based_novelty&#34;
+    args.diversity=&#34;binomial_diversity&#34;
+    args.popularity=&#34;num_of_ratings&#34;
+    args.masking_value=-1e6
+    args.baseline=&#34;EASE&#34;
+    args.metadata_path=&#34;movies.csv&#34;
+    args.type_of_items_distance=&#34;cf&#34;
+    args.shift=0.0
+    args.artifact_dir=None
+    args.output_path_prefix=None
+    args.discounts=&#34;1,1,1,1,1&#34;
+    args.weights = np.fromiter(map(float, args.weights.split(&#34;,&#34;)), dtype=np.float32)
+    args.discounts = [float(d) for d in args.discounts.split(&#34;,&#34;)]
+    args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k , num=args.k, endpoint=False) for d in args.discounts], axis=0)
+    DriverName = &#34;SQL Server&#34;
+#    DriverName = &#34;ODBC Driver 18 for SQL Server&#34;
+    ServerName =  &#34;np:\\\\.\\pipe\LOCALDB#2EB6953D\\tsql\\query&#34;
+#    ServerName = &#34;sql-server-db&#34;
+    DatabaseName = &#34;aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502&#34;
+    Username = &#39;RS&#39;
+    file = open(&#39;pswd.txt&#39;,mode=&#39;r&#39;)    
+    Password = file.read()
+    file.close()
+    args.connectionstring=f&#34;&#34;&#34;DRIVER={{{DriverName}}};
+        SERVER={ServerName};
+        DATABASE={DatabaseName};
+        UID={Username};
+        PWD={Password};
+        TrustServerCertificate=yes;
+    &#34;&#34;&#34;
+    try_to_connect_to_db(args.connectionstring)
+    args.df = get_ratings(args.connectionstring, only_MovieLens)
+    random.seed(args.seed)
+    return main(args)</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.load_cache"><code class="name flex">
+<span>def <span class="ident">load_cache</span></span>(<span>cache_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loads python object from file</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>cache_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>path to the file with saved python object</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>object</code></dt>
+<dd>saved python object</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_cache(cache_path):
+    &#34;&#34;&#34;
+    Loads python object from file
+
+    Parameters
+    ----------
+    cache_path : str
+        path to the file with saved python object
+
+    Returns
+    -------
+    object
+        saved python object
+    &#34;&#34;&#34;
+    print(f&#34;Loading cache from: {cache_path}&#34;)
+    with open(cache_path, &#39;rb&#39;) as f:
+        cache = pickle.load(f)
+    return cache</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Trains the algorithm, prepares normalizations</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>SimpleNamespace</code></dt>
+<dd>All arguments of RS</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>List of objects used for computing recommendations for any user</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main(args):
+    &#34;&#34;&#34;
+    Trains the algorithm, prepares normalizations
+
+    Parameters
+    ----------
+    args : SimpleNamespace
+        All arguments of RS
+
+    Returns
+    -------
+    list
+        List of objects used for computing recommendations for any user
+    &#34;&#34;&#34;
+    for arg_name in dir(args):
+        if arg_name[0] != &#39;_&#39;:
+            arg_value = getattr(args, arg_name)
+            print(f&#34;\t{arg_name}={arg_value}&#34;)
+
+    if not args.normalization:
+        print(f&#34;Using Identity normalization&#34;,file=sys.stderr)
+        normalization_factory = identity
+    else:
+        print(f&#34;Using {args.normalization} normalization&#34;,file=sys.stderr)
+        normalization_factory = globals()[args.normalization]
+
+    algorithm_factory = globals()[args.algorithm]
+    print(f&#34;Using &#39;{args.algorithm}&#39; algorithm&#34;,file=sys.stderr)
+    items,itemIDs, users, userIDs, extended_rating_matrix, pos_users_profiles, similarity_matrix,\
+          metadata_distance_matrix,user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id, \
+            all_genres, ease_B, ease_X = get_EASE(args)
+    neg_extended_rating_matrix, neg_ease_X, neg_ease_B, users_viewed_item, neg_users_profiles\
+          = get_EASE_with_negative(args, userIDs, itemIDs)
+    set_params_bin_diversity(user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id, all_genres)
+    set_params_calibration(user_genre_prob, metadata_matrix)
+    avg_ratings = get_avg_ratings_of_items(args.connectionstring)
+    avg_ratings = {list(avg_ratings[&#34;itemid&#34;])[i]: list(avg_ratings[&#34;averagescore&#34;])[i] for i in range(len(avg_ratings))} 
+    avg_ratings = [avg_ratings[item_id] for item_id in itemIDs]
+    set_params_popularity(avg_ratings)   
+
+    if args.type_of_items_distance == &#34;cb&#34;:
+        print(&#34;Using content based diversity&#34;)
+        assert args.metadata_path, &#34;Metadata path must be specified when using cb diversity&#34;
+        distance_matrix = metadata_distance_matrix
+    elif args.type_of_items_distance == &#34;cf&#34;:
+        print(&#34;Using collaborative diversity&#34;)
+        distance_matrix = 1.0 - similarity_matrix
+    else:
+        assert False, f&#34;Unknown diversity: {args.type_of_items_distance}&#34;    
+
+    num_users = users.size    
+    obj_weights = args.weights
+    obj_weights /= obj_weights.sum()
+    start_time = time.perf_counter()
+    start_time = time.perf_counter()
+    normalizations = load_cache(os.path.join(&#34;cache&#34;, &#34;normalizations.pckl&#34;))
+    # normalizations = compute_all_normalizations(args, normalization_factory, extended_rating_matrix, neg_extended_rating_matrix,\
+    #                                              ease_X, ease_B, neg_ease_X, neg_ease_B,  distance_matrix, users_viewed_item, items, users,\
+    #                                                 avg_ratings)
+    print(f&#34;Preparing normalizations took: {time.perf_counter() - start_time}&#34;,file=sys.stderr)
+    return extended_rating_matrix, neg_extended_rating_matrix, pos_users_profiles, neg_users_profiles,\
+    users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, algorithm_factory, normalizations,\
+    args, ease_B, neg_ease_B</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.parse_metadata"><code class="name flex">
+<span>def <span class="ident">parse_metadata</span></span>(<span>metadata_path, item_to_item_id, rating_matrix=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes datasets needed for computing recommendations for the user from metadata of movies</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>metadata_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>path to file with metadata</dd>
+<dt><strong><code>item_to_item_id</code></strong> :&ensp;<code>list</code></dt>
+<dd>list IDs of item placed on their indices used in datasets</dd>
+<dt><strong><code>rating_matrix</code></strong> :&ensp;<code>nd.array</code>, optional</dt>
+<dd>matrix with predictions of all ratings, by default None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>list of datasets needed for computing recommendations for the user</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_metadata(metadata_path, item_to_item_id, rating_matrix=None):
+    &#34;&#34;&#34;
+    Computes datasets needed for computing recommendations for the user from metadata of movies
+
+    Parameters
+    ----------
+    metadata_path : str
+        path to file with metadata
+    item_to_item_id : list
+        list IDs of item placed on their indices used in datasets
+    rating_matrix : nd.array, optional
+        matrix with predictions of all ratings, by default None
+
+    Returns
+    -------
+    list
+        list of datasets needed for computing recommendations for the user
+    &#34;&#34;&#34;
+    all_genres, metadata_matrix, genre_to_genre_id = None, None, None
+    if(support.binomial_diversity_support.metadata_matrix is None):
+        metadata = dict()
+        all_genres = set()
+        movies_df = pd.read_csv(metadata_path)
+        for index, row in movies_df.iterrows():
+            genres = row[&#34;genres&#34;].split(&#34;|&#34;)
+            if genres[0]==&#34;(no genres listed)&#34;:
+                genres=[]
+            all_genres.update(genres)
+            metadata[int(row[&#34;movieId&#34;])] = {
+                &#34;movie_name&#34;: row[&#34;title&#34;],
+                &#34;genres&#34;: genres
+            }
+        genre_to_genre_id = {g:i for i, g in enumerate(all_genres)}
+        metadata_matrix = np.zeros((len(item_to_item_id), len(all_genres)), dtype=np.int32)
+        for movie, data in metadata.items():
+            if movie not in item_to_item_id:
+                continue
+            item_id = item_to_item_id[movie]
+            for g in data[&#34;genres&#34;]:
+                metadata_matrix[item_id, genre_to_genre_id[g]] = 1
+    else:
+        all_genres = support.binomial_diversity_support.all_genres
+        metadata_matrix = support.binomial_diversity_support.metadata_matrix
+        genre_to_genre_id = support.binomial_diversity_support.genre_to_genre_id
+
+    metadata_distances = np.float32(squareform(pdist(metadata_matrix, &#34;cosine&#34;)))
+    metadata_distances[np.isnan(metadata_distances)] = 1.0
+    #metadata_matrix = 1.0 - metadata_matrix
+    genres_prob_all =np.zeros(len(all_genres))
+    user_genre_prob = np.zeros((rating_matrix.shape[0], len(all_genres)))
+    num_user_items=rating_matrix.getnnz( axis=1 )
+
+    
+    for i,j in get_sparse_matrix_indices(rating_matrix):
+        user_genre_prob[i]+=metadata_matrix[j]
+        genres_prob_all+=metadata_matrix[j]
+    user_genre_prob=[user_genre_prob[i]/num_user_items[i] for i in range(user_genre_prob.shape[0])]
+
+    num_all_items = rating_matrix.nnz
+    genres_prob_all/=num_all_items
+
+    return metadata_distances, user_genre_prob, genres_prob_all, metadata_matrix, genre_to_genre_id, all_genres</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.predict_for_user"><code class="name flex">
+<span>def <span class="ident">predict_for_user</span></span>(<span>user, user_index, items, extended_rating_matrix, neg_extended_rating_matrix, pos_users_profiles, neg_users_profiles, distance_matrix, users_viewed_item, normalizations, mask, algorithm_factory, args, obj_weights, num_users, currentlistindices)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes recommendations for one user</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>user</code></strong> :&ensp;<code>int</code></dt>
+<dd>selected user</dd>
+<dt><strong><code>user_index</code></strong> :&ensp;<code>int</code></dt>
+<dd>index in matrices of selected user</dd>
+<dt><strong><code>items</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>array of all items indices</dd>
+<dt><strong><code>extended_rating_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>prediction matrix from algorithm EASE computed from only positive ratings</dd>
+<dt><strong><code>neg_extended_rating_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>prediction matrix from algorithm EASE computed also from negative ratings</dd>
+<dt><strong><code>pos_users_profiles</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>every row corresponds to user's list of positively rated items</dd>
+<dt><strong><code>neg_users_profiles</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>every row corresponds to user's list of rated items</dd>
+<dt><strong><code>distance_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>matrix item x item with values representing distance (size of difference) of the 2 items</dd>
+<dt><strong><code>users_viewed_item</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>contains values how many users have rated each item</dd>
+<dt><strong><code>normalizations</code></strong> :&ensp;<code>dict</code></dt>
+<dd>every metric variant contains list of normalization (index in list corresponding to rank of the item or number of rated items by the user)</dd>
+<dt><strong><code>mask</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>contains 1 in the indices of items that can be recommended, 0 otherwise</dd>
+<dt><strong><code>algorithm_factory</code></strong> :&ensp;<code>factory</code></dt>
+<dd>Factory for creating mandate allocation algorithms</dd>
+<dt><strong><code>args</code></strong> :&ensp;<code>SimpleNamespace</code></dt>
+<dd>All arguments of RS</dd>
+<dt><strong><code>obj_weights</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>weights given by user to each metric</dd>
+<dt><strong><code>num_users</code></strong> :&ensp;<code>int</code></dt>
+<dd>number of users</dd>
+<dt><strong><code>currentlistindices</code></strong> :&ensp;<code>list</code></dt>
+<dd>indices of items already in the list</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.array, list</code></dt>
+<dd>recommended items and their objectives (=metrics) contribution</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predict_for_user(user, user_index, items, extended_rating_matrix, neg_extended_rating_matrix ,\
+                     pos_users_profiles, neg_users_profiles, distance_matrix, users_viewed_item, normalizations, mask, algorithm_factory,\
+                        args, obj_weights, num_users, currentlistindices):
+    &#34;&#34;&#34;
+    Computes recommendations for one user
+    
+    Parameters
+    ----------
+    user : int
+        selected user
+    user_index : int
+        index in matrices of selected user
+    items : np.ndarray
+        array of all items indices
+    extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed from only positive ratings
+    neg_extended_rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed also from negative ratings
+    pos_users_profiles : np.ndarray
+        every row corresponds to user&#39;s list of positively rated items
+    neg_users_profiles : np.ndarray
+        every row corresponds to user&#39;s list of rated items
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    users_viewed_item : np.ndarray
+        contains values how many users have rated each item
+    normalizations : dict
+        every metric variant contains list of normalization (index in list corresponding to rank of the item or number of rated items by the user)
+    mask : np.ndarray
+        contains 1 in the indices of items that can be recommended, 0 otherwise
+    algorithm_factory : factory
+        Factory for creating mandate allocation algorithms
+    args : SimpleNamespace
+        All arguments of RS
+    obj_weights : np.ndarray
+        weights given by user to each metric
+    num_users : int
+        number of users
+    currentlistindices : list
+        indices of items already in the list
+
+    Returns
+    -------
+    np.array, list
+        recommended items and their objectives (=metrics) contribution
+    &#34;&#34;&#34;
+    start_time = time.perf_counter()
+    mandate_allocation = algorithm_factory(obj_weights, args.masking_value)
+    users_partial_lists= np.full((1,len(currentlistindices) + args.k), -1, dtype=np.int32)
+    users_partial_lists[0, :len(currentlistindices)] = currentlistindices
+    supports_partial_lists = []
+    neg_user_profile_count= len(neg_users_profiles[user_index:user_index+1])
+    pos_user_profile_count= len(pos_users_profiles[user_index:user_index+1])
+    user_profile_count = pos_user_profile_count
+    if(args.relevance == &#34;also_negative&#34;):
+        user_profile_count = neg_user_profile_count
+    # Iteratively select item in the list
+    for i in range(len(currentlistindices), len(currentlistindices) + args.k):
+        iter_start_time = time.perf_counter()
+        print(f&#34;Predicting for i: {i + 1} out of: {args.k}&#34;)
+        # Compute support for the metrics
+        supports = get_supports(args, obj_weights, users_partial_lists, items, extended_rating_matrix[user_index:user_index+1],\
+                                neg_extended_rating_matrix[user_index:user_index+1],pos_users_profiles[user_index:user_index+1],\
+                                neg_users_profiles[user_index:user_index+1], distance_matrix, users_viewed_item, k=i+1,\
+                                    num_users=num_users, user_index=user_index)
+        
+        # Normalize the supports
+        assert supports.shape[0] == 5, &#34;expecting 5 objectives, if updated, update code below&#34;
+        
+        supports[0, :, :] = normalizations[args.relevance][min(user_profile_count, len(normalizations[args.relevance])-1)]\
+            (supports[0].T).T * args.discount_sequences[0][i]
+        supports[1, :, :] = normalizations[args.diversity][min(i,len(normalizations[args.diversity])-1)]\
+                                (supports[1].reshape(-1, 1)).reshape((supports.shape[1], -1)) * args.discount_sequences[1][i] 
+        supports[2, :, :] = normalizations[args.novelty][min(neg_user_profile_count, len(normalizations[args.novelty])-1)]\
+                                (supports[2].reshape(-1, 1)).reshape((supports.shape[1], -1)) * args.discount_sequences[2][i]
+        supports[3, :, :] = normalizations[args.popularity](supports[3].reshape(-1, 1)).reshape((supports.shape[1], -1)) \
+                                * args.discount_sequences[3][i] 
+        supports[4, :, :] = normalizations[&#34;calibration&#34;][min(i,len(normalizations[&#34;calibration&#34;])-1)]\
+                                (supports[4].reshape(-1, 1)).reshape((supports.shape[1], -1)) * args.discount_sequences[4][i] 
+        
+        # Mask out the already recommended items
+        np.put_along_axis(mask, users_partial_lists[:, :i], 0, 1)
+
+        # Get the per-user top-k recommendations
+        users_partial_lists[:, i] = mandate_allocation(mask, supports)
+
+        # For explanations, get supports of each item w.r.t. objectives
+        item_supports = np.squeeze(supports[:, 0, users_partial_lists[0, i]])
+        item_supports = [item_support * 100 for item_support in item_supports]
+        supports_partial_lists.append(item_supports)
+        print(args.diversity + &#34;, &#34; + args.novelty)
+        print(item_supports)
+        print(f&#34;i: {i + 1} done, took: {time.perf_counter() - iter_start_time}&#34;)
+    print(f&#34;Prediction done, took: {time.perf_counter() - start_time}&#34;,file=sys.stderr)
+    print(&#34;average\n&#34;)
+    print(np.average(np.array(supports_partial_lists), axis=0),file=sys.stderr)
+    return users_partial_lists[:,len(currentlistindices):], supports_partial_lists</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.prepare_calibration_normalization"><code class="name flex">
+<span>def <span class="ident">prepare_calibration_normalization</span></span>(<span>normalization_factory, distance_matrix, shift, items, users, recommendations_list_len)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepares normalization of all calibration variants, corresponding to rank of the item </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>normalization_factory</code></strong> :&ensp;<code>factory</code></dt>
+<dd>Factory to create new normalizations</dd>
+<dt><strong><code>distance_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>matrix item x item with values representing distance (size of difference) of the 2 items</dd>
+<dt><strong><code>shift</code></strong> :&ensp;<code>float</code></dt>
+<dd>shift in normalization</dd>
+<dt><strong><code>items</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>array of all items indices</dd>
+<dt><strong><code>users</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>array of all users indices</dd>
+<dt><strong><code>recommendations_list_len</code></strong> :&ensp;<code>int</code></dt>
+<dd>length of list of recommendations</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>list of normalization of calibration, corresponding to rank of the item</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepare_calibration_normalization( normalization_factory, distance_matrix, shift, items, users, recommendations_list_len):
+    &#34;&#34;&#34;
+    Prepares normalization of all calibration variants, corresponding to rank of the item 
+
+
+    Parameters
+    ----------
+    normalization_factory : factory
+        Factory to create new normalizations
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    shift : float
+        shift in normalization
+    items : np.ndarray
+        array of all items indices
+    users : np.ndarray
+        array of all users indices
+    recommendations_list_len : int
+        length of list of recommendations
+
+    Returns
+    -------
+    list
+        list of normalization of calibration, corresponding to rank of the item 
+    &#34;&#34;&#34;    
+    calibration_data_points=[]
+    norm_calibrations = []
+    selected_users = random.sample(list(users), k=100)
+    ranks = list(range(recommendations_list_len)) +\
+        list(range(recommendations_list_len, recommendations_list_len*4))[0::5]
+    users_partial_lists= np.full((len(users),recommendations_list_len*4), -1, dtype=np.int32)
+    index = -1
+    for i in ranks[:-1]: 
+        index += 1
+        calibration_data_points = []      
+        for user_index in selected_users:
+            support = calibration_support(users_partial_lists[user_index:user_index+1], items, user_index, i+1)
+            calibration_data_points.extend(support)
+            for j in range(ranks[index], ranks[index+1]):
+                users_partial_lists[user_index, j] = np.random.choice([np.argmax(support),np.random.choice(list(range(len(items))))],\
+                                                        p=[0.4, 0.6])
+                support[0,users_partial_lists[user_index, j]] = 0
+        calibration_data_points = np.array(calibration_data_points).flatten()
+        calibration_data_points=np.expand_dims(random.sample(list(calibration_data_points), k = len(items)),axis=1)
+        norm_calibration = build_normalization(normalization_factory, shift)
+        norm_calibration.train(calibration_data_points)
+        for j in range(ranks[index], ranks[index+1]):
+            norm_calibrations.append(norm_calibration)
+    return norm_calibrations</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.prepare_diversity_normalization"><code class="name flex">
+<span>def <span class="ident">prepare_diversity_normalization</span></span>(<span>diversity_type, normalization_factory, distance_matrix, shift, items, users, recommendations_list_len)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepares normalization of all diversity variants, corresponding to rank of the item </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>diversity_type</code></strong> :&ensp;<code>str</code></dt>
+<dd>code of the diversity variant</dd>
+<dt><strong><code>normalization_factory</code></strong> :&ensp;<code>factory</code></dt>
+<dd>Factory to create new normalizations</dd>
+<dt><strong><code>distance_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>matrix item x item with values representing distance (size of difference) of the 2 items</dd>
+<dt><strong><code>shift</code></strong> :&ensp;<code>float</code></dt>
+<dd>shift in normalization</dd>
+<dt><strong><code>items</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>array of all items indices</dd>
+<dt><strong><code>users</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>array of all users indices</dd>
+<dt><strong><code>recommendations_list_len</code></strong> :&ensp;<code>int</code></dt>
+<dd>length of list of recommendations</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>list of normalization of one diversity variant, corresponding to rank of the item</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepare_diversity_normalization(diversity_type, normalization_factory, distance_matrix, shift, items, users,\
+                                    recommendations_list_len):    
+    &#34;&#34;&#34;
+    Prepares normalization of all diversity variants, corresponding to rank of the item 
+
+
+    Parameters
+    ----------
+    diversity_type : str
+        code of the diversity variant
+    normalization_factory : factory
+        Factory to create new normalizations
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    shift : float
+        shift in normalization
+    items : np.ndarray
+        array of all items indices
+    users : np.ndarray
+        array of all users indices
+    recommendations_list_len : int
+        length of list of recommendations
+
+    Returns
+    -------
+    list
+        list of normalization of one diversity variant, corresponding to rank of the item 
+    &#34;&#34;&#34;    
+    selected_users = random.sample(list(users), k=100)
+    norm_diversities = []
+    ranks = list(range(recommendations_list_len)) +\
+        list(range(recommendations_list_len, recommendations_list_len*4))[0::5]
+    users_partial_lists= np.full((len(users),recommendations_list_len*4), -1, dtype=np.int32)
+    index = -1
+    for i in ranks[:-1]: 
+        index += 1
+        diversity_data_points = []      
+        for user_index in selected_users:
+            if(diversity_type==&#34;binomial_diversity&#34;):
+                support = binomial_diversity_support(users_partial_lists[user_index:user_index+1], items, user_index, i+1)
+            elif (diversity_type==&#34;maximal_diversity&#34;):
+                support = maximal_diversity_support(users_partial_lists[user_index:user_index+1],items, distance_matrix, i+1)
+            elif (diversity_type==&#34;intra_list_diversity&#34;):
+                support = intra_list_diversity_support(users_partial_lists[user_index:user_index+1],items, distance_matrix, i+1)
+            diversity_data_points.extend(support)
+            for j in range(ranks[index], ranks[index+1]):
+                users_partial_lists[user_index, j] = np.random.choice([np.argmax(support),\
+                                                                       np.random.choice(list(range(len(items))))],\
+                                                        p=[0.1, 0.9])
+                support[0,users_partial_lists[user_index, j]] = 0
+        diversity_data_points = np.array(diversity_data_points).flatten()
+        diversity_data_points=np.expand_dims(random.sample(list(diversity_data_points), k = len(items)),axis=1)
+        norm_diversity = build_normalization(normalization_factory, shift)
+        norm_diversity.train(diversity_data_points)
+        for j in range(ranks[index], ranks[index+1]):
+            norm_diversities.append(norm_diversity)
+    return norm_diversities</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.prepare_novelty_normalization"><code class="name flex">
+<span>def <span class="ident">prepare_novelty_normalization</span></span>(<span>novelty_type, normalization_factory, rating_matrix, ease_x, distance_matrix, users_viewed_item, shift, items, borders=[0, 2, 5, 8, 10, 15, 20, 30, 40, 50, 60, 75, 90, 110, 140])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepares normalization of all novelty variants, corresponding to number of items rated by the user</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>novelty_type</code></strong> :&ensp;<code>str</code></dt>
+<dd>code of the novelty variant</dd>
+<dt><strong><code>normalization_factory</code></strong> :&ensp;<code>factory</code></dt>
+<dd>Factory to create new normalizations</dd>
+<dt><strong><code>rating_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>prediction matrix from algorithm EASE computed also from negative ratings</dd>
+<dt><strong><code>ease_X</code></strong> :&ensp;<code>scipy.sparse.csr_matrix</code></dt>
+<dd>input matrix X for EASE retrieved also from negative ratings</dd>
+<dt><strong><code>distance_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>matrix item x item with values representing distance (size of difference) of the 2 items</dd>
+<dt><strong><code>users_viewed_item</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>contains values how many users have rated each item</dd>
+<dt><strong><code>shift</code></strong> :&ensp;<code>float</code></dt>
+<dd>shift in normalization</dd>
+<dt><strong><code>items</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>array of all items indices</dd>
+<dt><strong><code>borders</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of numbers of items rated by the user, normalization will be computed for each interval</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>list of normalization of one novelty variant, corresponding to number of items rated by the user</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepare_novelty_normalization(novelty_type, normalization_factory, rating_matrix, ease_x, distance_matrix,\
+                                  users_viewed_item, shift, items, \
+                                borders=[0,2,5,8,10,15,20,30,40,50,60,75,90,110,140]):
+    &#34;&#34;&#34;
+    Prepares normalization of all novelty variants, corresponding to number of items rated by the user
+
+
+    Parameters
+    ----------
+    novelty_type : str
+        code of the novelty variant
+    normalization_factory : factory
+        Factory to create new normalizations
+    rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE computed also from negative ratings    
+    ease_X : scipy.sparse.csr_matrix
+        input matrix X for EASE retrieved also from negative ratings
+    distance_matrix : np.ndarray
+        matrix item x item with values representing distance (size of difference) of the 2 items
+    users_viewed_item : np.ndarray
+        contains values how many users have rated each item
+    shift : float
+        shift in normalization
+    items : np.ndarray
+        array of all items indices
+    borders: list
+        list of numbers of items rated by the user, normalization will be computed for each interval
+
+    Returns
+    -------
+    list
+        list of normalization of one novelty variant, corresponding to number of items rated by the user
+    &#34;&#34;&#34;    
+    num_users = rating_matrix.shape[0] 
+    novelty_data_points=[]
+    if(novelty_type==&#34;popularity_complement&#34;):        
+        novelty_data_points = np.expand_dims(1.0 - users_viewed_item / num_users, axis=1)
+        norm_novelty = build_normalization(normalization_factory, shift)
+        norm_novelty.train(novelty_data_points)
+        return [norm_novelty]
+    else:
+        norm_novelties=[]
+        ease_X = ease_x.toarray()
+        sums_per_row = (ease_X != 0).sum(1)
+        borders.append(min(1000, borders[-1]+100)) #random big value
+        for i in range(len(borders) - 1):
+            possible_users = [index for index,value in enumerate(sums_per_row) if value &gt; borders[i]]     
+            if len(possible_users) &lt; 1:
+                borders[i+1] = borders[i]
+                continue
+            novelty_data_points= []        
+            for user in possible_users:
+                user_list= np.nonzero(ease_X[user,:])[0]
+                min_sample_len = max(1, borders[i])
+                max_sample_len = max(1, borders[i+1])
+                user_list = [random.sample(list(user_list), k=min(len(user_list),random.randint(min_sample_len, max_sample_len)))]
+                if(novelty_type==&#34;maximal_distance_based_novelty&#34;):
+                    novelty_data_points.extend(maximal_distance_based_novelty_support(user_list, items, distance_matrix))
+                elif (novelty_type==&#34;intra_list_distance_based_novelty&#34;):
+                    novelty_data_points.extend(intra_list_distance_based_novelty_support(user_list, items, distance_matrix))
+            novelty_data_points=np.expand_dims(random.sample(list(np.array(novelty_data_points).flatten()), k = len(items)),axis=1)
+            norm_novelty = build_normalization(normalization_factory, shift)
+            norm_novelty.train(novelty_data_points)
+            if (i+2)==len(borders):
+                norm_novelties.append(norm_novelty)
+            else:
+                norm_novelties.extend([norm_novelty] * (borders[i+1] - borders[i]))
+        return norm_novelties</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.prepare_popularity_normalization"><code class="name flex">
+<span>def <span class="ident">prepare_popularity_normalization</span></span>(<span>normalization_factory, users_viewed_item, shift, num_users, avg_ratings, popularity_type)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepares normalization of all popularity variants</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>normalization_factory</code></strong> :&ensp;<code>factory</code></dt>
+<dd>Factory to create new normalizations</dd>
+<dt><strong><code>users_viewed_item</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>contains values how many users have rated each item</dd>
+<dt><strong><code>shift</code></strong> :&ensp;<code>float</code></dt>
+<dd>shift in normalization</dd>
+<dt><strong><code>num_users</code></strong> :&ensp;<code>int</code></dt>
+<dd>number of users</dd>
+<dt><strong><code>avg_ratings</code></strong> :&ensp;<code>list</code></dt>
+<dd>list with average rating of each item</dd>
+<dt><strong><code>popularity_type</code></strong> :&ensp;<code>str</code></dt>
+<dd>code of the popularity variant</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>list of normalization of one popularity variant</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepare_popularity_normalization(normalization_factory, users_viewed_item, shift, num_users, avg_ratings,\
+                                     popularity_type):
+    &#34;&#34;&#34;
+    Prepares normalization of all popularity variants
+
+    Parameters
+    ----------
+    normalization_factory : factory
+        Factory to create new normalizations
+    users_viewed_item : np.ndarray
+        contains values how many users have rated each item
+    shift : float
+        shift in normalization
+    num_users : int
+        number of users
+    avg_ratings : list
+        list with average rating of each item
+    popularity_type : str
+        code of the popularity variant
+
+    Returns
+    -------
+    list
+        list of normalization of one popularity variant
+    &#34;&#34;&#34;    
+    popularity_data_points = []
+    if (popularity_type == &#34;num_of_ratings&#34;):
+        popularity_data_points =  np.expand_dims(users_viewed_item / num_users, axis=1)
+    elif (popularity_type == &#34;avg_ratings&#34;):
+        popularity_data_points =  np.expand_dims(avg_ratings, axis=1)
+    norm_popularity = build_normalization(normalization_factory, shift)
+    norm_popularity.train(popularity_data_points)
+    return norm_popularity</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.prepare_relevance_normalization"><code class="name flex">
+<span>def <span class="ident">prepare_relevance_normalization</span></span>(<span>normalization_factory, rating_matrix, ease_X, ease_B, shift, borders=[0, 2, 5, 8, 10, 15, 20, 30, 40, 50, 60, 75, 90, 110, 140])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepares normalization of relevance variant, corresponding to number of items rated by the user</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>normalization_factory</code></strong> :&ensp;<code>factory</code></dt>
+<dd>Factory to create new normalizations</dd>
+<dt><strong><code>rating_matrix</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>prediction matrix from algorithm EASE</dd>
+<dt><strong><code>ease_X</code></strong> :&ensp;<code>scipy.sparse.csr_matrix</code></dt>
+<dd>input matrix X for EASE</dd>
+<dt><strong><code>ease_B</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>matrix B of EASE</dd>
+<dt><strong><code>shift</code></strong> :&ensp;<code>float</code></dt>
+<dd>shift in normalization</dd>
+<dt><strong><code>borders</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of numbers of items rated by the user, normalization will be computed for each interval</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>list of normalization of one relevance variant, corresponding to number of items rated by the user</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepare_relevance_normalization(normalization_factory, rating_matrix, ease_X, ease_B, shift,\
+                                    borders=[0,2,5,8,10,15,20,30,40,50,60,75,90,110,140]):
+    &#34;&#34;&#34;
+    Prepares normalization of relevance variant, corresponding to number of items rated by the user
+
+
+    Parameters
+    ----------
+    normalization_factory : factory
+        Factory to create new normalizations
+    rating_matrix : np.ndarray
+        prediction matrix from algorithm EASE
+    ease_X : scipy.sparse.csr_matrix
+        input matrix X for EASE 
+    ease_B : np.ndarray
+        matrix B of EASE
+    shift : float
+        shift in normalization
+    borders: list
+        list of numbers of items rated by the user, normalization will be computed for each interval
+
+    Returns
+    -------
+    list
+        list of normalization of one relevance variant, corresponding to number of items rated by the user
+    &#34;&#34;&#34;    
+    borders.append(borders[-1]+2000) #random big value
+    norm_relevances=[]
+    ease_X = ease_X.toarray()
+    indices = np.nonzero(ease_X)
+    sums_per_row = (ease_X != 0).sum(1)
+    
+    for i in range(len(borders) - 1):
+        relevance_data_points = []
+        temp_rating_matrix = copy.deepcopy(rating_matrix)
+        possible_users = [index for index,value in enumerate(sums_per_row) if (value &gt;= borders[i])]        
+        if len(possible_users) &lt; 1:
+            borders[i+1] = borders[i]
+            continue
+        if (len(possible_users) &gt; 100):
+            possible_users = random.sample(possible_users, k=100)
+        for user in possible_users:
+            
+            indices = [index for index,value in enumerate(ease_X[user]) if value != 0]
+            if len(indices) &gt; borders[i+1]:
+                indices = random.sample(indices, k=random.randint(borders[i], borders[i+1]))
+            user_X = np.zeros(rating_matrix.shape[1],dtype=np.float64)
+            user_X[indices] = ease_X[user, indices]   
+            temp_rating_matrix[user] = user_X.dot(ease_B)
+            mask = np.ones(temp_rating_matrix.shape[1], dtype=bool)
+            mask[indices] = False
+            relevance_data_points.extend(temp_rating_matrix[user, mask])
+        relevance_data_points = np.expand_dims(random.sample(list(np.array(relevance_data_points).flatten()),
+                                                              k =ease_X.shape[1]),axis=1)
+        norm_relevance = build_normalization(normalization_factory, shift)
+        norm_relevance.train(relevance_data_points)
+        if (i+2)==len(borders):
+            norm_relevances.append(norm_relevance)
+        else:
+            norm_relevances.extend([norm_relevance] * (borders[i+1] - borders[i]))
+    return norm_relevances</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.save_cache"><code class="name flex">
+<span>def <span class="ident">save_cache</span></span>(<span>cache_path, cache)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves python object to file</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>cache_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>path to the file where the python object will be saved</dd>
+<dt><strong><code>cache</code></strong> :&ensp;<code>object</code></dt>
+<dd>python object to be saved</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_cache(cache_path, cache):
+    &#34;&#34;&#34;
+    Saves python object to file
+
+    Parameters
+    ----------
+    cache_path : str
+        path to the file where the python object will be saved
+    cache : object
+        python object to be saved
+    &#34;&#34;&#34;
+    print(f&#34;Saving cache to: {cache_path}&#34;)
+    with open(cache_path, &#39;wb&#39;) as f:
+        pickle.dump(cache, f)</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.main.try_to_connect_to_db"><code class="name flex">
+<span>def <span class="ident">try_to_connect_to_db</span></span>(<span>connectionstring)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Tries connect to db multiple times - checking if the database correctly started
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>connectionstring</code></strong> :&ensp;<code>str</code></dt>
+<dd>Connection string to the db</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def try_to_connect_to_db(connectionstring):
+    &#34;&#34;&#34;
+    Tries connect to db multiple times - checking if the database correctly started
+    Parameters
+    ----------
+    connectionstring : str
+        Connection string to the db
+    &#34;&#34;&#34;
+    retrycount = 0
+    while retrycount &lt; 100:
+        try:
+           conn = odbc.connect(connectionstring)
+           conn.close()
+           break
+        except Exception as e:
+            print(e,file=sys.stderr)
+            seconds = 90
+            print (f&#34;SQL server wasn&#39;t started yet. Or database wasn&#39;t restorted yet if its first run of the docker compose app.&#34;,\
+                   file=sys.stderr)
+            print (f&#34;Retry after {seconds} sec&#34;,file=sys.stderr)
+            retrycount += 1
+            time.sleep(seconds)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="moo-as-voting-fast" href="index.html">moo-as-voting-fast</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="moo-as-voting-fast.main.build_normalization" href="#moo-as-voting-fast.main.build_normalization">build_normalization</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.compute_all_normalizations" href="#moo-as-voting-fast.main.compute_all_normalizations">compute_all_normalizations</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.get_EASE" href="#moo-as-voting-fast.main.get_EASE">get_EASE</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.get_EASE_with_negative" href="#moo-as-voting-fast.main.get_EASE_with_negative">get_EASE_with_negative</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.get_avg_ratings_of_items" href="#moo-as-voting-fast.main.get_avg_ratings_of_items">get_avg_ratings_of_items</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.get_ratings" href="#moo-as-voting-fast.main.get_ratings">get_ratings</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.get_ratings_of_user" href="#moo-as-voting-fast.main.get_ratings_of_user">get_ratings_of_user</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.get_sparse_matrix_indices" href="#moo-as-voting-fast.main.get_sparse_matrix_indices">get_sparse_matrix_indices</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.get_supports" href="#moo-as-voting-fast.main.get_supports">get_supports</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.init" href="#moo-as-voting-fast.main.init">init</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.load_cache" href="#moo-as-voting-fast.main.load_cache">load_cache</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.main" href="#moo-as-voting-fast.main.main">main</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.parse_metadata" href="#moo-as-voting-fast.main.parse_metadata">parse_metadata</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.predict_for_user" href="#moo-as-voting-fast.main.predict_for_user">predict_for_user</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.prepare_calibration_normalization" href="#moo-as-voting-fast.main.prepare_calibration_normalization">prepare_calibration_normalization</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.prepare_diversity_normalization" href="#moo-as-voting-fast.main.prepare_diversity_normalization">prepare_diversity_normalization</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.prepare_novelty_normalization" href="#moo-as-voting-fast.main.prepare_novelty_normalization">prepare_novelty_normalization</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.prepare_popularity_normalization" href="#moo-as-voting-fast.main.prepare_popularity_normalization">prepare_popularity_normalization</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.prepare_relevance_normalization" href="#moo-as-voting-fast.main.prepare_relevance_normalization">prepare_relevance_normalization</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.save_cache" href="#moo-as-voting-fast.main.save_cache">save_cache</a></code></li>
+<li><code><a title="moo-as-voting-fast.main.try_to_connect_to_db" href="#moo-as-voting-fast.main.try_to_connect_to_db">try_to_connect_to_db</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

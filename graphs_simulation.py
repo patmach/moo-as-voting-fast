@@ -85,6 +85,7 @@ def print_line_graphs(df, x_axis, x_axis_postfix = False, folder="OldNormalizati
 def correlation(df, folder="OldNormalizationGraphs2"):
     """
     Prints graphs of correlation of each metric when used any combination of metric variants
+    
     Parameters
     ----------
     df : pd.DataFrame

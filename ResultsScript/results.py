@@ -10,7 +10,7 @@ import textwrap
 
 date_format= "%d-%m-%Y %H:%M:%S.%f"
 number_of_recommendations = 15
-
+folder_with_graphs = "Results"
 ActTypeToQuestionSection = {
     "Demographics":[],
     "Information about movies":[],
@@ -47,9 +47,10 @@ LikertScale = {"Strongly agree" : 1,
                "Strongly disagree" : -1}
 
 
-def wrap_labels(ax, width, break_long_words=False):
+def wrap_labels(ax, width_x, break_long_words=True, width_y = 60):
     """
     wraps labels by newlines
+    
     Parameters
     ----------
     ax : _type_
@@ -61,10 +62,18 @@ def wrap_labels(ax, width, break_long_words=False):
     """
     labels = []
     for label in ax.get_xticklabels():
-        text = label.get_text()
-        labels.append(textwrap.fill(text, width=width,
+        text = label.get_text().replace('_',' ')
+        labels.append(textwrap.fill(text, width=width_x,
                       break_long_words=break_long_words))
+    ax.set_xticks(ax.get_xticks().tolist())
     ax.set_xticklabels(labels, rotation=0)
+    labels = []
+    for label in ax.get_yticklabels():
+        text = label.get_text().replace('_',' ')
+        labels.append(textwrap.fill(text, width=width_y,
+                      break_long_words=break_long_words))
+    ax.set_yticks(ax.get_yticks().tolist())
+    ax.set_yticklabels(labels, rotation=0)
 
 
 def get_connection_string():
@@ -109,6 +118,7 @@ def get_table(table_name):
 
 def not_null_lists(f,s):
     """
+
     Parameters
     ----------
     s : list
@@ -129,6 +139,7 @@ def not_null_lists(f,s):
 
 def get_userAnswers():
     """
+
     Returns
     -------
     pd.DataFrame
@@ -151,6 +162,7 @@ def get_userAnswers():
 
 def get_first_user_acts():
     """
+
     Returns
     -------
     pd.DataFrame
@@ -163,11 +175,12 @@ def get_first_user_acts():
     userActs = pd.merge_ordered(userActs, acts, how="inner",on="actid")
     userActs.sort_values(by="index", inplace=True)
     userActs = userActs.drop_duplicates(subset=["userid","typeofact"])    
-    print(userActs)
+
     return userActs
 
 def get_most_used_in_recommender_queries():
     """
+
     Returns
     -------
     pd.DataFrame
@@ -182,12 +195,12 @@ def get_most_used_in_recommender_queries():
         df = recommenderQueries.groupby(['userid',column])['date'].count()
         df = df.reset_index()
         df = df.rename(columns={"date": "count", column:"actcode"})
-        df= pd.merge(df, acts, acts["actcode","typeofact"], on="actcode")
+        df= pd.merge(df, acts[["actcode","typeofact"]], on="actcode")
         grouped_dfs.append(df)            
     recommenderQueries = pd.concat(grouped_dfs)
     recommenderQueries.sort_values("count", ascending=False, inplace=True)
-    recommenderQueries = recommenderQueries.drop_duplicates(subset=["userid","typeOfAct"])
-    print(recommenderQueries)
+    recommenderQueries = recommenderQueries.drop_duplicates(subset=["userid","typeofact"])
+    
     return recommenderQueries
 
 def get_recommender_queries_from_file():
@@ -197,6 +210,7 @@ def get_recommender_queries_from_file():
 
 def get_recommender_queries_by_metric():
     """
+    
     Returns
     -------
     pd.DataFrame
@@ -235,6 +249,25 @@ def get_recommender_queries_rating_interaction():
     return recommenderqueries_new
 
 def process_user_interactions(userid, ratings, interactions, recommenderqueries):
+    """
+    Enrich recommender query dataset of users seen, clicks, ratings and positive ratings 
+    
+    Parameters
+    ----------
+    userid : int
+        ID of user
+    ratings : pd.DataFrame
+        dataframe with all given ratings
+    interactions : pd.DataFrame
+        dataframe with all interactions
+    recommenderqueries : pd.DataFrame
+        dataframe with all recommender queries
+
+    Returns
+    -------
+    pd.DataFrame
+        Enriched recommender query dataset of users seen, clicks, ratings and positive ratings 
+    """
     u_ratings = ratings[ratings["userid"]==userid]
     u_interactions = interactions[interactions["userid"]==userid]
     u_seens = u_interactions[u_interactions["type"]=="Seen"]
@@ -269,6 +302,13 @@ def process_user_interactions(userid, ratings, interactions, recommenderqueries)
     u_recommenderqueries["positive_ratings_per_seen"] =  u_recommenderqueries["positive_ratings"] / u_recommenderqueries["seens"] 
     u_recommenderqueries["positive_ratings_per_rating"] = u_recommenderqueries["positive_ratings"] / u_recommenderqueries["ratings"]
     u_recommenderqueries["rank"] = list(range(len(u_recommenderqueries)))
+    corr = u_recommenderqueries[["relevance","diversity","novelty","popularity","calibration", "rank",\
+                                 "seens", "clicks_per_seen", "positive_ratings_per_seen","ratings_per_seen"]] .corr()
+    g = sns.heatmap(corr,  cmap='coolwarm')    
+    g.set(title=f"Korelace - požadavek na RS")
+    plt.savefig(os.path.join(folder_with_graphs,f"corr_recommender_queries.png"), bbox_inches='tight')
+    plt.clf()
+    plt.cla()
     return u_recommenderqueries
 
 def process_metrics():
@@ -283,7 +323,7 @@ def process_metrics():
                palette=cm)
     g.set(title = f"Metrics weights specified by user")
     wrap_labels(g, 12)
-    plt.savefig(os.path.join("Results",f"Metrics_importances.png"), bbox_inches='tight')
+    plt.savefig(os.path.join(folder_with_graphs,f"Metrics_importances.png"), bbox_inches='tight')
     plt.close('all')
     plt.clf()
     plt.cla()
@@ -291,7 +331,7 @@ def process_metrics():
                palette=cm)
     g.set(title = f"Metrics variants weights specified by user")
     wrap_labels(g, 6)
-    plt.savefig(os.path.join("Results",f"Metrics_variants_importances.png"), bbox_inches='tight')
+    plt.savefig(os.path.join(folder_with_graphs,f"Metrics_variants_importances.png"), bbox_inches='tight')
     plt.close('all')
     plt.clf()
     plt.cla()
@@ -301,6 +341,7 @@ def process_metrics():
 def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
     """
     Compute all stats objectives weights per used metric variant and used mechanism
+
     Parameters
     ----------
     recommenderqueries : pd.DataFrame
@@ -315,7 +356,7 @@ def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
                palette=cm)
             g.set(title = f"{metric} weight specified by user per metric variant")
             wrap_labels(g, 12)
-            plt.savefig(os.path.join("Results",f"variants_of_{metric}_importances.png"), bbox_inches='tight')
+            plt.savefig(os.path.join(folder_with_graphs,f"variants_of_{metric}_importances.png"), bbox_inches='tight')
             plt.close('all')
             plt.clf()
             plt.cla()
@@ -323,7 +364,7 @@ def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
                split=True, palette=cm)
             g.set(title = f"{metric} weight specified by user per tweak mechanism")
             wrap_labels(g, 12)
-            plt.savefig(os.path.join("Results",f"by_tweak_mechanism_{metric}_importances.png"), bbox_inches='tight')
+            plt.savefig(os.path.join(folder_with_graphs,f"by_tweak_mechanism_{metric}_importances.png"), bbox_inches='tight')
             plt.close('all')
             plt.clf()
             plt.cla() 
@@ -356,6 +397,7 @@ def process_questions():
     userAnswers = get_userAnswers()
     firstUserActs = get_first_user_acts()
     recommendedQueries = get_most_used_in_recommender_queries()
+    best_peformances_by_ratings = process_interactions_and_ratings()
     questions = get_table("Questions")
     userAnswers = userAnswers[~userAnswers["userid"].isin(discarded_users)]
     userAnswers = userAnswers[~userAnswers["userid"].isin(author_users)]
@@ -367,60 +409,77 @@ def process_questions():
         q_userAnswers = userAnswers[userAnswers["questionid"] == questionid]   
         first = q_userAnswers.iloc[0]
         if (first["answertype"] == 0):
-            mean_std_df, q_userAnswers = get_Likert_Scale_int_value_dfs(q_userAnswers)
+            mean_std_df, q_userAnswers = get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers)
             likertScaleQuestionsMeanAndStd.append(mean_std_df)
             likertScaleAnswers.append(q_userAnswers)
-        process_one_question(questionid,userAnswers, q_userAnswers, first, firstUserActs, recommendedQueries)
+        process_one_question(questionid,userAnswers, q_userAnswers, first, firstUserActs, recommendedQueries, best_peformances_by_ratings)
     process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAnswers)
 
 def process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAnswers):
+    """
+    Compute all results from user answers to questions with possible answers from Likert scale converted to number representation
+      and save them as graphs
+
+    Parameters
+    ----------
+    likertScaleQuestionsMeanAndStd : pd.DataFrame
+        DataFrame containing mean and std of users answers to questions with possible answers from Likert scale
+    likertScaleAnswers : _type_
+        DataFrame containing answers to questions with possible answers from Likert scale converted to number representation
+    """
     likertScaleQuestionsMeanAndStd = pd.concat(likertScaleQuestionsMeanAndStd)
     likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd.reset_index()
-    print(likertScaleQuestionsMeanAndStd)
-    likertScaleQuestionsMeanAndStd.to_csv((os.path.join("Results",f"LikertScaleQuestionsAnswers.csv")))
+    likertScaleQuestionsMeanAndStd.to_csv((os.path.join(folder_with_graphs,f"LikertScaleQuestionsAnswers.csv")))
     likertScaleAnswers = pd.concat(likertScaleAnswers)
     for section in likertScaleAnswers["sectionname"].unique():
         section_LikertScaleAnswers = likertScaleAnswers[likertScaleAnswers["sectionname"] == section]
-        g = sns.boxplot(x="intvalue",y="questiontext",data=section_LikertScaleAnswers)
-        g.set(title=("\n".join(wrap(f"{section} likert scale questions", 60))))
-        g.set_xlim(-1.1,1.1)
-        wrap_labels(g, 20)
-        plt.savefig(os.path.join("Results",f"{section.replace(' ', '_')}LikertScaleQuestionsAnswers.png"), bbox_inches='tight')
-        plt.close('all')
-        plt.clf()
-        plt.cla()
-
         section_likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd[\
-            likertScaleQuestionsMeanAndStd["question"].isin(section_LikertScaleAnswers["questiontext"])]
+        likertScaleQuestionsMeanAndStd["question"].isin(section_LikertScaleAnswers["questiontext"])]
         g = sns.barplot(section_likertScaleQuestionsMeanAndStd, x="mean",y="question")
         y_coords = [p.get_y() + 0.5*p.get_height() for p in g.patches]
-        x_coords = [p.get_width() for p in g.patches]
+        x_coords = [p.get_width() for p in g.patches]        
         g.set_xlim(-1.1,1.1)        
         g.errorbar(x=x_coords, y=y_coords, xerr=section_likertScaleQuestionsMeanAndStd["std"], fmt="none", c= "k")
-        plt.savefig(os.path.join("Results",f"{section.replace(' ', '_')}LikertScaleQuestionsMeanAndStd.png"), bbox_inches='tight')
+        wrap_labels(g, 20)
+        plt.savefig(os.path.join(folder_with_graphs,f"{section.replace(' ', '_')}LikertScaleQuestionsMeanAndStd.png"), bbox_inches='tight')
         plt.close('all')
         plt.clf()
         plt.cla()
 
-def get_Likert_Scale_int_value_dfs(q_userAnswers):
-    q_userAnswers["intvalue"] = [LikertScale[answer] for answer in q_userAnswers["answer"]]
-    stats = q_userAnswers.groupby(["questiontext"]).agg({"intvalue": ["mean","std"]})
+def get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers):
+    """_summary_
+
+    Parameters
+    ----------
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+
+    Returns
+    -------
+    (pd.DataFrame, pd.DataFrame)
+        DataFrame containing mean and std of users answers to questions with possible answers from Likert scale
+        Dataset with user answers to the question with new column representing number representation of answer
+    """
+    q_userAnswers["numvalue"] = [LikertScale[answer] for answer in q_userAnswers["answer"]]
+    stats = q_userAnswers.groupby(["questiontext"]).agg({"numvalue": ["mean","std"]})
     stats = stats.reset_index()
     mean_std_df = pd.DataFrame({
             "question":stats["questiontext"],
-            "mean":stats["intvalue","mean"],
-            "std":stats["intvalue","std"]
+            "mean":stats["numvalue","mean"],
+            "std":stats["numvalue","std"]
     })
     return  mean_std_df , q_userAnswers
 
 def get_possible_answers_to_question(questionid, questionType):
     """
+    
     Parameters
     ----------
     questionid : int
         ID of the question
     questionType : int
         Type of the question
+    
     Returns
     -------
     list
@@ -435,7 +494,7 @@ def get_possible_answers_to_question(questionid, questionType):
         answersToQuestion = list(allAnswers[allAnswers["questionid"] == questionid]["text"].unique())
     return answersToQuestion
 
-def process_one_question(questionid, userAnswers, q_userAnswers, first, firstUserActs, recommendedQueries):
+def process_one_question(questionid, userAnswers, q_userAnswers, first, firstUserActs, recommendedQueries, best_peformances_by_ratings):
     """
     Compute results from user answers to one question and save them as graphs
 
@@ -458,12 +517,15 @@ def process_one_question(questionid, userAnswers, q_userAnswers, first, firstUse
                                             number_of_users_with_answers)
     process_one_question_most_used_act_in_query(questionid, sectionname, recommendedQueries, q_userAnswers, questiontext,\
                                                  answersToQuestion, number_of_users_with_answers)
+    process_one_question_best_performances_by_ratings_in_query(questionid, sectionname, best_peformances_by_ratings, q_userAnswers, questiontext,\
+                                                 answersToQuestion, number_of_users_with_answers)
     process_one_question_other_question(questionid, sectionname,userAnswers, q_userAnswers, questiontext, answersToQuestion,\
                                         number_of_users_with_answers)
 
 def process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion, y_max):
     """
     Saves graph of user answers to the question
+    
     Parameters
     ----------
     questionid : int
@@ -489,7 +551,7 @@ def process_one_question_all_answers(questionid, q_userAnswers, questiontext, an
     g.set(title=("\n".join(wrap(questiontext, 60))))
     g.set_ylim(0,y_max+2)
     wrap_labels(g, 12)
-    plt.savefig(os.path.join("Results",f"{questionid}_answers.png"), bbox_inches='tight')
+    plt.savefig(os.path.join(folder_with_graphs,f"{questionid}_answers.png"), bbox_inches='tight')
     plt.close('all')
     plt.clf()
     plt.cla()
@@ -520,6 +582,7 @@ def process_one_question_first_type_of_act(questionid, sectionname, firstUserAct
         type_userActs = firstUserActs[firstUserActs["typeofact"] == typeOfAct]
         type_userAnswers = pd.merge(q_userAnswers, type_userActs, how="left", on=["userid"])
         actName = f"First variant of {typeOfAct}"
+        type_userAnswers.sort_values("actcode", inplace=True)
         type_userAnswers.rename(columns={"actcode" : actName}, inplace=True)
         data = []
         for possibleAnswer in answersToQuestion:
@@ -538,11 +601,65 @@ def process_one_question_first_type_of_act(questionid, sectionname, firstUserAct
         g.set_ylim(0,y_max / len(type_userAnswers[actName].unique()) + 2)
         wrap_labels(g, 12)
         sns.move_legend(g, "upper left", bbox_to_anchor=(1, 1))
-        plt.savefig(os.path.join("Results",f"by_{typeOfAct}_{questionid}_answers.png"), bbox_inches='tight')
+        plt.savefig(os.path.join(folder_with_graphs,f"by_{typeOfAct}_{questionid}_answers.png"), bbox_inches='tight')
         plt.close('all')
         plt.clf()
         plt.cla()
         #plt.show()
+
+def process_one_question_best_performances_by_ratings_in_query(questionid, sectionname, best_peformances_by_ratings, q_userAnswers, questiontext,\
+                                                 answersToQuestion, y_max):
+    """
+    Saves graph of user answers to the question based on first act from group of acts
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    sectionname : str
+        name of the questions section where this question belongs
+    best_peformances_by_ratings : pd.DataFrame
+        DataFrame with variants of tweak mechanism, metrics,... used in recommender query that had most positive ratings 
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    """
+    for typeOfAct in ActTypeToQuestionSection[sectionname]:
+        type_userActs = best_peformances_by_ratings[best_peformances_by_ratings["typeofact"] == typeOfAct]
+        if (len(type_userActs)) == 0:
+            continue
+        type_userAnswers = pd.merge(q_userAnswers, type_userActs,  on=["userid"])
+        actName = "\n".join(wrap(f"Most given positive ratings per seen when used variant of {typeOfAct} in recommender queries", 25))
+        type_userAnswers.sort_values("actcode", inplace=True)
+        type_userAnswers.rename(columns={"actcode" : actName}, inplace=True)
+        data = []
+        for possibleAnswer in answersToQuestion:
+            type_userAnswers_by_answer = type_userAnswers[type_userAnswers["answer"] == possibleAnswer]
+            for nameOfAct in type_userAnswers[actName].unique():
+                type_userAnswers_by_act = type_userAnswers_by_answer[type_userAnswers_by_answer[actName] == nameOfAct]
+                
+                data.append(pd.DataFrame({
+                    "answer" : [possibleAnswer],
+                    "count" : [len(type_userAnswers_by_act)],
+                    actName: ["\n".join(wrap(nameOfAct, 25))]
+                }))
+        type_userAnswers = pd.concat(data)
+        cm = sns.color_palette("plasma",len(type_userAnswers[actName].unique()))
+        g = sns.barplot(data=type_userAnswers, x="answer", y="count", hue = actName, palette=cm)
+        g.set(title=("\n".join(wrap(questiontext, 40))))
+        g.set_ylim(0,y_max / len(type_userAnswers[actName].unique()) + 2)
+        wrap_labels(g, 12)
+        sns.move_legend(g, "upper left", bbox_to_anchor=(1, 1))
+        plt.savefig(os.path.join(folder_with_graphs,f"by_best_performed_on_ratings_{typeOfAct}_variant_{questionid}_answers.png"), bbox_inches='tight')
+        plt.close('all')
+        plt.clf()
+        plt.cla()
+
+
+
 
 def process_one_question_most_used_act_in_query(questionid, sectionname, recommenderQueries, q_userAnswers, questiontext,\
                                                 answersToQuestion, y_max):
@@ -565,11 +682,12 @@ def process_one_question_most_used_act_in_query(questionid, sectionname, recomme
         Possible answers to the question
     """
     for typeOfAct in ActTypeToQuestionSection[sectionname]:
-        type_userActs = recommenderQueries[recommenderQueries["typeOfAct"] == typeOfAct]
+        type_userActs = recommenderQueries[recommenderQueries["typeofact"] == typeOfAct]
         if (len(type_userActs)) == 0:
             continue
         type_userAnswers = pd.merge(q_userAnswers, type_userActs,  on=["userid"])
         actName = f"Most used variant of {typeOfAct} in recommender queries"
+        type_userAnswers.sort_values("actcode", inplace=True)
         type_userAnswers.rename(columns={"actcode" : actName}, inplace=True)
         data = []
         for possibleAnswer in answersToQuestion:
@@ -589,7 +707,7 @@ def process_one_question_most_used_act_in_query(questionid, sectionname, recomme
         g.set_ylim(0,y_max / len(type_userAnswers[actName].unique()) + 2)
         wrap_labels(g, 12)
         sns.move_legend(g, "upper left", bbox_to_anchor=(1, 1))
-        plt.savefig(os.path.join("Results",f"by_recommender_query_{typeOfAct}_{questionid}_answers.png"), bbox_inches='tight')
+        plt.savefig(os.path.join(folder_with_graphs,f"by_recommender_query_{typeOfAct}_{questionid}_answers.png"), bbox_inches='tight')
         plt.close('all')
         plt.clf()
         plt.cla()
@@ -597,7 +715,7 @@ def process_one_question_most_used_act_in_query(questionid, sectionname, recomme
 
 def process_one_question_other_question(questionid, sectionname,userAnswers, q_userAnswers, questiontext,
                                          answersToQuestion, y_max):
-    """_summary_
+    """
 
     Parameters
     ----------
@@ -652,13 +770,21 @@ def process_one_question_other_question(questionid, sectionname,userAnswers, q_u
         g.set_ylim(0, max(y_max / 2, dependent_userAnswers["count"].max()))
         wrap_labels(g, 12)
         sns.move_legend(g, "upper left", bbox_to_anchor=(1, 1))
-        plt.savefig(os.path.join("Results",f"by_{qid}_answers_{questionid}.png"), bbox_inches='tight')
+        plt.savefig(os.path.join(folder_with_graphs,f"by_{qid}_answers_{questionid}.png"), bbox_inches='tight')
         plt.close('all')
         plt.clf()
         plt.cla()
         #plt.show()
 
 def number_of_users_made_act(withFirstUserActs):
+    """
+    Computes and saves dataset containing how many users have completed each act
+
+    Parameters
+    ----------
+    withFirstUserActs : bool
+        count users that has the action assigned as default
+    """
     global discarded_users, author_users
     userActs = get_table("UserActs")
     acts = get_table("Acts")
@@ -674,9 +800,17 @@ def number_of_users_made_act(withFirstUserActs):
     groupedUserActs = groupedUserActs.rename(columns={"id_x": "count"})
     groupedUserActs["from_all"] = groupedUserActs["count"] / len(userActs["userid"].unique())
     groupedUserActs[["code","count","from_all","typeofact"]]\
-        .to_csv(os.path.join("Results",f"number_of_users_made_act_{str(withFirstUserActs)}.csv"))
+        .to_csv(os.path.join(folder_with_graphs,f"number_of_users_made_act_{str(withFirstUserActs)}.csv"))
 
 def number_of_finished_groups_of_acts_by_priority(usersThatAnswered):
+    """
+    Computes and saves dataset containing how many groups of acts user averagely finished for each priority
+
+    Parameters
+    ----------
+    usersThatAnswered : bool
+        count only users that answered atleast one question
+    """
     global author_users, users_without_questionnaire
     userActs = get_table("UserActs")
     acts = get_table("Acts")
@@ -699,9 +833,17 @@ def number_of_finished_groups_of_acts_by_priority(usersThatAnswered):
     userActs["count"] = userActs["count"] / userActs["priority_acts"]
     output = userActs.groupby(['priority'], as_index=False).agg({'count':['mean','std']})
     output = output.reset_index()
-    output.to_csv(os.path.join("Results",f"number_of_finished_groups_of_acts_by_priority_{str(usersThatAnswered)}.csv"))
+    output.to_csv(os.path.join(folder_with_graphs,f"number_of_finished_groups_of_acts_by_priority_{str(usersThatAnswered)}.csv"))
 
 def number_of_recommended_queries(usersThatAnswered):    
+    """
+    Computes mean and std of number of recommended queries made by user
+    
+    Parameters
+    ----------
+    usersThatAnswered : bool
+        count only users that answered atleast one question
+    """
     colnames=["relevance type","diversity type","novelty type","popularity type","calibration type",
               "relevance","diversity","novelty","popularity","calibration","tweak mechanism", "userid", "date"] 
     recommenderqueries = pd.read_csv("Logs/RecommenderQueries.txt", sep=';', names=colnames)
@@ -711,9 +853,19 @@ def number_of_recommended_queries(usersThatAnswered):
     recommenderqueries = recommenderqueries.reset_index()
     recommenderqueries = recommenderqueries.rename(columns={"date": "count"})
     recommenderqueriescount = recommenderqueries.agg({'count':['mean','std']})
-    recommenderqueriescount.to_csv(os.path.join("Results",f"recommenderqueriescount_{str(usersThatAnswered)}.csv"))
+    recommenderqueriescount.to_csv(os.path.join(folder_with_graphs,f"recommenderqueriescount_{str(usersThatAnswered)}.csv"))
 
 def time_in_user_study(two_hours_max):
+    """
+    Computes time spent in user study 
+        : from first recommender query to first answer to question
+        : from first recommender query to last answer to question
+
+    Parameters
+    ----------
+    two_hours_max : bool
+        count only with users that spend less than 2 hours in the user study (performed study at once)
+    """
     users = get_table("Users")
     users = users[~users["firstrecommendationtime"].isna()]
     #format = cnv_csharp_date_fmt("dd-MM-yyyy HH:mm:ss.f")
@@ -735,11 +887,50 @@ def time_in_user_study(two_hours_max):
     if (two_hours_max):
         users = users[users["minutes_to_last_answer"] <=120]
     minutes_to_first_answer = users.agg({'minutes_to_first_answer':['mean','std']})
-    minutes_to_first_answer.to_csv(os.path.join("Results",f"minutes_to_first_answer{str(two_hours_max)}.csv"))
+    minutes_to_first_answer.to_csv(os.path.join(folder_with_graphs,f"minutes_to_first_answer{str(two_hours_max)}.csv"))
     minutes_to_last_answer = users.agg({'minutes_to_last_answer':['mean','std']})
-    minutes_to_last_answer.to_csv(os.path.join("Results",f"minutes_to_last_answer{str(two_hours_max)}.csv"))
+    minutes_to_last_answer.to_csv(os.path.join(folder_with_graphs,f"minutes_to_last_answer{str(two_hours_max)}.csv"))
+
+def variant_performance_on_ratings_by_user_graph(df, column):
+    """
+    Graph of mean positive ratings by user when variants of {column} (metric, tweak mechanism) used in recommmender query
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Enriched recommender query dataset of users seen, clicks, ratings and positive ratings 
+    column : str
+        name of column with different variants
+    """
+    dict = {
+        "positive_ratings_per_seen": "users mean positive ratings per seen",
+        "clicks_per_seen":"users mean number of clicks per seen"
+    }
+    data = df.rename(columns=dict)
+    if(column == "rank"):
+        data[column] = round(df[column]/5)*5
+    count=0
+    y_max = [0.3, 0.05]
+    for value in dict.values():
+        g = sns.barplot(data, y=value, x=column)
+        g.set(title=("\n".join(wrap(f"{value} when variants of {column} used in recommmender query", 60))))
+        g.set_ylim(-0.01,y_max[count])
+        wrap_labels(g, 20)
+        plt.savefig(os.path.join(folder_with_graphs,f"ratings_and_interactions_per_{column.replace(' ', '_')}_{count}.png"), bbox_inches='tight')
+        plt.close('all')
+        plt.clf()
+        plt.cla()
+        count+=1
 
 def process_interactions_and_ratings():
+    """
+    Computes dataset based on users interactions and ratings to the response of recommender system
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with variants of tweak mechanism, metrics,... used in recommender query that had most positive ratings 
+    """
     recommender_queries_rating_interaction = get_recommender_queries_rating_interaction()   
     recommender_queries_rating_interaction[~recommender_queries_rating_interaction["userid"].isin(author_users)]
     recommender_queries_rating_interaction = recommender_queries_rating_interaction\
@@ -756,8 +947,9 @@ def process_interactions_and_ratings():
         }
     checked_columns = ["relevance type", "diversity type", "novelty type", "popularity type", "tweak mechanism", "rank"]
     for column in checked_columns:
-        stats = recommender_queries_rating_interaction.groupby(column).agg(agg)
-        stats.to_csv(os.path.join("Results",f"ratings_and_interactions_per_{column.replace(' ', '_')}.csv"))
+        stats = recommender_queries_rating_interaction.groupby(column).agg(agg)        
+        stats.to_csv(os.path.join(folder_with_graphs,f"ratings_and_interactions_per_{column.replace(' ', '_')}.csv"))
+        variant_performance_on_ratings_by_user_graph(recommender_queries_rating_interaction, column)
     user_best_performance_df = []
     for userid in recommender_queries_rating_interaction["userid"].unique():
         u_stats = recommender_queries_rating_interaction[recommender_queries_rating_interaction["userid"] == userid]
@@ -768,8 +960,8 @@ def process_interactions_and_ratings():
             x=1
             user_best_performance_df.append(stats)
     user_best_performance_df = pd.concat(user_best_performance_df)
-    user_best_performance_df = pd.merge(user_best_performance_df, acts["actcode","typeofact"], on="actcode")
-    print(user_best_performance_df[0:40])
+    user_best_performance_df = pd.merge(user_best_performance_df, acts[["actcode","typeofact"]], on="actcode")
+    return user_best_performance_df
 
 
 
@@ -779,7 +971,7 @@ def process():
     Compute all results and save them as graphs
     """
     set_discarded_users()
-    process_interactions_and_ratings()
+    #process_interactions_and_ratings()
     number_of_recommended_queries(True)
     number_of_recommended_queries(False)
     time_in_user_study(True)

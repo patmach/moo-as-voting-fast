@@ -17,6 +17,7 @@ import support.calibration_support as calibration_support
 
 def get_first_k_rated(user_id, userindex, k):
     """
+    
     Parameters
     ----------
     user_id : int

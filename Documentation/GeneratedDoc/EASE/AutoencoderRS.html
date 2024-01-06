@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>moo-as-voting-fast.EASE.AutoencoderRS API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>moo-as-voting-fast.EASE.AutoencoderRS</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from scipy.sparse import csr_matrix
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from scipy.spatial.distance import squareform, pdist
+from itertools import starmap
+
+class AutoencoderRS():
+
+
+    def __init__(self, df):
+        self.user_enc = LabelEncoder()
+        self.item_enc = LabelEncoder()
+        self.df = df
+
+    def _get_users_and_items(self, df):
+        &#34;&#34;&#34;
+        Transform ID of users and items to indices of matrix
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            Train dataset with columns user_id and item_id
+
+        Returns
+        -------
+        _type_
+            Transformed IDs (=indices) of users and items
+        &#34;&#34;&#34;
+        users = self.user_enc.fit_transform(df.loc[:, &#39;userid&#39;])
+        items = self.item_enc.fit_transform(df.loc[:, &#39;itemid&#39;])
+        return users, items
+
+    def computePrediction(self, user):
+        &#34;&#34;&#34;
+        Abstract, every algorithm computes it differently
+        Parameters
+        ----------
+        user : int
+            index of user
+
+        Returns
+        -------
+        np.array
+            prediction row (=item scores) for one user
+        
+        &#34;&#34;&#34;
+        raise NotImplementedError()
+    
+    def computeFullPredictionMatrix(self):
+        &#34;&#34;&#34;
+        Abstract, every algorithm computes it differently
+        Returns
+        -------
+        np.array
+            Whole matrix users*items with predictions
+        &#34;&#34;&#34;
+        raise NotImplementedError()
+
+    
+    def predict(self, train, users, items, k, only_items_without_transaction = False, get_all = False):
+        &#34;&#34;&#34;
+        Predicts scores for users and returns dataset with top k recommendations for each
+        Parameters
+        ----------
+        train : pd.DataFrame
+            The same dataframe that was used as parameter of fit
+        users : _type_
+            Users that the method returns recommendations to
+        items : _type_
+            Candidates for recommendation
+        k : int
+            How many recommendations should be returned to user
+        only_items_without_transaction : bool, optional
+            Will I recommend only items where users havent made transaction before, by default False
+        get_all : bool, optional
+            Ignoring parameter k and returns all possible candidates, by default False
+
+        Returns
+        -------
+        pd.DataFrame
+            DataFrame in format: [user_id, item_id, score, rank(for user)]
+        &#34;&#34;&#34;
+        items = self.item_enc.transform(items)
+        dd = train.loc[train.user_id.isin(users)]
+        dd[&#39;cm&#39;] = self.item_enc.transform(dd.item_id)
+        dd[&#39;cc&#39;] = self.user_enc.transform(dd.user_id)
+        g = dd.groupby(&#39;cc&#39;)
+        user_preds = starmap(
+                self.predict_for_user,
+                [(user, group, self.computePrediction(user), items, k, only_items_without_transaction, get_all)\
+                  for user, group in g],)
+        df = pd.concat(user_preds)
+        df[&#39;item_id&#39;] = self.item_enc.inverse_transform(df[&#39;item_id&#39;])
+        df[&#39;user_id&#39;] = self.user_enc.inverse_transform(df[&#39;user_id&#39;])
+        return df
+
+
+    def predict_for_user(self,user, group,  pred, items, k, only_items_without_transaction = False, get_all = False):
+        &#34;&#34;&#34;Computes predictions for one user
+
+        Parameters
+        ----------
+        user : int
+            Index of user
+        group : _type_
+            group of item indices where user has a transaction
+        pred : _type_
+            prediction = score of items for user
+        items : _type_
+            candidates - items that are possible for recommendations
+        k : int
+            How many recommendations should be returned to user
+        only_items_without_transaction : bool, optional
+            Will I recommend only items where users havent made transaction before, by default False
+        get_all : bool, optional
+            Ignoring parameter k and returns all possible candidates, by default False
+
+        Returns
+        -------
+        pd.DataFrame
+            Results of prediction for one user in dataframe with columns user_id, item_id, score, rank
+        &#34;&#34;&#34;
+        candidates = items
+        if(only_items_without_transaction):
+            with_transaction = set(group[&#39;cm&#39;])
+            candidates = [item for item in items if item not in with_transaction]
+        if(get_all):
+            k = len(candidates)
+        pred = np.take(pred, candidates)
+        res = np.argpartition(pred, -k)[-k:]
+        r = pd.DataFrame(
+            {
+                &#34;user_id&#34;: [user] * len(res),
+                &#34;item_id&#34;: np.take(candidates, res),
+                &#34;score&#34;: np.take(pred, res),
+            }
+        ).sort_values(&#39;score&#39;, ascending=False)
+        r[&#34;rank&#34;]=list(range(1, len(res)+1))
+        return r
+    
+    def compute_similarity(self, transpose=False, similarity_metric=&#39;cosine&#39;):
+        &#34;&#34;&#34;
+        Method to compute a similarity matrix from original df_matrix
+
+        :param transpose: If True, calculate the similarity in a transpose matrix
+        :type transpose: bool, default False
+
+        &#34;&#34;&#34;
+
+        # Calculate distance matrix
+        if transpose:
+            similarity_matrix = np.float32(squareform(pdist(self.X.todense().T, similarity_metric)))
+        else:
+            similarity_matrix = np.float32(squareform(pdist(self.X.todense(), similarity_metric)))
+
+        # Remove NaNs
+        similarity_matrix[np.isnan(similarity_matrix)] = 1.0
+        # transform distances in similarities. Values in matrix range from 0-1
+        similarity_matrix = (similarity_matrix.max() - similarity_matrix) / similarity_matrix.max()
+
+        return similarity_matrix</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS"><code class="flex name class">
+<span>class <span class="ident">AutoencoderRS</span></span>
+<span>(</span><span>df)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AutoencoderRS():
+
+
+    def __init__(self, df):
+        self.user_enc = LabelEncoder()
+        self.item_enc = LabelEncoder()
+        self.df = df
+
+    def _get_users_and_items(self, df):
+        &#34;&#34;&#34;
+        Transform ID of users and items to indices of matrix
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            Train dataset with columns user_id and item_id
+
+        Returns
+        -------
+        _type_
+            Transformed IDs (=indices) of users and items
+        &#34;&#34;&#34;
+        users = self.user_enc.fit_transform(df.loc[:, &#39;userid&#39;])
+        items = self.item_enc.fit_transform(df.loc[:, &#39;itemid&#39;])
+        return users, items
+
+    def computePrediction(self, user):
+        &#34;&#34;&#34;
+        Abstract, every algorithm computes it differently
+        Parameters
+        ----------
+        user : int
+            index of user
+
+        Returns
+        -------
+        np.array
+            prediction row (=item scores) for one user
+        
+        &#34;&#34;&#34;
+        raise NotImplementedError()
+    
+    def computeFullPredictionMatrix(self):
+        &#34;&#34;&#34;
+        Abstract, every algorithm computes it differently
+        Returns
+        -------
+        np.array
+            Whole matrix users*items with predictions
+        &#34;&#34;&#34;
+        raise NotImplementedError()
+
+    
+    def predict(self, train, users, items, k, only_items_without_transaction = False, get_all = False):
+        &#34;&#34;&#34;
+        Predicts scores for users and returns dataset with top k recommendations for each
+        Parameters
+        ----------
+        train : pd.DataFrame
+            The same dataframe that was used as parameter of fit
+        users : _type_
+            Users that the method returns recommendations to
+        items : _type_
+            Candidates for recommendation
+        k : int
+            How many recommendations should be returned to user
+        only_items_without_transaction : bool, optional
+            Will I recommend only items where users havent made transaction before, by default False
+        get_all : bool, optional
+            Ignoring parameter k and returns all possible candidates, by default False
+
+        Returns
+        -------
+        pd.DataFrame
+            DataFrame in format: [user_id, item_id, score, rank(for user)]
+        &#34;&#34;&#34;
+        items = self.item_enc.transform(items)
+        dd = train.loc[train.user_id.isin(users)]
+        dd[&#39;cm&#39;] = self.item_enc.transform(dd.item_id)
+        dd[&#39;cc&#39;] = self.user_enc.transform(dd.user_id)
+        g = dd.groupby(&#39;cc&#39;)
+        user_preds = starmap(
+                self.predict_for_user,
+                [(user, group, self.computePrediction(user), items, k, only_items_without_transaction, get_all)\
+                  for user, group in g],)
+        df = pd.concat(user_preds)
+        df[&#39;item_id&#39;] = self.item_enc.inverse_transform(df[&#39;item_id&#39;])
+        df[&#39;user_id&#39;] = self.user_enc.inverse_transform(df[&#39;user_id&#39;])
+        return df
+
+
+    def predict_for_user(self,user, group,  pred, items, k, only_items_without_transaction = False, get_all = False):
+        &#34;&#34;&#34;Computes predictions for one user
+
+        Parameters
+        ----------
+        user : int
+            Index of user
+        group : _type_
+            group of item indices where user has a transaction
+        pred : _type_
+            prediction = score of items for user
+        items : _type_
+            candidates - items that are possible for recommendations
+        k : int
+            How many recommendations should be returned to user
+        only_items_without_transaction : bool, optional
+            Will I recommend only items where users havent made transaction before, by default False
+        get_all : bool, optional
+            Ignoring parameter k and returns all possible candidates, by default False
+
+        Returns
+        -------
+        pd.DataFrame
+            Results of prediction for one user in dataframe with columns user_id, item_id, score, rank
+        &#34;&#34;&#34;
+        candidates = items
+        if(only_items_without_transaction):
+            with_transaction = set(group[&#39;cm&#39;])
+            candidates = [item for item in items if item not in with_transaction]
+        if(get_all):
+            k = len(candidates)
+        pred = np.take(pred, candidates)
+        res = np.argpartition(pred, -k)[-k:]
+        r = pd.DataFrame(
+            {
+                &#34;user_id&#34;: [user] * len(res),
+                &#34;item_id&#34;: np.take(candidates, res),
+                &#34;score&#34;: np.take(pred, res),
+            }
+        ).sort_values(&#39;score&#39;, ascending=False)
+        r[&#34;rank&#34;]=list(range(1, len(res)+1))
+        return r
+    
+    def compute_similarity(self, transpose=False, similarity_metric=&#39;cosine&#39;):
+        &#34;&#34;&#34;
+        Method to compute a similarity matrix from original df_matrix
+
+        :param transpose: If True, calculate the similarity in a transpose matrix
+        :type transpose: bool, default False
+
+        &#34;&#34;&#34;
+
+        # Calculate distance matrix
+        if transpose:
+            similarity_matrix = np.float32(squareform(pdist(self.X.todense().T, similarity_metric)))
+        else:
+            similarity_matrix = np.float32(squareform(pdist(self.X.todense(), similarity_metric)))
+
+        # Remove NaNs
+        similarity_matrix[np.isnan(similarity_matrix)] = 1.0
+        # transform distances in similarities. Values in matrix range from 0-1
+        similarity_matrix = (similarity_matrix.max() - similarity_matrix) / similarity_matrix.max()
+
+        return similarity_matrix</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.computeFullPredictionMatrix"><code class="name flex">
+<span>def <span class="ident">computeFullPredictionMatrix</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract, every algorithm computes it differently
+Returns</p>
+<hr>
+<dl>
+<dt><code>np.array</code></dt>
+<dd>Whole matrix users*items with predictions</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def computeFullPredictionMatrix(self):
+    &#34;&#34;&#34;
+    Abstract, every algorithm computes it differently
+    Returns
+    -------
+    np.array
+        Whole matrix users*items with predictions
+    &#34;&#34;&#34;
+    raise NotImplementedError()</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.computePrediction"><code class="name flex">
+<span>def <span class="ident">computePrediction</span></span>(<span>self, user)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract, every algorithm computes it differently
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>user</code></strong> :&ensp;<code>int</code></dt>
+<dd>index of user</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.array</code></dt>
+<dd>prediction row (=item scores) for one user</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def computePrediction(self, user):
+    &#34;&#34;&#34;
+    Abstract, every algorithm computes it differently
+    Parameters
+    ----------
+    user : int
+        index of user
+
+    Returns
+    -------
+    np.array
+        prediction row (=item scores) for one user
+    
+    &#34;&#34;&#34;
+    raise NotImplementedError()</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.compute_similarity"><code class="name flex">
+<span>def <span class="ident">compute_similarity</span></span>(<span>self, transpose=False, similarity_metric='cosine')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Method to compute a similarity matrix from original df_matrix</p>
+<p>:param transpose: If True, calculate the similarity in a transpose matrix
+:type transpose: bool, default False</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_similarity(self, transpose=False, similarity_metric=&#39;cosine&#39;):
+    &#34;&#34;&#34;
+    Method to compute a similarity matrix from original df_matrix
+
+    :param transpose: If True, calculate the similarity in a transpose matrix
+    :type transpose: bool, default False
+
+    &#34;&#34;&#34;
+
+    # Calculate distance matrix
+    if transpose:
+        similarity_matrix = np.float32(squareform(pdist(self.X.todense().T, similarity_metric)))
+    else:
+        similarity_matrix = np.float32(squareform(pdist(self.X.todense(), similarity_metric)))
+
+    # Remove NaNs
+    similarity_matrix[np.isnan(similarity_matrix)] = 1.0
+    # transform distances in similarities. Values in matrix range from 0-1
+    similarity_matrix = (similarity_matrix.max() - similarity_matrix) / similarity_matrix.max()
+
+    return similarity_matrix</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.predict"><code class="name flex">
+<span>def <span class="ident">predict</span></span>(<span>self, train, users, items, k, only_items_without_transaction=False, get_all=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Predicts scores for users and returns dataset with top k recommendations for each
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>train</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>The same dataframe that was used as parameter of fit</dd>
+<dt><strong><code>users</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>Users that the method returns recommendations to</dd>
+<dt><strong><code>items</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>Candidates for recommendation</dd>
+<dt><strong><code>k</code></strong> :&ensp;<code>int</code></dt>
+<dd>How many recommendations should be returned to user</dd>
+<dt><strong><code>only_items_without_transaction</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Will I recommend only items where users havent made transaction before, by default False</dd>
+<dt><strong><code>get_all</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Ignoring parameter k and returns all possible candidates, by default False</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>DataFrame in format: [user_id, item_id, score, rank(for user)]</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predict(self, train, users, items, k, only_items_without_transaction = False, get_all = False):
+    &#34;&#34;&#34;
+    Predicts scores for users and returns dataset with top k recommendations for each
+    Parameters
+    ----------
+    train : pd.DataFrame
+        The same dataframe that was used as parameter of fit
+    users : _type_
+        Users that the method returns recommendations to
+    items : _type_
+        Candidates for recommendation
+    k : int
+        How many recommendations should be returned to user
+    only_items_without_transaction : bool, optional
+        Will I recommend only items where users havent made transaction before, by default False
+    get_all : bool, optional
+        Ignoring parameter k and returns all possible candidates, by default False
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame in format: [user_id, item_id, score, rank(for user)]
+    &#34;&#34;&#34;
+    items = self.item_enc.transform(items)
+    dd = train.loc[train.user_id.isin(users)]
+    dd[&#39;cm&#39;] = self.item_enc.transform(dd.item_id)
+    dd[&#39;cc&#39;] = self.user_enc.transform(dd.user_id)
+    g = dd.groupby(&#39;cc&#39;)
+    user_preds = starmap(
+            self.predict_for_user,
+            [(user, group, self.computePrediction(user), items, k, only_items_without_transaction, get_all)\
+              for user, group in g],)
+    df = pd.concat(user_preds)
+    df[&#39;item_id&#39;] = self.item_enc.inverse_transform(df[&#39;item_id&#39;])
+    df[&#39;user_id&#39;] = self.user_enc.inverse_transform(df[&#39;user_id&#39;])
+    return df</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.predict_for_user"><code class="name flex">
+<span>def <span class="ident">predict_for_user</span></span>(<span>self, user, group, pred, items, k, only_items_without_transaction=False, get_all=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes predictions for one user</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>user</code></strong> :&ensp;<code>int</code></dt>
+<dd>Index of user</dd>
+<dt><strong><code>group</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>group of item indices where user has a transaction</dd>
+<dt><strong><code>pred</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>prediction = score of items for user</dd>
+<dt><strong><code>items</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>candidates - items that are possible for recommendations</dd>
+<dt><strong><code>k</code></strong> :&ensp;<code>int</code></dt>
+<dd>How many recommendations should be returned to user</dd>
+<dt><strong><code>only_items_without_transaction</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Will I recommend only items where users havent made transaction before, by default False</dd>
+<dt><strong><code>get_all</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Ignoring parameter k and returns all possible candidates, by default False</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>Results of prediction for one user in dataframe with columns user_id, item_id, score, rank</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def predict_for_user(self,user, group,  pred, items, k, only_items_without_transaction = False, get_all = False):
+    &#34;&#34;&#34;Computes predictions for one user
+
+    Parameters
+    ----------
+    user : int
+        Index of user
+    group : _type_
+        group of item indices where user has a transaction
+    pred : _type_
+        prediction = score of items for user
+    items : _type_
+        candidates - items that are possible for recommendations
+    k : int
+        How many recommendations should be returned to user
+    only_items_without_transaction : bool, optional
+        Will I recommend only items where users havent made transaction before, by default False
+    get_all : bool, optional
+        Ignoring parameter k and returns all possible candidates, by default False
+
+    Returns
+    -------
+    pd.DataFrame
+        Results of prediction for one user in dataframe with columns user_id, item_id, score, rank
+    &#34;&#34;&#34;
+    candidates = items
+    if(only_items_without_transaction):
+        with_transaction = set(group[&#39;cm&#39;])
+        candidates = [item for item in items if item not in with_transaction]
+    if(get_all):
+        k = len(candidates)
+    pred = np.take(pred, candidates)
+    res = np.argpartition(pred, -k)[-k:]
+    r = pd.DataFrame(
+        {
+            &#34;user_id&#34;: [user] * len(res),
+            &#34;item_id&#34;: np.take(candidates, res),
+            &#34;score&#34;: np.take(pred, res),
+        }
+    ).sort_values(&#39;score&#39;, ascending=False)
+    r[&#34;rank&#34;]=list(range(1, len(res)+1))
+    return r</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="moo-as-voting-fast.EASE" href="index.html">moo-as-voting-fast.EASE</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS" href="#moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS">AutoencoderRS</a></code></h4>
+<ul class="">
+<li><code><a title="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.computeFullPredictionMatrix" href="#moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.computeFullPredictionMatrix">computeFullPredictionMatrix</a></code></li>
+<li><code><a title="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.computePrediction" href="#moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.computePrediction">computePrediction</a></code></li>
+<li><code><a title="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.compute_similarity" href="#moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.compute_similarity">compute_similarity</a></code></li>
+<li><code><a title="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.predict" href="#moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.predict">predict</a></code></li>
+<li><code><a title="moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.predict_for_user" href="#moo-as-voting-fast.EASE.AutoencoderRS.AutoencoderRS.predict_for_user">predict_for_user</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -1284,6 +1284,7 @@ def get_avg_ratings_of_items(connectionstring):
 def try_to_connect_to_db(connectionstring):
     """
     Tries connect to db multiple times - checking if the database correctly started
+    
     Parameters
     ----------
     connectionstring : str

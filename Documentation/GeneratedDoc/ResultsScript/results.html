@@ -1,0 +1,2515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>moo-as-voting-fast.ResultsScript.results API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>moo-as-voting-fast.ResultsScript.results</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from datetime import datetime, timedelta
+import pypyodbc as odbc
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+from textwrap import wrap
+import textwrap
+
+date_format= &#34;%d-%m-%Y %H:%M:%S.%f&#34;
+number_of_recommendations = 15
+folder_with_graphs = &#34;Results&#34;
+ActTypeToQuestionSection = {
+    &#34;Demographics&#34;:[],
+    &#34;Information about movies&#34;:[],
+    &#34;Explanation&#34;:[&#34;Preview Explanation&#34;, &#34;Score Explanation&#34;, &#34;Metrics Explanation&#34;],
+    &#34;Relevance&#34;:[&#34;Relevance&#34;],
+    &#34;Diversity&#34;:[&#34;Diversity&#34;],
+    &#34;Novelty&#34;:[&#34;Novelty&#34;],
+    &#34;Popularity&#34;:[&#34;Popularity&#34;],
+    &#34;Calibration&#34;:[],
+    &#34;Objectives overall&#34;:[&#34;Diversity&#34;, &#34;Novelty&#34;, &#34;Popularity&#34;, &#34;Relevance&#34;],
+    &#34;Types of objectives filter&#34;:[&#34;Tweak Mechanism&#34;],
+    &#34;Overall&#34;:[&#34;Diversity&#34;, &#34;Novelty&#34;, &#34;Popularity&#34;, &#34;Relevance&#34;],
+    &#34;Additional&#34;:[]
+}
+
+QuestionSectionsDependency = {
+    &#34;Demographics&#34;:[],
+    &#34;Information about movies&#34;:[],
+    &#34;Explanation&#34;:[],
+    &#34;Relevance&#34;:[],
+    &#34;Diversity&#34;:[],
+    &#34;Novelty&#34;:[],
+    &#34;Popularity&#34;:[],
+    &#34;Calibration&#34;:[],
+    &#34;Objectives overall&#34;:[&#34;Diversity&#34;, &#34;Novelty&#34;, &#34;Popularity&#34;, &#34;Relevance&#34;],
+    &#34;Types of objectives filter&#34;:[],
+    &#34;Overall&#34;:[&#34;Diversity&#34;, &#34;Novelty&#34;, &#34;Popularity&#34;, &#34;Relevance&#34;, &#34;Objectives overall&#34;],
+    &#34;Additional&#34;:[]
+}
+LikertScale = {&#34;Strongly agree&#34; : 1, 
+               &#34;Agree&#34; : 0.5,
+               &#34;Neutral / Don&#39;t Know&#34; : 0,
+               &#34;Disagree&#34; : -0.5,
+               &#34;Strongly disagree&#34; : -1}
+
+
+def wrap_labels(ax, width_x, break_long_words=True, width_y = 60):
+    &#34;&#34;&#34;
+    wraps labels by newlines
+    Parameters
+    ----------
+    ax : _type_
+        graph or its axis
+    width : int
+        maximum width for one line of text
+    break_long_words : bool, optional
+        If true breaks long words, by default False
+    &#34;&#34;&#34;
+    labels = []
+    for label in ax.get_xticklabels():
+        text = label.get_text().replace(&#39;_&#39;,&#39; &#39;)
+        labels.append(textwrap.fill(text, width=width_x,
+                      break_long_words=break_long_words))
+    ax.set_xticks(ax.get_xticks().tolist())
+    ax.set_xticklabels(labels, rotation=0)
+    labels = []
+    for label in ax.get_yticklabels():
+        text = label.get_text().replace(&#39;_&#39;,&#39; &#39;)
+        labels.append(textwrap.fill(text, width=width_y,
+                      break_long_words=break_long_words))
+    ax.set_yticks(ax.get_yticks().tolist())
+    ax.set_yticklabels(labels, rotation=0)
+
+
+def get_connection_string():
+    &#34;&#34;&#34;
+        Connects to the database
+    &#34;&#34;&#34;
+    DriverName = &#34;SQL Server&#34;
+    ServerName =  &#34;np:\\\\.\\pipe\LOCALDB#6E0416EF\\tsql\\query&#34;
+    ServerName = &#34;localhost,1401&#34;
+    DatabaseName = &#34;aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502&#34;
+    Username = &#39;RS&#39;
+    file = open(&#39;pswd.txt&#39;,mode=&#39;r&#39;)    
+    Password = file.read()
+    file.close()
+    connectionstring=f&#34;&#34;&#34;DRIVER={{{DriverName}}};
+        SERVER={ServerName};
+        DATABASE={DatabaseName};
+        UID={Username};
+        PWD={Password};
+        TrustServerCertificate=yes;
+    &#34;&#34;&#34;
+    return connectionstring
+
+def get_table(table_name):
+    &#34;&#34;&#34;
+
+    Parameters
+    ----------
+    table_name : str
+        name of the table in database
+
+    Returns
+    -------
+    pd.DataFrame
+        Content of the database table
+    &#34;&#34;&#34;
+    conn = odbc.connect(get_connection_string())
+    df = pd.read_sql_query(&#39;SELECT  * FROM &#39; + table_name, conn)
+    df.columns = df.columns.str.lower()
+    conn.close()
+    return df
+
+def not_null_lists(f,s):
+    &#34;&#34;&#34;
+    Parameters
+    ----------
+    s : list
+        first list
+    d : list
+        second list
+
+    Returns
+    -------
+    list
+        list where value of each index corresponds to value in s with the same index. 
+        If the value in s with the same index is null the the value in d with the same index is inserted.
+    &#34;&#34;&#34;
+    list = []
+    for i in range(len(f)):
+        list.append(f[i] if not pd.isna(f[i]) else s[i])
+    return list
+
+def get_userAnswers():
+    &#34;&#34;&#34;
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with all needed information about users answers
+    &#34;&#34;&#34;
+    userAnswers = get_table(&#34;UserAnswers&#34;)
+    questions = get_table(&#34;Questions&#34;).rename(columns={&#34;id&#34;: &#34;questionid&#34;, &#34;text&#34;:&#34;questiontext&#34;})
+    answers = get_table(&#34;Answers&#34;).rename(columns={&#34;id&#34;: &#34;answerid&#34;, &#34;text&#34;:&#34;answertext&#34;}).drop(columns=[&#34;questionid&#34;])
+    questionSections = get_table(&#34;QuestionSections&#34;).rename(columns={&#34;id&#34;: &#34;questionsectionid&#34;, &#34;name&#34;: &#34;sectionname&#34;})
+    questions = pd.merge_ordered(questions, questionSections, how=&#34;left&#34;, on=&#34;questionsectionid&#34;)
+    userAnswers = pd.merge_ordered(userAnswers, questions, how=&#34;inner&#34;, on=&#34;questionid&#34;)
+    userAnswers = pd.merge_ordered(userAnswers, answers, how=&#34;left&#34;, on=&#34;answerid&#34;)
+    LikertScaleTexts = list(LikertScale.keys())
+    userAnswers[&#34;valueanswer&#34;] = [LikertScaleTexts[int(x)] if not np.isnan(x) else x for x in list(userAnswers[&#34;value&#34;])]
+    userAnswers[&#34;answer&#34;] = not_null_lists(list(userAnswers[&#34;valueanswer&#34;]), list(userAnswers[&#34;answertext&#34;]))
+    userAnswers[&#34;answerindex&#34;] = not_null_lists(list(userAnswers[&#34;answerid&#34;]), list(userAnswers[&#34;value&#34;]))
+    userAnswers.sort_values(by=&#34;answerindex&#34;, inplace=True)
+    userAnswers = userAnswers.drop(columns=[&#34;value&#34;,&#34;text&#34;,&#34;answerid&#34;,&#34;valueanswer&#34;])
+    return userAnswers
+
+def get_first_user_acts():
+    &#34;&#34;&#34;
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    &#34;&#34;&#34;
+    acts = get_table(&#34;Acts&#34;).rename(columns={&#34;id&#34;: &#34;actid&#34;, &#34;code&#34;:&#34;actcode&#34;})
+    colnames=[&#34;userid&#34;,&#34;actid&#34;,&#34;date&#34;] 
+    userActs = pd.read_csv(&#34;Logs/UserActs.txt&#34;, sep=&#39;;&#39;, names=colnames)
+    userActs[&#34;index&#34;] = userActs.index
+    userActs = pd.merge_ordered(userActs, acts, how=&#34;inner&#34;,on=&#34;actid&#34;)
+    userActs.sort_values(by=&#34;index&#34;, inplace=True)
+    userActs = userActs.drop_duplicates(subset=[&#34;userid&#34;,&#34;typeofact&#34;])    
+
+    return userActs
+
+def get_most_used_in_recommender_queries():
+    &#34;&#34;&#34;
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    &#34;&#34;&#34;
+    recommenderQueries = get_recommender_queries_from_file()
+    recommenderQueries[&#34;tweak mechanism&#34;] = [&#34;PlusMinusButtons&#34; if x == &#34;Buttons&#34; else &#34;DragAndDrop&#34; if x==&#34;Drag and drop&#34;
+                                             else x for x in list(recommenderQueries[&#34;tweak mechanism&#34;])]
+    grouped_dfs = []
+    acts = get_table(&#34;Acts&#34;).rename(columns={&#34;id&#34;: &#34;actid&#34;, &#34;code&#34;:&#34;actcode&#34;})
+    for column in [&#34;relevance type&#34;,&#34;diversity type&#34;,&#34;novelty type&#34;,&#34;popularity type&#34;, &#34;tweak mechanism&#34;]:
+        df = recommenderQueries.groupby([&#39;userid&#39;,column])[&#39;date&#39;].count()
+        df = df.reset_index()
+        df = df.rename(columns={&#34;date&#34;: &#34;count&#34;, column:&#34;actcode&#34;})
+        df= pd.merge(df, acts[[&#34;actcode&#34;,&#34;typeofact&#34;]], on=&#34;actcode&#34;)
+        grouped_dfs.append(df)            
+    recommenderQueries = pd.concat(grouped_dfs)
+    recommenderQueries.sort_values(&#34;count&#34;, ascending=False, inplace=True)
+    recommenderQueries = recommenderQueries.drop_duplicates(subset=[&#34;userid&#34;,&#34;typeofact&#34;])
+    
+    return recommenderQueries
+
+def get_recommender_queries_from_file():
+    colnames=[&#34;relevance type&#34;,&#34;diversity type&#34;,&#34;novelty type&#34;,&#34;popularity type&#34;,&#34;calibration type&#34;,
+              &#34;relevance&#34;,&#34;diversity&#34;,&#34;novelty&#34;,&#34;popularity&#34;,&#34;calibration&#34;,&#34;tweak mechanism&#34;, &#34;userid&#34;, &#34;date&#34;] 
+    return pd.read_csv(&#34;Logs/RecommenderQueries.txt&#34;, sep=&#39;;&#39;, names=colnames)
+
+def get_recommender_queries_by_metric():
+    &#34;&#34;&#34;
+    Returns
+    -------
+    pd.DataFrame
+        All queries to the recommender called by user
+    &#34;&#34;&#34;
+    recommenderqueries = get_recommender_queries_from_file()
+    bymetrics = []
+    for metric in [&#34;relevance&#34;,&#34;diversity&#34;,&#34;novelty&#34;,&#34;popularity&#34;,&#34;calibration&#34;]:
+        bymetric = pd.DataFrame()
+        bymetric[&#34;Metric&#34;] = [metric] * len(recommenderqueries)
+        bymetric[&#34;Metric importance&#34;] = recommenderqueries[metric]
+        bymetric[&#34;Metric variant&#34;] = recommenderqueries[metric+&#34; type&#34;]
+        bymetric[&#34;Metric variant&#34;] = [s if pd.isna(s) else s.replace(&#34;_&#34;,&#34; &#34;)
+                                      for s in list(bymetric[&#34;Metric variant&#34;])]
+        bymetric[&#34;Tweak mechanism&#34;] = recommenderqueries[&#34;tweak mechanism&#34;]
+        bymetric[&#34;userid&#34;] = recommenderqueries[&#34;userid&#34;]
+        bymetric[&#34;Date&#34;] = recommenderqueries[&#34;date&#34;]
+        bymetrics.append(bymetric)
+    bymetrics = pd.concat(bymetrics)
+    return bymetrics
+
+def get_recommender_queries_rating_interaction():
+    recommenderqueries = get_recommender_queries_from_file()
+    recommenderqueries = recommenderqueries[~recommenderqueries[&#34;userid&#34;].isin(author_users)]
+    colnames=[&#34;userid&#34;,&#34;itemid&#34;,&#34;ratingscore&#34;,&#34;date&#34;] 
+    ratings = pd.read_csv(&#34;Logs/Ratings.txt&#34;, sep=&#39;;&#39;, names=colnames)
+    colnames=[&#34;userid&#34;,&#34;itemid&#34;,&#34;type&#34;,&#34;date&#34;] 
+    interactions = pd.read_csv(&#34;Logs/Interactions.txt&#34;, sep=&#39;;&#39;, names=colnames)
+    recommenderqueries_new = []
+    recommenderqueries[&#34;date&#34;] = pd.to_datetime(recommenderqueries[&#34;date&#34;], format=date_format)
+    ratings[&#34;date&#34;] = pd.to_datetime(ratings[&#34;date&#34;], format=date_format)
+    interactions[&#34;date&#34;] = pd.to_datetime(interactions[&#34;date&#34;], format=date_format)
+    for userid in recommenderqueries[&#34;userid&#34;].unique():
+        recommenderqueries_new.append(process_user_interactions(userid, ratings, interactions, recommenderqueries))
+    recommenderqueries_new = pd.concat(recommenderqueries_new)
+    return recommenderqueries_new
+
+def process_user_interactions(userid, ratings, interactions, recommenderqueries):
+    &#34;&#34;&#34;
+    Enrich recommender query dataset of users seen, clicks, ratings and positive ratings 
+    Parameters
+    ----------
+    userid : int
+        ID of user
+    ratings : pd.DataFrame
+        dataframe with all given ratings
+    interactions : pd.DataFrame
+        dataframe with all interactions
+    recommenderqueries : pd.DataFrame
+        dataframe with all recommender queries
+
+    Returns
+    -------
+    pd.DataFrame
+        Enriched recommender query dataset of users seen, clicks, ratings and positive ratings 
+    &#34;&#34;&#34;
+    u_ratings = ratings[ratings[&#34;userid&#34;]==userid]
+    u_interactions = interactions[interactions[&#34;userid&#34;]==userid]
+    u_seens = u_interactions[u_interactions[&#34;type&#34;]==&#34;Seen&#34;]
+    u_clicks = u_interactions[u_interactions[&#34;type&#34;]==&#34;Click&#34;]
+    u_recommenderqueries = recommenderqueries[recommenderqueries[&#34;userid&#34;]==userid]
+    num_seens = []
+    num_clicks = []
+    num_positive_ratings = []
+    num_ratings = []
+    upper_bound_date = recommenderqueries[&#34;date&#34;].max() + timedelta(days=1)
+    for i in range(len(u_recommenderqueries)):
+        min_date = u_recommenderqueries.iloc[i][&#34;date&#34;]
+        max_date = upper_bound_date
+        if (len(u_recommenderqueries) &gt; i+1):
+            max_date = u_recommenderqueries.iloc[i + 1][&#34;date&#34;]
+        cur_seens = u_seens[(u_seens[&#34;date&#34;] &gt; min_date) &amp; (u_seens[&#34;date&#34;] &lt; max_date)].head(number_of_recommendations)
+        cur_clicks = u_clicks[(u_clicks[&#34;date&#34;] &gt; min_date) &amp; (u_clicks[&#34;date&#34;] &lt; max_date)]
+        cur_clicks = pd.merge(cur_clicks, cur_seens[&#34;itemid&#34;], on=[&#34;itemid&#34;]).drop_duplicates(subset=[&#34;itemid&#34;])
+        cur_ratings = u_ratings[(u_ratings[&#34;date&#34;] &gt; min_date) &amp; (u_ratings[&#34;date&#34;] &lt; max_date)]
+        cur_ratings = pd.merge(cur_ratings, cur_seens[&#34;itemid&#34;], on=[&#34;itemid&#34;]).drop_duplicates(subset=[&#34;itemid&#34;], keep=&#34;last&#34;)
+        cur_positive_ratings = cur_ratings[cur_ratings[&#34;ratingscore&#34;] &gt; 5]
+        num_seens.append(len(cur_seens))
+        num_clicks.append(len(cur_clicks))
+        num_ratings.append(len(cur_ratings))
+        num_positive_ratings.append(len(cur_positive_ratings))
+    u_recommenderqueries[&#34;seens&#34;] = num_seens
+    u_recommenderqueries[&#34;clicks&#34;] = num_clicks
+    u_recommenderqueries[&#34;positive_ratings&#34;] = num_positive_ratings
+    u_recommenderqueries[&#34;ratings&#34;] = num_ratings
+    u_recommenderqueries[&#34;clicks_per_seen&#34;] =  u_recommenderqueries[&#34;clicks&#34;] / u_recommenderqueries[&#34;seens&#34;] 
+    u_recommenderqueries[&#34;ratings_per_seen&#34;] =  u_recommenderqueries[&#34;ratings&#34;] / u_recommenderqueries[&#34;seens&#34;] 
+    u_recommenderqueries[&#34;positive_ratings_per_seen&#34;] =  u_recommenderqueries[&#34;positive_ratings&#34;] / u_recommenderqueries[&#34;seens&#34;] 
+    u_recommenderqueries[&#34;positive_ratings_per_rating&#34;] = u_recommenderqueries[&#34;positive_ratings&#34;] / u_recommenderqueries[&#34;ratings&#34;]
+    u_recommenderqueries[&#34;rank&#34;] = list(range(len(u_recommenderqueries)))
+    corr = u_recommenderqueries[[&#34;relevance&#34;,&#34;diversity&#34;,&#34;novelty&#34;,&#34;popularity&#34;,&#34;calibration&#34;, &#34;rank&#34;,\
+                                 &#34;seens&#34;, &#34;clicks_per_seen&#34;, &#34;positive_ratings_per_seen&#34;,&#34;ratings_per_seen&#34;]] .corr()
+    g = sns.heatmap(corr,  cmap=&#39;coolwarm&#39;)    
+    g.set(title=f&#34;Korelace - požadavek na RS&#34;)
+    plt.savefig(os.path.join(folder_with_graphs,f&#34;corr_recommender_queries.png&#34;), bbox_inches=&#39;tight&#39;)
+    plt.clf()
+    plt.cla()
+    return u_recommenderqueries
+
+def process_metrics():
+    &#34;&#34;&#34;
+    Compute all stats objectives weights in recommender queries and save them as graphs
+    &#34;&#34;&#34;
+    global author_users
+    recommenderqueries = get_recommender_queries_by_metric()
+    recommenderqueries = recommenderqueries[~recommenderqueries[&#34;userid&#34;].isin(author_users)]
+    cm = sns.color_palette(&#34;plasma&#34;,len(recommenderqueries[&#34;Metric&#34;].unique()))
+    g = sns.violinplot(data = recommenderqueries, x= &#34;Metric&#34;, y= &#34;Metric importance&#34;,
+               palette=cm)
+    g.set(title = f&#34;Metrics weights specified by user&#34;)
+    wrap_labels(g, 12)
+    plt.savefig(os.path.join(folder_with_graphs,f&#34;Metrics_importances.png&#34;), bbox_inches=&#39;tight&#39;)
+    plt.close(&#39;all&#39;)
+    plt.clf()
+    plt.cla()
+    g = sns.violinplot(data = recommenderqueries, x= &#34;Metric variant&#34;, y= &#34;Metric importance&#34;,
+               palette=cm)
+    g.set(title = f&#34;Metrics variants weights specified by user&#34;)
+    wrap_labels(g, 6)
+    plt.savefig(os.path.join(folder_with_graphs,f&#34;Metrics_variants_importances.png&#34;), bbox_inches=&#39;tight&#39;)
+    plt.close(&#39;all&#39;)
+    plt.clf()
+    plt.cla()
+    process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm)
+    
+
+def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
+    &#34;&#34;&#34;
+    Compute all stats objectives weights per used metric variant and used mechanism
+    Parameters
+    ----------
+    recommenderqueries : pd.DataFrame
+        All queries to the recommender called by user
+    cm : _RGBColorPalette
+        Color palette used
+    &#34;&#34;&#34;
+    for metric in recommenderqueries[&#34;Metric&#34;].unique():
+        metric_recommenderqueries = recommenderqueries[recommenderqueries[&#34;Metric&#34;] == metric]
+        if(len(metric_recommenderqueries[&#34;Metric variant&#34;].unique()) &gt; 1):
+            g = sns.violinplot(data = metric_recommenderqueries, x= &#34;Metric variant&#34;, y= &#34;Metric importance&#34;,
+               palette=cm)
+            g.set(title = f&#34;{metric} weight specified by user per metric variant&#34;)
+            wrap_labels(g, 12)
+            plt.savefig(os.path.join(folder_with_graphs,f&#34;variants_of_{metric}_importances.png&#34;), bbox_inches=&#39;tight&#39;)
+            plt.close(&#39;all&#39;)
+            plt.clf()
+            plt.cla()
+            g = sns.violinplot(data = metric_recommenderqueries, x= &#34;Tweak mechanism&#34;, y= &#34;Metric importance&#34;,
+               split=True, palette=cm)
+            g.set(title = f&#34;{metric} weight specified by user per tweak mechanism&#34;)
+            wrap_labels(g, 12)
+            plt.savefig(os.path.join(folder_with_graphs,f&#34;by_tweak_mechanism_{metric}_importances.png&#34;), bbox_inches=&#39;tight&#39;)
+            plt.close(&#39;all&#39;)
+            plt.clf()
+            plt.cla() 
+
+discarded_users = []
+author_users = []
+users_without_questionnaire = []
+
+def set_discarded_users():
+    &#34;&#34;&#34;
+    Discards users of authors and users that haven&#39;t answered attention checks right
+    &#34;&#34;&#34;
+    global discarded_users, author_users, users_without_questionnaire
+    users = get_table(&#34;Users&#34;)
+    author_users.extend(list(users[(users[&#34;username&#34;]==&#34;log_master2&#34;) | (users[&#34;username&#34;]==&#34;lp&#34;)][&#34;id&#34;]))
+    userAnswers = get_userAnswers()
+    attentionChecks = userAnswers[userAnswers[&#34;questiontext&#34;].str.contains(&#34;attention check&#34;, case=False)]
+    attentionChecks[&#34;expected_answer&#34;] = [s.split(&#39;&#34;&#39;)[1] for s in attentionChecks[&#34;questiontext&#34;]]
+    userWrongAnswersToAttentionCheck = attentionChecks[attentionChecks[&#34;expected_answer&#34;].str.lower() \
+                                                       != attentionChecks[&#34;answer&#34;].str.lower()]
+    discarded_users.extend(list(userWrongAnswersToAttentionCheck[&#34;userid&#34;].unique()))
+    discarded_users = list(set(discarded_users))
+    users_without_questionnaire = list(set(users[~users[&#34;id&#34;].isin(userAnswers[&#34;userid&#34;])][&#34;id&#34;]))
+
+def process_questions():
+    &#34;&#34;&#34;
+    Compute all results from user answers and save them as graphs
+    &#34;&#34;&#34;
+    global discarded_users, author_users
+    userAnswers = get_userAnswers()
+    firstUserActs = get_first_user_acts()
+    recommendedQueries = get_most_used_in_recommender_queries()
+    best_peformances_by_ratings = process_interactions_and_ratings()
+    questions = get_table(&#34;Questions&#34;)
+    userAnswers = userAnswers[~userAnswers[&#34;userid&#34;].isin(discarded_users)]
+    userAnswers = userAnswers[~userAnswers[&#34;userid&#34;].isin(author_users)]
+    firstUserActs = firstUserActs[~firstUserActs[&#34;userid&#34;].isin(author_users)]
+    recommendedQueries = recommendedQueries[~recommendedQueries[&#34;userid&#34;].isin(author_users)]
+    likertScaleQuestionsMeanAndStd = []
+    likertScaleAnswers = []
+    for questionid in questions[&#34;id&#34;]:        
+        q_userAnswers = userAnswers[userAnswers[&#34;questionid&#34;] == questionid]   
+        first = q_userAnswers.iloc[0]
+        if (first[&#34;answertype&#34;] == 0):
+            mean_std_df, q_userAnswers = get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers)
+            likertScaleQuestionsMeanAndStd.append(mean_std_df)
+            likertScaleAnswers.append(q_userAnswers)
+        process_one_question(questionid,userAnswers, q_userAnswers, first, firstUserActs, recommendedQueries, best_peformances_by_ratings)
+    process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAnswers)
+
+def process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAnswers):
+    &#34;&#34;&#34;
+    Compute all results from user answers to questions with possible answers from Likert scale converted to number representation
+      and save them as graphs
+
+    Parameters
+    ----------
+    likertScaleQuestionsMeanAndStd : pd.DataFrame
+        DataFrame containing mean and std of users answers to questions with possible answers from Likert scale
+    likertScaleAnswers : _type_
+        DataFrame containing answers to questions with possible answers from Likert scale converted to number representation
+    &#34;&#34;&#34;
+    likertScaleQuestionsMeanAndStd = pd.concat(likertScaleQuestionsMeanAndStd)
+    likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd.reset_index()
+    print(likertScaleQuestionsMeanAndStd)
+    likertScaleQuestionsMeanAndStd.to_csv((os.path.join(folder_with_graphs,f&#34;LikertScaleQuestionsAnswers.csv&#34;)))
+    likertScaleAnswers = pd.concat(likertScaleAnswers)
+    for section in likertScaleAnswers[&#34;sectionname&#34;].unique():
+        section_LikertScaleAnswers = likertScaleAnswers[likertScaleAnswers[&#34;sectionname&#34;] == section]
+        section_likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd[\
+        likertScaleQuestionsMeanAndStd[&#34;question&#34;].isin(section_LikertScaleAnswers[&#34;questiontext&#34;])]
+        g = sns.barplot(section_likertScaleQuestionsMeanAndStd, x=&#34;mean&#34;,y=&#34;question&#34;)
+        y_coords = [p.get_y() + 0.5*p.get_height() for p in g.patches]
+        x_coords = [p.get_width() for p in g.patches]        
+        g.set_xlim(-1.1,1.1)        
+        g.errorbar(x=x_coords, y=y_coords, xerr=section_likertScaleQuestionsMeanAndStd[&#34;std&#34;], fmt=&#34;none&#34;, c= &#34;k&#34;)
+        wrap_labels(g, 20)
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;{section.replace(&#39; &#39;, &#39;_&#39;)}LikertScaleQuestionsMeanAndStd.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()
+
+def get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers):
+    &#34;&#34;&#34;_summary_
+
+    Parameters
+    ----------
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+
+    Returns
+    -------
+    (pd.DataFrame, pd.DataFrame)
+        DataFrame containing mean and std of users answers to questions with possible answers from Likert scale
+        Dataset with user answers to the question with new column representing number representation of answer
+    &#34;&#34;&#34;
+    q_userAnswers[&#34;numvalue&#34;] = [LikertScale[answer] for answer in q_userAnswers[&#34;answer&#34;]]
+    stats = q_userAnswers.groupby([&#34;questiontext&#34;]).agg({&#34;numvalue&#34;: [&#34;mean&#34;,&#34;std&#34;]})
+    stats = stats.reset_index()
+    mean_std_df = pd.DataFrame({
+            &#34;question&#34;:stats[&#34;questiontext&#34;],
+            &#34;mean&#34;:stats[&#34;numvalue&#34;,&#34;mean&#34;],
+            &#34;std&#34;:stats[&#34;numvalue&#34;,&#34;std&#34;]
+    })
+    return  mean_std_df , q_userAnswers
+
+def get_possible_answers_to_question(questionid, questionType):
+    &#34;&#34;&#34;
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    questionType : int
+        Type of the question
+    Returns
+    -------
+    list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    allAnswers = get_table(&#34;Answers&#34;)
+
+    if (questionType == 0):
+        answersToQuestion = list(LikertScale.keys())
+        answersToQuestion.reverse()
+    elif (questionType == 1):
+        answersToQuestion = list(allAnswers[allAnswers[&#34;questionid&#34;] == questionid][&#34;text&#34;].unique())
+    return answersToQuestion
+
+def process_one_question(questionid, userAnswers, q_userAnswers, first, firstUserActs, recommendedQueries, best_peformances_by_ratings):
+    &#34;&#34;&#34;
+    Compute results from user answers to one question and save them as graphs
+
+    Parameters
+    ----------
+    questionid : int
+        ID of questions
+    userAnswers : pd.DataFrame
+        Dataset with user answers
+    firstUserActs : pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    &#34;&#34;&#34;
+    questiontext = first[&#34;questiontext&#34;]
+    sectionname = first[&#34;sectionname&#34;]
+    questionType = first[&#34;answertype&#34;]    
+    number_of_users_with_answers = len(userAnswers[&#34;userid&#34;].unique())
+    answersToQuestion = get_possible_answers_to_question(questionid, questionType)
+    process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion, number_of_users_with_answers)
+    process_one_question_first_type_of_act(questionid, sectionname, firstUserActs, q_userAnswers, questiontext, answersToQuestion,\
+                                            number_of_users_with_answers)
+    process_one_question_most_used_act_in_query(questionid, sectionname, recommendedQueries, q_userAnswers, questiontext,\
+                                                 answersToQuestion, number_of_users_with_answers)
+    process_one_question_best_performances_by_ratings_in_query(questionid, sectionname, best_peformances_by_ratings, q_userAnswers, questiontext,\
+                                                 answersToQuestion, number_of_users_with_answers)
+    process_one_question_other_question(questionid, sectionname,userAnswers, q_userAnswers, questiontext, answersToQuestion,\
+                                        number_of_users_with_answers)
+
+def process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion, y_max):
+    &#34;&#34;&#34;
+    Saves graph of user answers to the question
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    counts = []
+    for possibleAnswer in answersToQuestion:
+        counts.append(len(q_userAnswers[q_userAnswers[&#34;answer&#34;] == possibleAnswer]))
+    question_userAnswers = pd.DataFrame({
+        &#34;answer&#34; : answersToQuestion,
+        &#34;count&#34; : counts
+    })
+    cm = sns.color_palette(&#34;plasma&#34;,len(question_userAnswers[&#34;answer&#34;].unique()))
+    g = sns.barplot(data=question_userAnswers, x=&#34;answer&#34;,y=&#34;count&#34;)
+    for bin_,i in zip(g.patches, cm):
+        bin_.set_facecolor(i)
+    g.set(title=(&#34;\n&#34;.join(wrap(questiontext, 60))))
+    g.set_ylim(0,y_max+2)
+    wrap_labels(g, 12)
+    plt.savefig(os.path.join(folder_with_graphs,f&#34;{questionid}_answers.png&#34;), bbox_inches=&#39;tight&#39;)
+    plt.close(&#39;all&#39;)
+    plt.clf()
+    plt.cla()
+    
+
+
+def process_one_question_first_type_of_act(questionid, sectionname, firstUserActs, q_userAnswers, questiontext,\
+                                           answersToQuestion,y_max):
+    &#34;&#34;&#34;
+    Saves graph of user answers to the question based on first act from group of acts
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    sectionname : str
+        name of the questions section where this question belongs
+    firstUserActs : pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    for typeOfAct in ActTypeToQuestionSection[sectionname]:
+        type_userActs = firstUserActs[firstUserActs[&#34;typeofact&#34;] == typeOfAct]
+        type_userAnswers = pd.merge(q_userAnswers, type_userActs, how=&#34;left&#34;, on=[&#34;userid&#34;])
+        actName = f&#34;First variant of {typeOfAct}&#34;
+        type_userAnswers.sort_values(&#34;actcode&#34;, inplace=True)
+        type_userAnswers.rename(columns={&#34;actcode&#34; : actName}, inplace=True)
+        data = []
+        for possibleAnswer in answersToQuestion:
+            type_userAnswers_by_answer = type_userAnswers[type_userAnswers[&#34;answer&#34;] == possibleAnswer]
+            for nameOfAct in type_userAnswers[actName].unique():
+                type_userAnswers_by_act = type_userAnswers_by_answer[type_userAnswers_by_answer[actName] == nameOfAct]
+                data.append(pd.DataFrame({
+                    &#34;answer&#34; : [possibleAnswer],
+                    &#34;count&#34; : [len(type_userAnswers_by_act)],                    
+                    actName: [&#34;\n&#34;.join(wrap(nameOfAct, 25))]
+                }))
+        type_userAnswers = pd.concat(data)
+        cm = sns.color_palette(&#34;plasma&#34;,len(type_userAnswers[actName].unique()))
+        g = sns.barplot(data=type_userAnswers, x=&#34;answer&#34;, y=&#34;count&#34;, hue = actName, palette=cm)
+        g.set(title=(&#34;\n&#34;.join(wrap(questiontext, 40))))
+        g.set_ylim(0,y_max / len(type_userAnswers[actName].unique()) + 2)
+        wrap_labels(g, 12)
+        sns.move_legend(g, &#34;upper left&#34;, bbox_to_anchor=(1, 1))
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;by_{typeOfAct}_{questionid}_answers.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()
+        #plt.show()
+
+def process_one_question_best_performances_by_ratings_in_query(questionid, sectionname, best_peformances_by_ratings, q_userAnswers, questiontext,\
+                                                 answersToQuestion, y_max):
+    &#34;&#34;&#34;
+    Saves graph of user answers to the question based on first act from group of acts
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    sectionname : str
+        name of the questions section where this question belongs
+    best_peformances_by_ratings : pd.DataFrame
+        DataFrame with variants of tweak mechanism, metrics,... used in recommender query that had most positive ratings 
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    for typeOfAct in ActTypeToQuestionSection[sectionname]:
+        type_userActs = best_peformances_by_ratings[best_peformances_by_ratings[&#34;typeofact&#34;] == typeOfAct]
+        if (len(type_userActs)) == 0:
+            continue
+        type_userAnswers = pd.merge(q_userAnswers, type_userActs,  on=[&#34;userid&#34;])
+        actName = &#34;\n&#34;.join(wrap(f&#34;Most given positive ratings per seen when used variant of {typeOfAct} in recommender queries&#34;, 25))
+        type_userAnswers.sort_values(&#34;actcode&#34;, inplace=True)
+        type_userAnswers.rename(columns={&#34;actcode&#34; : actName}, inplace=True)
+        data = []
+        for possibleAnswer in answersToQuestion:
+            type_userAnswers_by_answer = type_userAnswers[type_userAnswers[&#34;answer&#34;] == possibleAnswer]
+            for nameOfAct in type_userAnswers[actName].unique():
+                type_userAnswers_by_act = type_userAnswers_by_answer[type_userAnswers_by_answer[actName] == nameOfAct]
+                
+                data.append(pd.DataFrame({
+                    &#34;answer&#34; : [possibleAnswer],
+                    &#34;count&#34; : [len(type_userAnswers_by_act)],
+                    actName: [&#34;\n&#34;.join(wrap(nameOfAct, 25))]
+                }))
+        type_userAnswers = pd.concat(data)
+        cm = sns.color_palette(&#34;plasma&#34;,len(type_userAnswers[actName].unique()))
+        g = sns.barplot(data=type_userAnswers, x=&#34;answer&#34;, y=&#34;count&#34;, hue = actName, palette=cm)
+        g.set(title=(&#34;\n&#34;.join(wrap(questiontext, 40))))
+        g.set_ylim(0,y_max / len(type_userAnswers[actName].unique()) + 2)
+        wrap_labels(g, 12)
+        sns.move_legend(g, &#34;upper left&#34;, bbox_to_anchor=(1, 1))
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;by_best_performed_on_ratings_{typeOfAct}_variant_{questionid}_answers.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()
+
+
+
+
+def process_one_question_most_used_act_in_query(questionid, sectionname, recommenderQueries, q_userAnswers, questiontext,\
+                                                answersToQuestion, y_max):
+    &#34;&#34;&#34;
+    Saves graph of user answers to the question based on first act from group of acts
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    sectionname : str
+        name of the questions section where this question belongs
+    recommenderQueries : pd.DataFrame
+        DataFrame with most used actions for recommenderquery (tweak emchanism, metric variants)
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    for typeOfAct in ActTypeToQuestionSection[sectionname]:
+        type_userActs = recommenderQueries[recommenderQueries[&#34;typeofact&#34;] == typeOfAct]
+        if (len(type_userActs)) == 0:
+            continue
+        type_userAnswers = pd.merge(q_userAnswers, type_userActs,  on=[&#34;userid&#34;])
+        actName = f&#34;Most used variant of {typeOfAct} in recommender queries&#34;
+        type_userAnswers.sort_values(&#34;actcode&#34;, inplace=True)
+        type_userAnswers.rename(columns={&#34;actcode&#34; : actName}, inplace=True)
+        data = []
+        for possibleAnswer in answersToQuestion:
+            type_userAnswers_by_answer = type_userAnswers[type_userAnswers[&#34;answer&#34;] == possibleAnswer]
+            for nameOfAct in type_userAnswers[actName].unique():
+                type_userAnswers_by_act = type_userAnswers_by_answer[type_userAnswers_by_answer[actName] == nameOfAct]
+                
+                data.append(pd.DataFrame({
+                    &#34;answer&#34; : [possibleAnswer],
+                    &#34;count&#34; : [len(type_userAnswers_by_act)],
+                    actName: [&#34;\n&#34;.join(wrap(nameOfAct, 25))]
+                }))
+        type_userAnswers = pd.concat(data)
+        cm = sns.color_palette(&#34;plasma&#34;,len(type_userAnswers[actName].unique()))
+        g = sns.barplot(data=type_userAnswers, x=&#34;answer&#34;, y=&#34;count&#34;, hue = actName, palette=cm)
+        g.set(title=(&#34;\n&#34;.join(wrap(questiontext, 40))))
+        g.set_ylim(0,y_max / len(type_userAnswers[actName].unique()) + 2)
+        wrap_labels(g, 12)
+        sns.move_legend(g, &#34;upper left&#34;, bbox_to_anchor=(1, 1))
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;by_recommender_query_{typeOfAct}_{questionid}_answers.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()
+        #plt.show()
+
+def process_one_question_other_question(questionid, sectionname,userAnswers, q_userAnswers, questiontext,
+                                         answersToQuestion, y_max):
+    &#34;&#34;&#34;_summary_
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    userAnswers : pd.DataFrame
+        Dataset with user answers
+    sectionname : str
+        name of the questions section where this question belongs
+    firstUserActs : pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    setOfDependentQuestions = set(userAnswers[(userAnswers[&#34;sectionname&#34;] == sectionname)][&#34;questionid&#34;].unique())
+    setOfDependentQuestions = setOfDependentQuestions |\
+          set(userAnswers[(userAnswers[&#34;sectionname&#34;] == &#34;Demographics&#34;)][&#34;questionid&#34;].unique())
+    for sname in QuestionSectionsDependency[sectionname]:
+        setOfDependentQuestions = setOfDependentQuestions |\
+          set(userAnswers[(userAnswers[&#34;sectionname&#34;] == sname)][&#34;questionid&#34;].unique())
+    setOfDependentQuestions.remove(questionid)
+    for qid in setOfDependentQuestions:
+        dependent_userAnswers = userAnswers[userAnswers[&#34;questionid&#34;] == qid]
+        sname = dependent_userAnswers.iloc[0][&#34;sectionname&#34;]
+        qtype = dependent_userAnswers.iloc[0][&#34;answertype&#34;]
+        qtext = dependent_userAnswers.iloc[0][&#34;questiontext&#34;]
+        dependent_userAnswers = dependent_userAnswers.add_suffix(f&#39;_{qid}&#39;)
+        dependent_userAnswers = dependent_userAnswers.rename(columns={f&#34;userid_{qid}&#34;:&#34;userid&#34;})
+        dependent_userAnswers = pd.merge(q_userAnswers, dependent_userAnswers, on=&#34;userid&#34;)
+        dependent_answerColumn = &#34;\n&#34;.join(wrap(qtext, 40))
+        dependent_userAnswers.rename(columns={f&#34;answer_{qid}&#34; : dependent_answerColumn}, inplace=True)
+        answersToDependentQuestion = get_possible_answers_to_question(qid,qtype)
+        data = []
+        for possibleAnswer in answersToQuestion:
+            dependent_userAnswers_by_answer = dependent_userAnswers[dependent_userAnswers[&#34;answer&#34;] == possibleAnswer]
+            for possibleDependentAnswer in answersToDependentQuestion:
+                dependent_userAnswers_by_dependent = dependent_userAnswers_by_answer\
+                    [dependent_userAnswers_by_answer[dependent_answerColumn] == possibleDependentAnswer]
+                data.append(pd.DataFrame({
+                    &#34;answer&#34; : [possibleAnswer],
+                    &#34;count&#34; : [len(dependent_userAnswers_by_dependent)],
+                    dependent_answerColumn: [&#34;\n&#34;.join(wrap(possibleDependentAnswer, 25))]
+                }))
+        dependent_userAnswers = pd.concat(data)
+        cm = sns.color_palette(&#34;plasma&#34;,len(dependent_userAnswers[dependent_answerColumn].unique()))
+        g = sns.barplot(data=dependent_userAnswers, x=&#34;answer&#34;, y=&#34;count&#34;, hue = dependent_answerColumn, palette=cm)
+        g.set(title=(&#34;\n&#34;.join(wrap(questiontext, 60))))
+        g.set_ylim(0, max(y_max / 2, dependent_userAnswers[&#34;count&#34;].max()))
+        wrap_labels(g, 12)
+        sns.move_legend(g, &#34;upper left&#34;, bbox_to_anchor=(1, 1))
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;by_{qid}_answers_{questionid}.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()
+        #plt.show()
+
+def number_of_users_made_act(withFirstUserActs):
+    &#34;&#34;&#34;
+    Computes and saves dataset containing how many users have completed each act
+
+    Parameters
+    ----------
+    withFirstUserActs : bool
+        count users that has the action assigned as default
+    &#34;&#34;&#34;
+    global discarded_users, author_users
+    userActs = get_table(&#34;UserActs&#34;)
+    acts = get_table(&#34;Acts&#34;)
+    userActs = pd.merge(userActs, acts, left_on=&#34;actid&#34;, right_on=&#34;id&#34;)
+    userActs = userActs[~userActs[&#34;userid&#34;].isin(author_users)]
+    userActs = userActs[~userActs[&#34;userid&#34;].isin(discarded_users)]
+    if (not withFirstUserActs):
+        firstUserActs = get_first_user_acts()[[&#34;userid&#34;,&#34;actid&#34;,&#34;priority&#34;]]
+        userActs = pd.merge(userActs, firstUserActs, how=&#34;left&#34;, on=[&#34;userid&#34;,&#34;actid&#34;])
+        userActs = userActs[userActs[&#34;priority_y&#34;].isna()]
+    groupedUserActs = userActs.groupby([&#34;code&#34;,&#34;typeofact&#34;])[&#34;id_x&#34;].count()
+    groupedUserActs = groupedUserActs.reset_index()    
+    groupedUserActs = groupedUserActs.rename(columns={&#34;id_x&#34;: &#34;count&#34;})
+    groupedUserActs[&#34;from_all&#34;] = groupedUserActs[&#34;count&#34;] / len(userActs[&#34;userid&#34;].unique())
+    groupedUserActs[[&#34;code&#34;,&#34;count&#34;,&#34;from_all&#34;,&#34;typeofact&#34;]]\
+        .to_csv(os.path.join(folder_with_graphs,f&#34;number_of_users_made_act_{str(withFirstUserActs)}.csv&#34;))
+
+def number_of_finished_groups_of_acts_by_priority(usersThatAnswered):
+    &#34;&#34;&#34;
+    Computes and saves dataset containing how many groups of acts user averagely finished for each priority
+
+    Parameters
+    ----------
+    usersThatAnswered : bool
+        count only users that answered atleast one question
+    &#34;&#34;&#34;
+    global author_users, users_without_questionnaire
+    userActs = get_table(&#34;UserActs&#34;)
+    acts = get_table(&#34;Acts&#34;)
+    acts[&#34;groupsize&#34;] = [len(acts[acts[&#34;typeofact&#34;] == typeOfAct]) for typeOfAct in acts[&#34;typeofact&#34;]]
+    userActs = pd.merge(userActs, acts, left_on=&#34;actid&#34;, right_on=&#34;id&#34;)
+    userActs = userActs[~userActs[&#34;userid&#34;].isin(author_users)]
+    if (usersThatAnswered):
+        userActs = userActs[~userActs[&#34;userid&#34;].isin(users_without_questionnaire)]
+    userActs[&#34;priority&#34;] = userActs[&#34;priority&#34;].astype(&#39;category&#39;)
+    userActs = userActs.groupby([&#34;userid&#34;,&#34;typeofact&#34;, &#34;groupsize&#34;, &#34;priority&#34;])[&#34;id_x&#34;].count()
+    userActs = userActs.reset_index()
+    userActs = userActs.rename(columns={&#34;id_x&#34;: &#34;count&#34;})
+    userActs[&#34;completed_group&#34;] = userActs[&#34;groupsize&#34;] == userActs[&#34;count&#34;]
+    userActs = userActs[userActs[&#34;completed_group&#34;] == True]
+    userActs = userActs.groupby([&#34;userid&#34;, &#34;priority&#34;])[&#34;groupsize&#34;].count()
+    userActs = userActs.reset_index()
+    userActs = userActs.rename(columns={&#34;groupsize&#34;: &#34;count&#34;})
+    userActs[&#34;priority_acts&#34;] = [len(acts[acts[&#34;priority&#34;] == priority][&#34;typeofact&#34;].unique()) 
+                                 for priority in userActs[&#34;priority&#34;]]
+    userActs[&#34;count&#34;] = userActs[&#34;count&#34;] / userActs[&#34;priority_acts&#34;]
+    output = userActs.groupby([&#39;priority&#39;], as_index=False).agg({&#39;count&#39;:[&#39;mean&#39;,&#39;std&#39;]})
+    output = output.reset_index()
+    output.to_csv(os.path.join(folder_with_graphs,f&#34;number_of_finished_groups_of_acts_by_priority_{str(usersThatAnswered)}.csv&#34;))
+
+def number_of_recommended_queries(usersThatAnswered):    
+    &#34;&#34;&#34;
+    Computes mean and std of number of recommended queries made by user
+    Parameters
+    ----------
+    usersThatAnswered : bool
+        count only users that answered atleast one question
+    &#34;&#34;&#34;
+    colnames=[&#34;relevance type&#34;,&#34;diversity type&#34;,&#34;novelty type&#34;,&#34;popularity type&#34;,&#34;calibration type&#34;,
+              &#34;relevance&#34;,&#34;diversity&#34;,&#34;novelty&#34;,&#34;popularity&#34;,&#34;calibration&#34;,&#34;tweak mechanism&#34;, &#34;userid&#34;, &#34;date&#34;] 
+    recommenderqueries = pd.read_csv(&#34;Logs/RecommenderQueries.txt&#34;, sep=&#39;;&#39;, names=colnames)
+    if (usersThatAnswered):
+        recommenderqueries = recommenderqueries[~recommenderqueries[&#34;userid&#34;].isin(users_without_questionnaire)]
+    recommenderqueries = recommenderqueries.groupby([&#34;userid&#34;])[&#34;date&#34;].count()
+    recommenderqueries = recommenderqueries.reset_index()
+    recommenderqueries = recommenderqueries.rename(columns={&#34;date&#34;: &#34;count&#34;})
+    recommenderqueriescount = recommenderqueries.agg({&#39;count&#39;:[&#39;mean&#39;,&#39;std&#39;]})
+    recommenderqueriescount.to_csv(os.path.join(folder_with_graphs,f&#34;recommenderqueriescount_{str(usersThatAnswered)}.csv&#34;))
+
+def time_in_user_study(two_hours_max):
+    &#34;&#34;&#34;
+    Computes time spent in user study 
+        : from first recommender query to first answer to question
+        : from first recommender query to last answer to question
+
+    Parameters
+    ----------
+    two_hours_max : bool
+        count only with users that spend less than 2 hours in the user study (performed study at once)
+    &#34;&#34;&#34;
+    users = get_table(&#34;Users&#34;)
+    users = users[~users[&#34;firstrecommendationtime&#34;].isna()]
+    #format = cnv_csharp_date_fmt(&#34;dd-MM-yyyy HH:mm:ss.f&#34;)
+    users[&#34;firstrecommendationtime&#34;] = pd.to_datetime(users[&#34;firstrecommendationtime&#34;], format=&#34;%Y-%m-%d %H:%M:%S.%f&#34;)
+    userAnswers = get_userAnswers()
+    userAnswers[&#34;date&#34;] = pd.to_datetime(userAnswers[&#34;date&#34;], format=&#34;%Y-%m-%d %H:%M:%S.%f&#34;)
+    userAnswersMin = userAnswers.groupby(&#34;userid&#34;)[&#34;date&#34;].min()
+    userAnswersMin = userAnswersMin.reset_index()
+    userAnswersMin = userAnswersMin.rename(columns={&#34;date&#34;: &#34;firstanswer&#34;})
+    userAnswersMax = userAnswers.groupby(&#34;userid&#34;)[&#34;date&#34;].max()
+    userAnswersMax = userAnswersMax.reset_index()
+    userAnswersMax = userAnswersMax.rename(columns={&#34;date&#34;: &#34;lastanswer&#34;})
+    userAnswers = pd.merge(userAnswersMin, userAnswersMax, on=&#34;userid&#34;)
+    users = pd.merge(users, userAnswers, left_on=&#34;id&#34;, right_on=&#34;userid&#34;)
+    users[&#34;minutes_to_first_answer&#34;] = users[&#34;firstanswer&#34;] - users[&#34;firstrecommendationtime&#34;]
+    users[&#34;minutes_to_first_answer&#34;] = [delta.total_seconds() / 60 for delta in users[&#34;minutes_to_first_answer&#34;]]
+    users[&#34;minutes_to_last_answer&#34;] = users[&#34;lastanswer&#34;] - users[&#34;firstrecommendationtime&#34;]
+    users[&#34;minutes_to_last_answer&#34;] = [delta.total_seconds() / 60 for delta in users[&#34;minutes_to_last_answer&#34;]]
+    if (two_hours_max):
+        users = users[users[&#34;minutes_to_last_answer&#34;] &lt;=120]
+    minutes_to_first_answer = users.agg({&#39;minutes_to_first_answer&#39;:[&#39;mean&#39;,&#39;std&#39;]})
+    minutes_to_first_answer.to_csv(os.path.join(folder_with_graphs,f&#34;minutes_to_first_answer{str(two_hours_max)}.csv&#34;))
+    minutes_to_last_answer = users.agg({&#39;minutes_to_last_answer&#39;:[&#39;mean&#39;,&#39;std&#39;]})
+    minutes_to_last_answer.to_csv(os.path.join(folder_with_graphs,f&#34;minutes_to_last_answer{str(two_hours_max)}.csv&#34;))
+
+def variant_performance_on_ratings_by_user_graph(df, column):
+    &#34;&#34;&#34;
+    Graph of mean positive ratings by user when variants of {column} (metric, tweak mechanism) used in recommmender query
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Enriched recommender query dataset of users seen, clicks, ratings and positive ratings 
+    column : str
+        name of column with different variants
+    &#34;&#34;&#34;
+    dict = {
+        &#34;positive_ratings_per_seen&#34;: &#34;users mean positive ratings per seen&#34;,
+        &#34;clicks_per_seen&#34;:&#34;users mean number of clicks per seen&#34;
+    }
+    data = df.rename(columns=dict)
+    if(column == &#34;rank&#34;):
+        data[column] = round(df[column]/5)*5
+    count=0
+    y_max = [0.3, 0.05]
+    for value in dict.values():
+        g = sns.barplot(data, y=value, x=column)
+        g.set(title=(&#34;\n&#34;.join(wrap(f&#34;{value} when variants of {column} used in recommmender query&#34;, 60))))
+        g.set_ylim(-0.01,y_max[count])
+        wrap_labels(g, 20)
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;ratings_and_interactions_per_{column.replace(&#39; &#39;, &#39;_&#39;)}_{count}.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()
+        count+=1
+
+def process_interactions_and_ratings():
+    &#34;&#34;&#34;
+    Computes dataset based on users interactions and ratings to the response of recommender system
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with variants of tweak mechanism, metrics,... used in recommender query that had most positive ratings 
+    &#34;&#34;&#34;
+    recommender_queries_rating_interaction = get_recommender_queries_rating_interaction()   
+    recommender_queries_rating_interaction[~recommender_queries_rating_interaction[&#34;userid&#34;].isin(author_users)]
+    recommender_queries_rating_interaction = recommender_queries_rating_interaction\
+        [recommender_queries_rating_interaction[&#34;seens&#34;]&gt;0] 
+    recommender_queries_rating_interaction[&#34;tweak mechanism&#34;] = [&#34;PlusMinusButtons&#34; if x == &#34;Buttons&#34; else &#34;DragAndDrop&#34; \
+                                                        if x==&#34;Drag and drop&#34;
+                                                        else x 
+                                                        for x in list(recommender_queries_rating_interaction[&#34;tweak mechanism&#34;])]
+    grouped_dfs = []
+    acts = get_table(&#34;Acts&#34;).rename(columns={&#34;id&#34;: &#34;actid&#34;, &#34;code&#34;:&#34;actcode&#34;})
+    agg = {
+        &#34;positive_ratings_per_seen&#34;: [&#34;mean&#34;, &#34;std&#34;],
+        &#34;clicks_per_seen&#34;: [&#34;mean&#34;, &#34;std&#34;]
+        }
+    checked_columns = [&#34;relevance type&#34;, &#34;diversity type&#34;, &#34;novelty type&#34;, &#34;popularity type&#34;, &#34;tweak mechanism&#34;, &#34;rank&#34;]
+    for column in checked_columns:
+        stats = recommender_queries_rating_interaction.groupby(column).agg(agg)        
+        stats.to_csv(os.path.join(folder_with_graphs,f&#34;ratings_and_interactions_per_{column.replace(&#39; &#39;, &#39;_&#39;)}.csv&#34;))
+        variant_performance_on_ratings_by_user_graph(recommender_queries_rating_interaction, column)
+    user_best_performance_df = []
+    for userid in recommender_queries_rating_interaction[&#34;userid&#34;].unique():
+        u_stats = recommender_queries_rating_interaction[recommender_queries_rating_interaction[&#34;userid&#34;] == userid]
+        for column in checked_columns[:-1]:
+            stats = u_stats.groupby([column, &#34;userid&#34;])[&#34;positive_ratings_per_seen&#34;].mean()
+            stats = stats.reset_index().sort_values(&#34;positive_ratings_per_seen&#34;).drop_duplicates([&#34;userid&#34;], keep=&#34;last&#34;)
+            stats = stats.rename(columns={column: &#34;actcode&#34;})
+            x=1
+            user_best_performance_df.append(stats)
+    user_best_performance_df = pd.concat(user_best_performance_df)
+    user_best_performance_df = pd.merge(user_best_performance_df, acts[[&#34;actcode&#34;,&#34;typeofact&#34;]], on=&#34;actcode&#34;)
+    return user_best_performance_df
+
+
+
+
+def process():
+    &#34;&#34;&#34;
+    Compute all results and save them as graphs
+    &#34;&#34;&#34;
+    set_discarded_users()
+    #process_interactions_and_ratings()
+    number_of_recommended_queries(True)
+    number_of_recommended_queries(False)
+    time_in_user_study(True)
+    time_in_user_study(False)
+    number_of_finished_groups_of_acts_by_priority(False)
+    number_of_finished_groups_of_acts_by_priority(True)
+    number_of_users_made_act(False)
+    number_of_users_made_act(True)
+    process_questions()
+    process_metrics()
+    print(&#34;DONE!&#34;)
+
+
+if __name__ == &#34;__main__&#34;:
+    process()
+ </code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="moo-as-voting-fast.ResultsScript.results.get_Likert_Scale_int_value_mean_and_std_dfs"><code class="name flex">
+<span>def <span class="ident">get_Likert_Scale_int_value_mean_and_std_dfs</span></span>(<span>q_userAnswers)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><em>summary</em></p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>q_userAnswers</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>Dataset with user answers to the question</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>(pd.DataFrame, pd.DataFrame)
+DataFrame containing mean and std of users answers to questions with possible answers from Likert scale
+Dataset with user answers to the question with new column representing number representation of answer</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers):
+    &#34;&#34;&#34;_summary_
+
+    Parameters
+    ----------
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+
+    Returns
+    -------
+    (pd.DataFrame, pd.DataFrame)
+        DataFrame containing mean and std of users answers to questions with possible answers from Likert scale
+        Dataset with user answers to the question with new column representing number representation of answer
+    &#34;&#34;&#34;
+    q_userAnswers[&#34;numvalue&#34;] = [LikertScale[answer] for answer in q_userAnswers[&#34;answer&#34;]]
+    stats = q_userAnswers.groupby([&#34;questiontext&#34;]).agg({&#34;numvalue&#34;: [&#34;mean&#34;,&#34;std&#34;]})
+    stats = stats.reset_index()
+    mean_std_df = pd.DataFrame({
+            &#34;question&#34;:stats[&#34;questiontext&#34;],
+            &#34;mean&#34;:stats[&#34;numvalue&#34;,&#34;mean&#34;],
+            &#34;std&#34;:stats[&#34;numvalue&#34;,&#34;std&#34;]
+    })
+    return  mean_std_df , q_userAnswers</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.get_connection_string"><code class="name flex">
+<span>def <span class="ident">get_connection_string</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Connects to the database</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_connection_string():
+    &#34;&#34;&#34;
+        Connects to the database
+    &#34;&#34;&#34;
+    DriverName = &#34;SQL Server&#34;
+    ServerName =  &#34;np:\\\\.\\pipe\LOCALDB#6E0416EF\\tsql\\query&#34;
+    ServerName = &#34;localhost,1401&#34;
+    DatabaseName = &#34;aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502&#34;
+    Username = &#39;RS&#39;
+    file = open(&#39;pswd.txt&#39;,mode=&#39;r&#39;)    
+    Password = file.read()
+    file.close()
+    connectionstring=f&#34;&#34;&#34;DRIVER={{{DriverName}}};
+        SERVER={ServerName};
+        DATABASE={DatabaseName};
+        UID={Username};
+        PWD={Password};
+        TrustServerCertificate=yes;
+    &#34;&#34;&#34;
+    return connectionstring</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.get_first_user_acts"><code class="name flex">
+<span>def <span class="ident">get_first_user_acts</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>DataFrame with all users first acts from each group of acts</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_first_user_acts():
+    &#34;&#34;&#34;
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    &#34;&#34;&#34;
+    acts = get_table(&#34;Acts&#34;).rename(columns={&#34;id&#34;: &#34;actid&#34;, &#34;code&#34;:&#34;actcode&#34;})
+    colnames=[&#34;userid&#34;,&#34;actid&#34;,&#34;date&#34;] 
+    userActs = pd.read_csv(&#34;Logs/UserActs.txt&#34;, sep=&#39;;&#39;, names=colnames)
+    userActs[&#34;index&#34;] = userActs.index
+    userActs = pd.merge_ordered(userActs, acts, how=&#34;inner&#34;,on=&#34;actid&#34;)
+    userActs.sort_values(by=&#34;index&#34;, inplace=True)
+    userActs = userActs.drop_duplicates(subset=[&#34;userid&#34;,&#34;typeofact&#34;])    
+
+    return userActs</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.get_most_used_in_recommender_queries"><code class="name flex">
+<span>def <span class="ident">get_most_used_in_recommender_queries</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>DataFrame with all users first acts from each group of acts</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_most_used_in_recommender_queries():
+    &#34;&#34;&#34;
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    &#34;&#34;&#34;
+    recommenderQueries = get_recommender_queries_from_file()
+    recommenderQueries[&#34;tweak mechanism&#34;] = [&#34;PlusMinusButtons&#34; if x == &#34;Buttons&#34; else &#34;DragAndDrop&#34; if x==&#34;Drag and drop&#34;
+                                             else x for x in list(recommenderQueries[&#34;tweak mechanism&#34;])]
+    grouped_dfs = []
+    acts = get_table(&#34;Acts&#34;).rename(columns={&#34;id&#34;: &#34;actid&#34;, &#34;code&#34;:&#34;actcode&#34;})
+    for column in [&#34;relevance type&#34;,&#34;diversity type&#34;,&#34;novelty type&#34;,&#34;popularity type&#34;, &#34;tweak mechanism&#34;]:
+        df = recommenderQueries.groupby([&#39;userid&#39;,column])[&#39;date&#39;].count()
+        df = df.reset_index()
+        df = df.rename(columns={&#34;date&#34;: &#34;count&#34;, column:&#34;actcode&#34;})
+        df= pd.merge(df, acts[[&#34;actcode&#34;,&#34;typeofact&#34;]], on=&#34;actcode&#34;)
+        grouped_dfs.append(df)            
+    recommenderQueries = pd.concat(grouped_dfs)
+    recommenderQueries.sort_values(&#34;count&#34;, ascending=False, inplace=True)
+    recommenderQueries = recommenderQueries.drop_duplicates(subset=[&#34;userid&#34;,&#34;typeofact&#34;])
+    
+    return recommenderQueries</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.get_possible_answers_to_question"><code class="name flex">
+<span>def <span class="ident">get_possible_answers_to_question</span></span>(<span>questionid, questionType)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>questionid</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the question</dd>
+<dt><strong><code>questionType</code></strong> :&ensp;<code>int</code></dt>
+<dd>Type of the question</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>Possible answers to the question</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_possible_answers_to_question(questionid, questionType):
+    &#34;&#34;&#34;
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    questionType : int
+        Type of the question
+    Returns
+    -------
+    list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    allAnswers = get_table(&#34;Answers&#34;)
+
+    if (questionType == 0):
+        answersToQuestion = list(LikertScale.keys())
+        answersToQuestion.reverse()
+    elif (questionType == 1):
+        answersToQuestion = list(allAnswers[allAnswers[&#34;questionid&#34;] == questionid][&#34;text&#34;].unique())
+    return answersToQuestion</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.get_recommender_queries_by_metric"><code class="name flex">
+<span>def <span class="ident">get_recommender_queries_by_metric</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>All queries to the recommender called by user</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_recommender_queries_by_metric():
+    &#34;&#34;&#34;
+    Returns
+    -------
+    pd.DataFrame
+        All queries to the recommender called by user
+    &#34;&#34;&#34;
+    recommenderqueries = get_recommender_queries_from_file()
+    bymetrics = []
+    for metric in [&#34;relevance&#34;,&#34;diversity&#34;,&#34;novelty&#34;,&#34;popularity&#34;,&#34;calibration&#34;]:
+        bymetric = pd.DataFrame()
+        bymetric[&#34;Metric&#34;] = [metric] * len(recommenderqueries)
+        bymetric[&#34;Metric importance&#34;] = recommenderqueries[metric]
+        bymetric[&#34;Metric variant&#34;] = recommenderqueries[metric+&#34; type&#34;]
+        bymetric[&#34;Metric variant&#34;] = [s if pd.isna(s) else s.replace(&#34;_&#34;,&#34; &#34;)
+                                      for s in list(bymetric[&#34;Metric variant&#34;])]
+        bymetric[&#34;Tweak mechanism&#34;] = recommenderqueries[&#34;tweak mechanism&#34;]
+        bymetric[&#34;userid&#34;] = recommenderqueries[&#34;userid&#34;]
+        bymetric[&#34;Date&#34;] = recommenderqueries[&#34;date&#34;]
+        bymetrics.append(bymetric)
+    bymetrics = pd.concat(bymetrics)
+    return bymetrics</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.get_recommender_queries_from_file"><code class="name flex">
+<span>def <span class="ident">get_recommender_queries_from_file</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_recommender_queries_from_file():
+    colnames=[&#34;relevance type&#34;,&#34;diversity type&#34;,&#34;novelty type&#34;,&#34;popularity type&#34;,&#34;calibration type&#34;,
+              &#34;relevance&#34;,&#34;diversity&#34;,&#34;novelty&#34;,&#34;popularity&#34;,&#34;calibration&#34;,&#34;tweak mechanism&#34;, &#34;userid&#34;, &#34;date&#34;] 
+    return pd.read_csv(&#34;Logs/RecommenderQueries.txt&#34;, sep=&#39;;&#39;, names=colnames)</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.get_recommender_queries_rating_interaction"><code class="name flex">
+<span>def <span class="ident">get_recommender_queries_rating_interaction</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_recommender_queries_rating_interaction():
+    recommenderqueries = get_recommender_queries_from_file()
+    recommenderqueries = recommenderqueries[~recommenderqueries[&#34;userid&#34;].isin(author_users)]
+    colnames=[&#34;userid&#34;,&#34;itemid&#34;,&#34;ratingscore&#34;,&#34;date&#34;] 
+    ratings = pd.read_csv(&#34;Logs/Ratings.txt&#34;, sep=&#39;;&#39;, names=colnames)
+    colnames=[&#34;userid&#34;,&#34;itemid&#34;,&#34;type&#34;,&#34;date&#34;] 
+    interactions = pd.read_csv(&#34;Logs/Interactions.txt&#34;, sep=&#39;;&#39;, names=colnames)
+    recommenderqueries_new = []
+    recommenderqueries[&#34;date&#34;] = pd.to_datetime(recommenderqueries[&#34;date&#34;], format=date_format)
+    ratings[&#34;date&#34;] = pd.to_datetime(ratings[&#34;date&#34;], format=date_format)
+    interactions[&#34;date&#34;] = pd.to_datetime(interactions[&#34;date&#34;], format=date_format)
+    for userid in recommenderqueries[&#34;userid&#34;].unique():
+        recommenderqueries_new.append(process_user_interactions(userid, ratings, interactions, recommenderqueries))
+    recommenderqueries_new = pd.concat(recommenderqueries_new)
+    return recommenderqueries_new</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.get_table"><code class="name flex">
+<span>def <span class="ident">get_table</span></span>(<span>table_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>table_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>name of the table in database</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>Content of the database table</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_table(table_name):
+    &#34;&#34;&#34;
+
+    Parameters
+    ----------
+    table_name : str
+        name of the table in database
+
+    Returns
+    -------
+    pd.DataFrame
+        Content of the database table
+    &#34;&#34;&#34;
+    conn = odbc.connect(get_connection_string())
+    df = pd.read_sql_query(&#39;SELECT  * FROM &#39; + table_name, conn)
+    df.columns = df.columns.str.lower()
+    conn.close()
+    return df</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.get_userAnswers"><code class="name flex">
+<span>def <span class="ident">get_userAnswers</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>DataFrame with all needed information about users answers</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_userAnswers():
+    &#34;&#34;&#34;
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with all needed information about users answers
+    &#34;&#34;&#34;
+    userAnswers = get_table(&#34;UserAnswers&#34;)
+    questions = get_table(&#34;Questions&#34;).rename(columns={&#34;id&#34;: &#34;questionid&#34;, &#34;text&#34;:&#34;questiontext&#34;})
+    answers = get_table(&#34;Answers&#34;).rename(columns={&#34;id&#34;: &#34;answerid&#34;, &#34;text&#34;:&#34;answertext&#34;}).drop(columns=[&#34;questionid&#34;])
+    questionSections = get_table(&#34;QuestionSections&#34;).rename(columns={&#34;id&#34;: &#34;questionsectionid&#34;, &#34;name&#34;: &#34;sectionname&#34;})
+    questions = pd.merge_ordered(questions, questionSections, how=&#34;left&#34;, on=&#34;questionsectionid&#34;)
+    userAnswers = pd.merge_ordered(userAnswers, questions, how=&#34;inner&#34;, on=&#34;questionid&#34;)
+    userAnswers = pd.merge_ordered(userAnswers, answers, how=&#34;left&#34;, on=&#34;answerid&#34;)
+    LikertScaleTexts = list(LikertScale.keys())
+    userAnswers[&#34;valueanswer&#34;] = [LikertScaleTexts[int(x)] if not np.isnan(x) else x for x in list(userAnswers[&#34;value&#34;])]
+    userAnswers[&#34;answer&#34;] = not_null_lists(list(userAnswers[&#34;valueanswer&#34;]), list(userAnswers[&#34;answertext&#34;]))
+    userAnswers[&#34;answerindex&#34;] = not_null_lists(list(userAnswers[&#34;answerid&#34;]), list(userAnswers[&#34;value&#34;]))
+    userAnswers.sort_values(by=&#34;answerindex&#34;, inplace=True)
+    userAnswers = userAnswers.drop(columns=[&#34;value&#34;,&#34;text&#34;,&#34;answerid&#34;,&#34;valueanswer&#34;])
+    return userAnswers</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.not_null_lists"><code class="name flex">
+<span>def <span class="ident">not_null_lists</span></span>(<span>f, s)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>s</code></strong> :&ensp;<code>list</code></dt>
+<dd>first list</dd>
+<dt><strong><code>d</code></strong> :&ensp;<code>list</code></dt>
+<dd>second list</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>list where value of each index corresponds to value in s with the same index.
+If the value in s with the same index is null the the value in d with the same index is inserted.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def not_null_lists(f,s):
+    &#34;&#34;&#34;
+    Parameters
+    ----------
+    s : list
+        first list
+    d : list
+        second list
+
+    Returns
+    -------
+    list
+        list where value of each index corresponds to value in s with the same index. 
+        If the value in s with the same index is null the the value in d with the same index is inserted.
+    &#34;&#34;&#34;
+    list = []
+    for i in range(len(f)):
+        list.append(f[i] if not pd.isna(f[i]) else s[i])
+    return list</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.number_of_finished_groups_of_acts_by_priority"><code class="name flex">
+<span>def <span class="ident">number_of_finished_groups_of_acts_by_priority</span></span>(<span>usersThatAnswered)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes and saves dataset containing how many groups of acts user averagely finished for each priority</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>usersThatAnswered</code></strong> :&ensp;<code>bool</code></dt>
+<dd>count only users that answered atleast one question</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def number_of_finished_groups_of_acts_by_priority(usersThatAnswered):
+    &#34;&#34;&#34;
+    Computes and saves dataset containing how many groups of acts user averagely finished for each priority
+
+    Parameters
+    ----------
+    usersThatAnswered : bool
+        count only users that answered atleast one question
+    &#34;&#34;&#34;
+    global author_users, users_without_questionnaire
+    userActs = get_table(&#34;UserActs&#34;)
+    acts = get_table(&#34;Acts&#34;)
+    acts[&#34;groupsize&#34;] = [len(acts[acts[&#34;typeofact&#34;] == typeOfAct]) for typeOfAct in acts[&#34;typeofact&#34;]]
+    userActs = pd.merge(userActs, acts, left_on=&#34;actid&#34;, right_on=&#34;id&#34;)
+    userActs = userActs[~userActs[&#34;userid&#34;].isin(author_users)]
+    if (usersThatAnswered):
+        userActs = userActs[~userActs[&#34;userid&#34;].isin(users_without_questionnaire)]
+    userActs[&#34;priority&#34;] = userActs[&#34;priority&#34;].astype(&#39;category&#39;)
+    userActs = userActs.groupby([&#34;userid&#34;,&#34;typeofact&#34;, &#34;groupsize&#34;, &#34;priority&#34;])[&#34;id_x&#34;].count()
+    userActs = userActs.reset_index()
+    userActs = userActs.rename(columns={&#34;id_x&#34;: &#34;count&#34;})
+    userActs[&#34;completed_group&#34;] = userActs[&#34;groupsize&#34;] == userActs[&#34;count&#34;]
+    userActs = userActs[userActs[&#34;completed_group&#34;] == True]
+    userActs = userActs.groupby([&#34;userid&#34;, &#34;priority&#34;])[&#34;groupsize&#34;].count()
+    userActs = userActs.reset_index()
+    userActs = userActs.rename(columns={&#34;groupsize&#34;: &#34;count&#34;})
+    userActs[&#34;priority_acts&#34;] = [len(acts[acts[&#34;priority&#34;] == priority][&#34;typeofact&#34;].unique()) 
+                                 for priority in userActs[&#34;priority&#34;]]
+    userActs[&#34;count&#34;] = userActs[&#34;count&#34;] / userActs[&#34;priority_acts&#34;]
+    output = userActs.groupby([&#39;priority&#39;], as_index=False).agg({&#39;count&#39;:[&#39;mean&#39;,&#39;std&#39;]})
+    output = output.reset_index()
+    output.to_csv(os.path.join(folder_with_graphs,f&#34;number_of_finished_groups_of_acts_by_priority_{str(usersThatAnswered)}.csv&#34;))</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.number_of_recommended_queries"><code class="name flex">
+<span>def <span class="ident">number_of_recommended_queries</span></span>(<span>usersThatAnswered)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes mean and std of number of recommended queries made by user
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>usersThatAnswered</code></strong> :&ensp;<code>bool</code></dt>
+<dd>count only users that answered atleast one question</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def number_of_recommended_queries(usersThatAnswered):    
+    &#34;&#34;&#34;
+    Computes mean and std of number of recommended queries made by user
+    Parameters
+    ----------
+    usersThatAnswered : bool
+        count only users that answered atleast one question
+    &#34;&#34;&#34;
+    colnames=[&#34;relevance type&#34;,&#34;diversity type&#34;,&#34;novelty type&#34;,&#34;popularity type&#34;,&#34;calibration type&#34;,
+              &#34;relevance&#34;,&#34;diversity&#34;,&#34;novelty&#34;,&#34;popularity&#34;,&#34;calibration&#34;,&#34;tweak mechanism&#34;, &#34;userid&#34;, &#34;date&#34;] 
+    recommenderqueries = pd.read_csv(&#34;Logs/RecommenderQueries.txt&#34;, sep=&#39;;&#39;, names=colnames)
+    if (usersThatAnswered):
+        recommenderqueries = recommenderqueries[~recommenderqueries[&#34;userid&#34;].isin(users_without_questionnaire)]
+    recommenderqueries = recommenderqueries.groupby([&#34;userid&#34;])[&#34;date&#34;].count()
+    recommenderqueries = recommenderqueries.reset_index()
+    recommenderqueries = recommenderqueries.rename(columns={&#34;date&#34;: &#34;count&#34;})
+    recommenderqueriescount = recommenderqueries.agg({&#39;count&#39;:[&#39;mean&#39;,&#39;std&#39;]})
+    recommenderqueriescount.to_csv(os.path.join(folder_with_graphs,f&#34;recommenderqueriescount_{str(usersThatAnswered)}.csv&#34;))</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.number_of_users_made_act"><code class="name flex">
+<span>def <span class="ident">number_of_users_made_act</span></span>(<span>withFirstUserActs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes and saves dataset containing how many users have completed each act</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>withFirstUserActs</code></strong> :&ensp;<code>bool</code></dt>
+<dd>count users that has the action assigned as default</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def number_of_users_made_act(withFirstUserActs):
+    &#34;&#34;&#34;
+    Computes and saves dataset containing how many users have completed each act
+
+    Parameters
+    ----------
+    withFirstUserActs : bool
+        count users that has the action assigned as default
+    &#34;&#34;&#34;
+    global discarded_users, author_users
+    userActs = get_table(&#34;UserActs&#34;)
+    acts = get_table(&#34;Acts&#34;)
+    userActs = pd.merge(userActs, acts, left_on=&#34;actid&#34;, right_on=&#34;id&#34;)
+    userActs = userActs[~userActs[&#34;userid&#34;].isin(author_users)]
+    userActs = userActs[~userActs[&#34;userid&#34;].isin(discarded_users)]
+    if (not withFirstUserActs):
+        firstUserActs = get_first_user_acts()[[&#34;userid&#34;,&#34;actid&#34;,&#34;priority&#34;]]
+        userActs = pd.merge(userActs, firstUserActs, how=&#34;left&#34;, on=[&#34;userid&#34;,&#34;actid&#34;])
+        userActs = userActs[userActs[&#34;priority_y&#34;].isna()]
+    groupedUserActs = userActs.groupby([&#34;code&#34;,&#34;typeofact&#34;])[&#34;id_x&#34;].count()
+    groupedUserActs = groupedUserActs.reset_index()    
+    groupedUserActs = groupedUserActs.rename(columns={&#34;id_x&#34;: &#34;count&#34;})
+    groupedUserActs[&#34;from_all&#34;] = groupedUserActs[&#34;count&#34;] / len(userActs[&#34;userid&#34;].unique())
+    groupedUserActs[[&#34;code&#34;,&#34;count&#34;,&#34;from_all&#34;,&#34;typeofact&#34;]]\
+        .to_csv(os.path.join(folder_with_graphs,f&#34;number_of_users_made_act_{str(withFirstUserActs)}.csv&#34;))</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process"><code class="name flex">
+<span>def <span class="ident">process</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compute all results and save them as graphs</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process():
+    &#34;&#34;&#34;
+    Compute all results and save them as graphs
+    &#34;&#34;&#34;
+    set_discarded_users()
+    #process_interactions_and_ratings()
+    number_of_recommended_queries(True)
+    number_of_recommended_queries(False)
+    time_in_user_study(True)
+    time_in_user_study(False)
+    number_of_finished_groups_of_acts_by_priority(False)
+    number_of_finished_groups_of_acts_by_priority(True)
+    number_of_users_made_act(False)
+    number_of_users_made_act(True)
+    process_questions()
+    process_metrics()
+    print(&#34;DONE!&#34;)</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_Likert_Scale_Questions"><code class="name flex">
+<span>def <span class="ident">process_Likert_Scale_Questions</span></span>(<span>likertScaleQuestionsMeanAndStd, likertScaleAnswers)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compute all results from user answers to questions with possible answers from Likert scale converted to number representation
+and save them as graphs</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>likertScaleQuestionsMeanAndStd</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>DataFrame containing mean and std of users answers to questions with possible answers from Likert scale</dd>
+<dt><strong><code>likertScaleAnswers</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>DataFrame containing answers to questions with possible answers from Likert scale converted to number representation</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAnswers):
+    &#34;&#34;&#34;
+    Compute all results from user answers to questions with possible answers from Likert scale converted to number representation
+      and save them as graphs
+
+    Parameters
+    ----------
+    likertScaleQuestionsMeanAndStd : pd.DataFrame
+        DataFrame containing mean and std of users answers to questions with possible answers from Likert scale
+    likertScaleAnswers : _type_
+        DataFrame containing answers to questions with possible answers from Likert scale converted to number representation
+    &#34;&#34;&#34;
+    likertScaleQuestionsMeanAndStd = pd.concat(likertScaleQuestionsMeanAndStd)
+    likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd.reset_index()
+    print(likertScaleQuestionsMeanAndStd)
+    likertScaleQuestionsMeanAndStd.to_csv((os.path.join(folder_with_graphs,f&#34;LikertScaleQuestionsAnswers.csv&#34;)))
+    likertScaleAnswers = pd.concat(likertScaleAnswers)
+    for section in likertScaleAnswers[&#34;sectionname&#34;].unique():
+        section_LikertScaleAnswers = likertScaleAnswers[likertScaleAnswers[&#34;sectionname&#34;] == section]
+        section_likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd[\
+        likertScaleQuestionsMeanAndStd[&#34;question&#34;].isin(section_LikertScaleAnswers[&#34;questiontext&#34;])]
+        g = sns.barplot(section_likertScaleQuestionsMeanAndStd, x=&#34;mean&#34;,y=&#34;question&#34;)
+        y_coords = [p.get_y() + 0.5*p.get_height() for p in g.patches]
+        x_coords = [p.get_width() for p in g.patches]        
+        g.set_xlim(-1.1,1.1)        
+        g.errorbar(x=x_coords, y=y_coords, xerr=section_likertScaleQuestionsMeanAndStd[&#34;std&#34;], fmt=&#34;none&#34;, c= &#34;k&#34;)
+        wrap_labels(g, 20)
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;{section.replace(&#39; &#39;, &#39;_&#39;)}LikertScaleQuestionsMeanAndStd.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_interactions_and_ratings"><code class="name flex">
+<span>def <span class="ident">process_interactions_and_ratings</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes dataset based on users interactions and ratings to the response of recommender system</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>DataFrame with variants of tweak mechanism, metrics,&hellip; used in recommender query that had most positive ratings</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_interactions_and_ratings():
+    &#34;&#34;&#34;
+    Computes dataset based on users interactions and ratings to the response of recommender system
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with variants of tweak mechanism, metrics,... used in recommender query that had most positive ratings 
+    &#34;&#34;&#34;
+    recommender_queries_rating_interaction = get_recommender_queries_rating_interaction()   
+    recommender_queries_rating_interaction[~recommender_queries_rating_interaction[&#34;userid&#34;].isin(author_users)]
+    recommender_queries_rating_interaction = recommender_queries_rating_interaction\
+        [recommender_queries_rating_interaction[&#34;seens&#34;]&gt;0] 
+    recommender_queries_rating_interaction[&#34;tweak mechanism&#34;] = [&#34;PlusMinusButtons&#34; if x == &#34;Buttons&#34; else &#34;DragAndDrop&#34; \
+                                                        if x==&#34;Drag and drop&#34;
+                                                        else x 
+                                                        for x in list(recommender_queries_rating_interaction[&#34;tweak mechanism&#34;])]
+    grouped_dfs = []
+    acts = get_table(&#34;Acts&#34;).rename(columns={&#34;id&#34;: &#34;actid&#34;, &#34;code&#34;:&#34;actcode&#34;})
+    agg = {
+        &#34;positive_ratings_per_seen&#34;: [&#34;mean&#34;, &#34;std&#34;],
+        &#34;clicks_per_seen&#34;: [&#34;mean&#34;, &#34;std&#34;]
+        }
+    checked_columns = [&#34;relevance type&#34;, &#34;diversity type&#34;, &#34;novelty type&#34;, &#34;popularity type&#34;, &#34;tweak mechanism&#34;, &#34;rank&#34;]
+    for column in checked_columns:
+        stats = recommender_queries_rating_interaction.groupby(column).agg(agg)        
+        stats.to_csv(os.path.join(folder_with_graphs,f&#34;ratings_and_interactions_per_{column.replace(&#39; &#39;, &#39;_&#39;)}.csv&#34;))
+        variant_performance_on_ratings_by_user_graph(recommender_queries_rating_interaction, column)
+    user_best_performance_df = []
+    for userid in recommender_queries_rating_interaction[&#34;userid&#34;].unique():
+        u_stats = recommender_queries_rating_interaction[recommender_queries_rating_interaction[&#34;userid&#34;] == userid]
+        for column in checked_columns[:-1]:
+            stats = u_stats.groupby([column, &#34;userid&#34;])[&#34;positive_ratings_per_seen&#34;].mean()
+            stats = stats.reset_index().sort_values(&#34;positive_ratings_per_seen&#34;).drop_duplicates([&#34;userid&#34;], keep=&#34;last&#34;)
+            stats = stats.rename(columns={column: &#34;actcode&#34;})
+            x=1
+            user_best_performance_df.append(stats)
+    user_best_performance_df = pd.concat(user_best_performance_df)
+    user_best_performance_df = pd.merge(user_best_performance_df, acts[[&#34;actcode&#34;,&#34;typeofact&#34;]], on=&#34;actcode&#34;)
+    return user_best_performance_df</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_metrics"><code class="name flex">
+<span>def <span class="ident">process_metrics</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compute all stats objectives weights in recommender queries and save them as graphs</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_metrics():
+    &#34;&#34;&#34;
+    Compute all stats objectives weights in recommender queries and save them as graphs
+    &#34;&#34;&#34;
+    global author_users
+    recommenderqueries = get_recommender_queries_by_metric()
+    recommenderqueries = recommenderqueries[~recommenderqueries[&#34;userid&#34;].isin(author_users)]
+    cm = sns.color_palette(&#34;plasma&#34;,len(recommenderqueries[&#34;Metric&#34;].unique()))
+    g = sns.violinplot(data = recommenderqueries, x= &#34;Metric&#34;, y= &#34;Metric importance&#34;,
+               palette=cm)
+    g.set(title = f&#34;Metrics weights specified by user&#34;)
+    wrap_labels(g, 12)
+    plt.savefig(os.path.join(folder_with_graphs,f&#34;Metrics_importances.png&#34;), bbox_inches=&#39;tight&#39;)
+    plt.close(&#39;all&#39;)
+    plt.clf()
+    plt.cla()
+    g = sns.violinplot(data = recommenderqueries, x= &#34;Metric variant&#34;, y= &#34;Metric importance&#34;,
+               palette=cm)
+    g.set(title = f&#34;Metrics variants weights specified by user&#34;)
+    wrap_labels(g, 6)
+    plt.savefig(os.path.join(folder_with_graphs,f&#34;Metrics_variants_importances.png&#34;), bbox_inches=&#39;tight&#39;)
+    plt.close(&#39;all&#39;)
+    plt.clf()
+    plt.cla()
+    process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm)</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_metrics_per_variant_and_per_mechanism"><code class="name flex">
+<span>def <span class="ident">process_metrics_per_variant_and_per_mechanism</span></span>(<span>recommenderqueries, cm)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compute all stats objectives weights per used metric variant and used mechanism
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>recommenderqueries</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>All queries to the recommender called by user</dd>
+<dt><strong><code>cm</code></strong> :&ensp;<code>_RGBColorPalette</code></dt>
+<dd>Color palette used</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
+    &#34;&#34;&#34;
+    Compute all stats objectives weights per used metric variant and used mechanism
+    Parameters
+    ----------
+    recommenderqueries : pd.DataFrame
+        All queries to the recommender called by user
+    cm : _RGBColorPalette
+        Color palette used
+    &#34;&#34;&#34;
+    for metric in recommenderqueries[&#34;Metric&#34;].unique():
+        metric_recommenderqueries = recommenderqueries[recommenderqueries[&#34;Metric&#34;] == metric]
+        if(len(metric_recommenderqueries[&#34;Metric variant&#34;].unique()) &gt; 1):
+            g = sns.violinplot(data = metric_recommenderqueries, x= &#34;Metric variant&#34;, y= &#34;Metric importance&#34;,
+               palette=cm)
+            g.set(title = f&#34;{metric} weight specified by user per metric variant&#34;)
+            wrap_labels(g, 12)
+            plt.savefig(os.path.join(folder_with_graphs,f&#34;variants_of_{metric}_importances.png&#34;), bbox_inches=&#39;tight&#39;)
+            plt.close(&#39;all&#39;)
+            plt.clf()
+            plt.cla()
+            g = sns.violinplot(data = metric_recommenderqueries, x= &#34;Tweak mechanism&#34;, y= &#34;Metric importance&#34;,
+               split=True, palette=cm)
+            g.set(title = f&#34;{metric} weight specified by user per tweak mechanism&#34;)
+            wrap_labels(g, 12)
+            plt.savefig(os.path.join(folder_with_graphs,f&#34;by_tweak_mechanism_{metric}_importances.png&#34;), bbox_inches=&#39;tight&#39;)
+            plt.close(&#39;all&#39;)
+            plt.clf()
+            plt.cla() </code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_one_question"><code class="name flex">
+<span>def <span class="ident">process_one_question</span></span>(<span>questionid, userAnswers, q_userAnswers, first, firstUserActs, recommendedQueries, best_peformances_by_ratings)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compute results from user answers to one question and save them as graphs</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>questionid</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of questions</dd>
+<dt><strong><code>userAnswers</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>Dataset with user answers</dd>
+<dt><strong><code>firstUserActs</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>DataFrame with all users first acts from each group of acts</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_one_question(questionid, userAnswers, q_userAnswers, first, firstUserActs, recommendedQueries, best_peformances_by_ratings):
+    &#34;&#34;&#34;
+    Compute results from user answers to one question and save them as graphs
+
+    Parameters
+    ----------
+    questionid : int
+        ID of questions
+    userAnswers : pd.DataFrame
+        Dataset with user answers
+    firstUserActs : pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    &#34;&#34;&#34;
+    questiontext = first[&#34;questiontext&#34;]
+    sectionname = first[&#34;sectionname&#34;]
+    questionType = first[&#34;answertype&#34;]    
+    number_of_users_with_answers = len(userAnswers[&#34;userid&#34;].unique())
+    answersToQuestion = get_possible_answers_to_question(questionid, questionType)
+    process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion, number_of_users_with_answers)
+    process_one_question_first_type_of_act(questionid, sectionname, firstUserActs, q_userAnswers, questiontext, answersToQuestion,\
+                                            number_of_users_with_answers)
+    process_one_question_most_used_act_in_query(questionid, sectionname, recommendedQueries, q_userAnswers, questiontext,\
+                                                 answersToQuestion, number_of_users_with_answers)
+    process_one_question_best_performances_by_ratings_in_query(questionid, sectionname, best_peformances_by_ratings, q_userAnswers, questiontext,\
+                                                 answersToQuestion, number_of_users_with_answers)
+    process_one_question_other_question(questionid, sectionname,userAnswers, q_userAnswers, questiontext, answersToQuestion,\
+                                        number_of_users_with_answers)</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_one_question_all_answers"><code class="name flex">
+<span>def <span class="ident">process_one_question_all_answers</span></span>(<span>questionid, q_userAnswers, questiontext, answersToQuestion, y_max)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves graph of user answers to the question
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>questionid</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the question</dd>
+<dt><strong><code>q_userAnswers</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>Dataset with user answers to the question</dd>
+<dt><strong><code>questiontext</code></strong> :&ensp;<code>str</code></dt>
+<dd>Text of the question</dd>
+<dt><strong><code>answersToQuestion</code></strong> :&ensp;<code>list</code></dt>
+<dd>Possible answers to the question</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_one_question_all_answers(questionid, q_userAnswers, questiontext, answersToQuestion, y_max):
+    &#34;&#34;&#34;
+    Saves graph of user answers to the question
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    counts = []
+    for possibleAnswer in answersToQuestion:
+        counts.append(len(q_userAnswers[q_userAnswers[&#34;answer&#34;] == possibleAnswer]))
+    question_userAnswers = pd.DataFrame({
+        &#34;answer&#34; : answersToQuestion,
+        &#34;count&#34; : counts
+    })
+    cm = sns.color_palette(&#34;plasma&#34;,len(question_userAnswers[&#34;answer&#34;].unique()))
+    g = sns.barplot(data=question_userAnswers, x=&#34;answer&#34;,y=&#34;count&#34;)
+    for bin_,i in zip(g.patches, cm):
+        bin_.set_facecolor(i)
+    g.set(title=(&#34;\n&#34;.join(wrap(questiontext, 60))))
+    g.set_ylim(0,y_max+2)
+    wrap_labels(g, 12)
+    plt.savefig(os.path.join(folder_with_graphs,f&#34;{questionid}_answers.png&#34;), bbox_inches=&#39;tight&#39;)
+    plt.close(&#39;all&#39;)
+    plt.clf()
+    plt.cla()</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_one_question_best_performances_by_ratings_in_query"><code class="name flex">
+<span>def <span class="ident">process_one_question_best_performances_by_ratings_in_query</span></span>(<span>questionid, sectionname, best_peformances_by_ratings, q_userAnswers, questiontext, answersToQuestion, y_max)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves graph of user answers to the question based on first act from group of acts</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>questionid</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the question</dd>
+<dt><strong><code>sectionname</code></strong> :&ensp;<code>str</code></dt>
+<dd>name of the questions section where this question belongs</dd>
+<dt><strong><code>best_peformances_by_ratings</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>DataFrame with variants of tweak mechanism, metrics,&hellip; used in recommender query that had most positive ratings</dd>
+<dt><strong><code>q_userAnswers</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>Dataset with user answers to the question</dd>
+<dt><strong><code>questiontext</code></strong> :&ensp;<code>str</code></dt>
+<dd>Text of the question</dd>
+<dt><strong><code>answersToQuestion</code></strong> :&ensp;<code>list</code></dt>
+<dd>Possible answers to the question</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_one_question_best_performances_by_ratings_in_query(questionid, sectionname, best_peformances_by_ratings, q_userAnswers, questiontext,\
+                                                 answersToQuestion, y_max):
+    &#34;&#34;&#34;
+    Saves graph of user answers to the question based on first act from group of acts
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    sectionname : str
+        name of the questions section where this question belongs
+    best_peformances_by_ratings : pd.DataFrame
+        DataFrame with variants of tweak mechanism, metrics,... used in recommender query that had most positive ratings 
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    for typeOfAct in ActTypeToQuestionSection[sectionname]:
+        type_userActs = best_peformances_by_ratings[best_peformances_by_ratings[&#34;typeofact&#34;] == typeOfAct]
+        if (len(type_userActs)) == 0:
+            continue
+        type_userAnswers = pd.merge(q_userAnswers, type_userActs,  on=[&#34;userid&#34;])
+        actName = &#34;\n&#34;.join(wrap(f&#34;Most given positive ratings per seen when used variant of {typeOfAct} in recommender queries&#34;, 25))
+        type_userAnswers.sort_values(&#34;actcode&#34;, inplace=True)
+        type_userAnswers.rename(columns={&#34;actcode&#34; : actName}, inplace=True)
+        data = []
+        for possibleAnswer in answersToQuestion:
+            type_userAnswers_by_answer = type_userAnswers[type_userAnswers[&#34;answer&#34;] == possibleAnswer]
+            for nameOfAct in type_userAnswers[actName].unique():
+                type_userAnswers_by_act = type_userAnswers_by_answer[type_userAnswers_by_answer[actName] == nameOfAct]
+                
+                data.append(pd.DataFrame({
+                    &#34;answer&#34; : [possibleAnswer],
+                    &#34;count&#34; : [len(type_userAnswers_by_act)],
+                    actName: [&#34;\n&#34;.join(wrap(nameOfAct, 25))]
+                }))
+        type_userAnswers = pd.concat(data)
+        cm = sns.color_palette(&#34;plasma&#34;,len(type_userAnswers[actName].unique()))
+        g = sns.barplot(data=type_userAnswers, x=&#34;answer&#34;, y=&#34;count&#34;, hue = actName, palette=cm)
+        g.set(title=(&#34;\n&#34;.join(wrap(questiontext, 40))))
+        g.set_ylim(0,y_max / len(type_userAnswers[actName].unique()) + 2)
+        wrap_labels(g, 12)
+        sns.move_legend(g, &#34;upper left&#34;, bbox_to_anchor=(1, 1))
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;by_best_performed_on_ratings_{typeOfAct}_variant_{questionid}_answers.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_one_question_first_type_of_act"><code class="name flex">
+<span>def <span class="ident">process_one_question_first_type_of_act</span></span>(<span>questionid, sectionname, firstUserActs, q_userAnswers, questiontext, answersToQuestion, y_max)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves graph of user answers to the question based on first act from group of acts</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>questionid</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the question</dd>
+<dt><strong><code>sectionname</code></strong> :&ensp;<code>str</code></dt>
+<dd>name of the questions section where this question belongs</dd>
+<dt><strong><code>firstUserActs</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>DataFrame with all users first acts from each group of acts</dd>
+<dt><strong><code>q_userAnswers</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>Dataset with user answers to the question</dd>
+<dt><strong><code>questiontext</code></strong> :&ensp;<code>str</code></dt>
+<dd>Text of the question</dd>
+<dt><strong><code>answersToQuestion</code></strong> :&ensp;<code>list</code></dt>
+<dd>Possible answers to the question</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_one_question_first_type_of_act(questionid, sectionname, firstUserActs, q_userAnswers, questiontext,\
+                                           answersToQuestion,y_max):
+    &#34;&#34;&#34;
+    Saves graph of user answers to the question based on first act from group of acts
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    sectionname : str
+        name of the questions section where this question belongs
+    firstUserActs : pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    for typeOfAct in ActTypeToQuestionSection[sectionname]:
+        type_userActs = firstUserActs[firstUserActs[&#34;typeofact&#34;] == typeOfAct]
+        type_userAnswers = pd.merge(q_userAnswers, type_userActs, how=&#34;left&#34;, on=[&#34;userid&#34;])
+        actName = f&#34;First variant of {typeOfAct}&#34;
+        type_userAnswers.sort_values(&#34;actcode&#34;, inplace=True)
+        type_userAnswers.rename(columns={&#34;actcode&#34; : actName}, inplace=True)
+        data = []
+        for possibleAnswer in answersToQuestion:
+            type_userAnswers_by_answer = type_userAnswers[type_userAnswers[&#34;answer&#34;] == possibleAnswer]
+            for nameOfAct in type_userAnswers[actName].unique():
+                type_userAnswers_by_act = type_userAnswers_by_answer[type_userAnswers_by_answer[actName] == nameOfAct]
+                data.append(pd.DataFrame({
+                    &#34;answer&#34; : [possibleAnswer],
+                    &#34;count&#34; : [len(type_userAnswers_by_act)],                    
+                    actName: [&#34;\n&#34;.join(wrap(nameOfAct, 25))]
+                }))
+        type_userAnswers = pd.concat(data)
+        cm = sns.color_palette(&#34;plasma&#34;,len(type_userAnswers[actName].unique()))
+        g = sns.barplot(data=type_userAnswers, x=&#34;answer&#34;, y=&#34;count&#34;, hue = actName, palette=cm)
+        g.set(title=(&#34;\n&#34;.join(wrap(questiontext, 40))))
+        g.set_ylim(0,y_max / len(type_userAnswers[actName].unique()) + 2)
+        wrap_labels(g, 12)
+        sns.move_legend(g, &#34;upper left&#34;, bbox_to_anchor=(1, 1))
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;by_{typeOfAct}_{questionid}_answers.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()
+        #plt.show()</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_one_question_most_used_act_in_query"><code class="name flex">
+<span>def <span class="ident">process_one_question_most_used_act_in_query</span></span>(<span>questionid, sectionname, recommenderQueries, q_userAnswers, questiontext, answersToQuestion, y_max)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves graph of user answers to the question based on first act from group of acts</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>questionid</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the question</dd>
+<dt><strong><code>sectionname</code></strong> :&ensp;<code>str</code></dt>
+<dd>name of the questions section where this question belongs</dd>
+<dt><strong><code>recommenderQueries</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>DataFrame with most used actions for recommenderquery (tweak emchanism, metric variants)</dd>
+<dt><strong><code>q_userAnswers</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>Dataset with user answers to the question</dd>
+<dt><strong><code>questiontext</code></strong> :&ensp;<code>str</code></dt>
+<dd>Text of the question</dd>
+<dt><strong><code>answersToQuestion</code></strong> :&ensp;<code>list</code></dt>
+<dd>Possible answers to the question</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_one_question_most_used_act_in_query(questionid, sectionname, recommenderQueries, q_userAnswers, questiontext,\
+                                                answersToQuestion, y_max):
+    &#34;&#34;&#34;
+    Saves graph of user answers to the question based on first act from group of acts
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    sectionname : str
+        name of the questions section where this question belongs
+    recommenderQueries : pd.DataFrame
+        DataFrame with most used actions for recommenderquery (tweak emchanism, metric variants)
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    for typeOfAct in ActTypeToQuestionSection[sectionname]:
+        type_userActs = recommenderQueries[recommenderQueries[&#34;typeofact&#34;] == typeOfAct]
+        if (len(type_userActs)) == 0:
+            continue
+        type_userAnswers = pd.merge(q_userAnswers, type_userActs,  on=[&#34;userid&#34;])
+        actName = f&#34;Most used variant of {typeOfAct} in recommender queries&#34;
+        type_userAnswers.sort_values(&#34;actcode&#34;, inplace=True)
+        type_userAnswers.rename(columns={&#34;actcode&#34; : actName}, inplace=True)
+        data = []
+        for possibleAnswer in answersToQuestion:
+            type_userAnswers_by_answer = type_userAnswers[type_userAnswers[&#34;answer&#34;] == possibleAnswer]
+            for nameOfAct in type_userAnswers[actName].unique():
+                type_userAnswers_by_act = type_userAnswers_by_answer[type_userAnswers_by_answer[actName] == nameOfAct]
+                
+                data.append(pd.DataFrame({
+                    &#34;answer&#34; : [possibleAnswer],
+                    &#34;count&#34; : [len(type_userAnswers_by_act)],
+                    actName: [&#34;\n&#34;.join(wrap(nameOfAct, 25))]
+                }))
+        type_userAnswers = pd.concat(data)
+        cm = sns.color_palette(&#34;plasma&#34;,len(type_userAnswers[actName].unique()))
+        g = sns.barplot(data=type_userAnswers, x=&#34;answer&#34;, y=&#34;count&#34;, hue = actName, palette=cm)
+        g.set(title=(&#34;\n&#34;.join(wrap(questiontext, 40))))
+        g.set_ylim(0,y_max / len(type_userAnswers[actName].unique()) + 2)
+        wrap_labels(g, 12)
+        sns.move_legend(g, &#34;upper left&#34;, bbox_to_anchor=(1, 1))
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;by_recommender_query_{typeOfAct}_{questionid}_answers.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()
+        #plt.show()</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_one_question_other_question"><code class="name flex">
+<span>def <span class="ident">process_one_question_other_question</span></span>(<span>questionid, sectionname, userAnswers, q_userAnswers, questiontext, answersToQuestion, y_max)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><em>summary</em></p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>questionid</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the question</dd>
+<dt><strong><code>userAnswers</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>Dataset with user answers</dd>
+<dt><strong><code>sectionname</code></strong> :&ensp;<code>str</code></dt>
+<dd>name of the questions section where this question belongs</dd>
+<dt><strong><code>firstUserActs</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>DataFrame with all users first acts from each group of acts</dd>
+<dt><strong><code>q_userAnswers</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>Dataset with user answers to the question</dd>
+<dt><strong><code>questiontext</code></strong> :&ensp;<code>str</code></dt>
+<dd>Text of the question</dd>
+<dt><strong><code>answersToQuestion</code></strong> :&ensp;<code>list</code></dt>
+<dd>Possible answers to the question</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_one_question_other_question(questionid, sectionname,userAnswers, q_userAnswers, questiontext,
+                                         answersToQuestion, y_max):
+    &#34;&#34;&#34;_summary_
+
+    Parameters
+    ----------
+    questionid : int
+        ID of the question
+    userAnswers : pd.DataFrame
+        Dataset with user answers
+    sectionname : str
+        name of the questions section where this question belongs
+    firstUserActs : pd.DataFrame
+        DataFrame with all users first acts from each group of acts
+    q_userAnswers : pd.DataFrame
+        Dataset with user answers to the question
+    questiontext : str
+        Text of the question
+    answersToQuestion : list
+        Possible answers to the question
+    &#34;&#34;&#34;
+    setOfDependentQuestions = set(userAnswers[(userAnswers[&#34;sectionname&#34;] == sectionname)][&#34;questionid&#34;].unique())
+    setOfDependentQuestions = setOfDependentQuestions |\
+          set(userAnswers[(userAnswers[&#34;sectionname&#34;] == &#34;Demographics&#34;)][&#34;questionid&#34;].unique())
+    for sname in QuestionSectionsDependency[sectionname]:
+        setOfDependentQuestions = setOfDependentQuestions |\
+          set(userAnswers[(userAnswers[&#34;sectionname&#34;] == sname)][&#34;questionid&#34;].unique())
+    setOfDependentQuestions.remove(questionid)
+    for qid in setOfDependentQuestions:
+        dependent_userAnswers = userAnswers[userAnswers[&#34;questionid&#34;] == qid]
+        sname = dependent_userAnswers.iloc[0][&#34;sectionname&#34;]
+        qtype = dependent_userAnswers.iloc[0][&#34;answertype&#34;]
+        qtext = dependent_userAnswers.iloc[0][&#34;questiontext&#34;]
+        dependent_userAnswers = dependent_userAnswers.add_suffix(f&#39;_{qid}&#39;)
+        dependent_userAnswers = dependent_userAnswers.rename(columns={f&#34;userid_{qid}&#34;:&#34;userid&#34;})
+        dependent_userAnswers = pd.merge(q_userAnswers, dependent_userAnswers, on=&#34;userid&#34;)
+        dependent_answerColumn = &#34;\n&#34;.join(wrap(qtext, 40))
+        dependent_userAnswers.rename(columns={f&#34;answer_{qid}&#34; : dependent_answerColumn}, inplace=True)
+        answersToDependentQuestion = get_possible_answers_to_question(qid,qtype)
+        data = []
+        for possibleAnswer in answersToQuestion:
+            dependent_userAnswers_by_answer = dependent_userAnswers[dependent_userAnswers[&#34;answer&#34;] == possibleAnswer]
+            for possibleDependentAnswer in answersToDependentQuestion:
+                dependent_userAnswers_by_dependent = dependent_userAnswers_by_answer\
+                    [dependent_userAnswers_by_answer[dependent_answerColumn] == possibleDependentAnswer]
+                data.append(pd.DataFrame({
+                    &#34;answer&#34; : [possibleAnswer],
+                    &#34;count&#34; : [len(dependent_userAnswers_by_dependent)],
+                    dependent_answerColumn: [&#34;\n&#34;.join(wrap(possibleDependentAnswer, 25))]
+                }))
+        dependent_userAnswers = pd.concat(data)
+        cm = sns.color_palette(&#34;plasma&#34;,len(dependent_userAnswers[dependent_answerColumn].unique()))
+        g = sns.barplot(data=dependent_userAnswers, x=&#34;answer&#34;, y=&#34;count&#34;, hue = dependent_answerColumn, palette=cm)
+        g.set(title=(&#34;\n&#34;.join(wrap(questiontext, 60))))
+        g.set_ylim(0, max(y_max / 2, dependent_userAnswers[&#34;count&#34;].max()))
+        wrap_labels(g, 12)
+        sns.move_legend(g, &#34;upper left&#34;, bbox_to_anchor=(1, 1))
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;by_{qid}_answers_{questionid}.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()
+        #plt.show()</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_questions"><code class="name flex">
+<span>def <span class="ident">process_questions</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compute all results from user answers and save them as graphs</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_questions():
+    &#34;&#34;&#34;
+    Compute all results from user answers and save them as graphs
+    &#34;&#34;&#34;
+    global discarded_users, author_users
+    userAnswers = get_userAnswers()
+    firstUserActs = get_first_user_acts()
+    recommendedQueries = get_most_used_in_recommender_queries()
+    best_peformances_by_ratings = process_interactions_and_ratings()
+    questions = get_table(&#34;Questions&#34;)
+    userAnswers = userAnswers[~userAnswers[&#34;userid&#34;].isin(discarded_users)]
+    userAnswers = userAnswers[~userAnswers[&#34;userid&#34;].isin(author_users)]
+    firstUserActs = firstUserActs[~firstUserActs[&#34;userid&#34;].isin(author_users)]
+    recommendedQueries = recommendedQueries[~recommendedQueries[&#34;userid&#34;].isin(author_users)]
+    likertScaleQuestionsMeanAndStd = []
+    likertScaleAnswers = []
+    for questionid in questions[&#34;id&#34;]:        
+        q_userAnswers = userAnswers[userAnswers[&#34;questionid&#34;] == questionid]   
+        first = q_userAnswers.iloc[0]
+        if (first[&#34;answertype&#34;] == 0):
+            mean_std_df, q_userAnswers = get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers)
+            likertScaleQuestionsMeanAndStd.append(mean_std_df)
+            likertScaleAnswers.append(q_userAnswers)
+        process_one_question(questionid,userAnswers, q_userAnswers, first, firstUserActs, recommendedQueries, best_peformances_by_ratings)
+    process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAnswers)</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.process_user_interactions"><code class="name flex">
+<span>def <span class="ident">process_user_interactions</span></span>(<span>userid, ratings, interactions, recommenderqueries)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Enrich recommender query dataset of users seen, clicks, ratings and positive ratings
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>userid</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of user</dd>
+<dt><strong><code>ratings</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>dataframe with all given ratings</dd>
+<dt><strong><code>interactions</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>dataframe with all interactions</dd>
+<dt><strong><code>recommenderqueries</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>dataframe with all recommender queries</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pd.DataFrame</code></dt>
+<dd>Enriched recommender query dataset of users seen, clicks, ratings and positive ratings</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_user_interactions(userid, ratings, interactions, recommenderqueries):
+    &#34;&#34;&#34;
+    Enrich recommender query dataset of users seen, clicks, ratings and positive ratings 
+    Parameters
+    ----------
+    userid : int
+        ID of user
+    ratings : pd.DataFrame
+        dataframe with all given ratings
+    interactions : pd.DataFrame
+        dataframe with all interactions
+    recommenderqueries : pd.DataFrame
+        dataframe with all recommender queries
+
+    Returns
+    -------
+    pd.DataFrame
+        Enriched recommender query dataset of users seen, clicks, ratings and positive ratings 
+    &#34;&#34;&#34;
+    u_ratings = ratings[ratings[&#34;userid&#34;]==userid]
+    u_interactions = interactions[interactions[&#34;userid&#34;]==userid]
+    u_seens = u_interactions[u_interactions[&#34;type&#34;]==&#34;Seen&#34;]
+    u_clicks = u_interactions[u_interactions[&#34;type&#34;]==&#34;Click&#34;]
+    u_recommenderqueries = recommenderqueries[recommenderqueries[&#34;userid&#34;]==userid]
+    num_seens = []
+    num_clicks = []
+    num_positive_ratings = []
+    num_ratings = []
+    upper_bound_date = recommenderqueries[&#34;date&#34;].max() + timedelta(days=1)
+    for i in range(len(u_recommenderqueries)):
+        min_date = u_recommenderqueries.iloc[i][&#34;date&#34;]
+        max_date = upper_bound_date
+        if (len(u_recommenderqueries) &gt; i+1):
+            max_date = u_recommenderqueries.iloc[i + 1][&#34;date&#34;]
+        cur_seens = u_seens[(u_seens[&#34;date&#34;] &gt; min_date) &amp; (u_seens[&#34;date&#34;] &lt; max_date)].head(number_of_recommendations)
+        cur_clicks = u_clicks[(u_clicks[&#34;date&#34;] &gt; min_date) &amp; (u_clicks[&#34;date&#34;] &lt; max_date)]
+        cur_clicks = pd.merge(cur_clicks, cur_seens[&#34;itemid&#34;], on=[&#34;itemid&#34;]).drop_duplicates(subset=[&#34;itemid&#34;])
+        cur_ratings = u_ratings[(u_ratings[&#34;date&#34;] &gt; min_date) &amp; (u_ratings[&#34;date&#34;] &lt; max_date)]
+        cur_ratings = pd.merge(cur_ratings, cur_seens[&#34;itemid&#34;], on=[&#34;itemid&#34;]).drop_duplicates(subset=[&#34;itemid&#34;], keep=&#34;last&#34;)
+        cur_positive_ratings = cur_ratings[cur_ratings[&#34;ratingscore&#34;] &gt; 5]
+        num_seens.append(len(cur_seens))
+        num_clicks.append(len(cur_clicks))
+        num_ratings.append(len(cur_ratings))
+        num_positive_ratings.append(len(cur_positive_ratings))
+    u_recommenderqueries[&#34;seens&#34;] = num_seens
+    u_recommenderqueries[&#34;clicks&#34;] = num_clicks
+    u_recommenderqueries[&#34;positive_ratings&#34;] = num_positive_ratings
+    u_recommenderqueries[&#34;ratings&#34;] = num_ratings
+    u_recommenderqueries[&#34;clicks_per_seen&#34;] =  u_recommenderqueries[&#34;clicks&#34;] / u_recommenderqueries[&#34;seens&#34;] 
+    u_recommenderqueries[&#34;ratings_per_seen&#34;] =  u_recommenderqueries[&#34;ratings&#34;] / u_recommenderqueries[&#34;seens&#34;] 
+    u_recommenderqueries[&#34;positive_ratings_per_seen&#34;] =  u_recommenderqueries[&#34;positive_ratings&#34;] / u_recommenderqueries[&#34;seens&#34;] 
+    u_recommenderqueries[&#34;positive_ratings_per_rating&#34;] = u_recommenderqueries[&#34;positive_ratings&#34;] / u_recommenderqueries[&#34;ratings&#34;]
+    u_recommenderqueries[&#34;rank&#34;] = list(range(len(u_recommenderqueries)))
+    corr = u_recommenderqueries[[&#34;relevance&#34;,&#34;diversity&#34;,&#34;novelty&#34;,&#34;popularity&#34;,&#34;calibration&#34;, &#34;rank&#34;,\
+                                 &#34;seens&#34;, &#34;clicks_per_seen&#34;, &#34;positive_ratings_per_seen&#34;,&#34;ratings_per_seen&#34;]] .corr()
+    g = sns.heatmap(corr,  cmap=&#39;coolwarm&#39;)    
+    g.set(title=f&#34;Korelace - požadavek na RS&#34;)
+    plt.savefig(os.path.join(folder_with_graphs,f&#34;corr_recommender_queries.png&#34;), bbox_inches=&#39;tight&#39;)
+    plt.clf()
+    plt.cla()
+    return u_recommenderqueries</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.set_discarded_users"><code class="name flex">
+<span>def <span class="ident">set_discarded_users</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Discards users of authors and users that haven't answered attention checks right</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_discarded_users():
+    &#34;&#34;&#34;
+    Discards users of authors and users that haven&#39;t answered attention checks right
+    &#34;&#34;&#34;
+    global discarded_users, author_users, users_without_questionnaire
+    users = get_table(&#34;Users&#34;)
+    author_users.extend(list(users[(users[&#34;username&#34;]==&#34;log_master2&#34;) | (users[&#34;username&#34;]==&#34;lp&#34;)][&#34;id&#34;]))
+    userAnswers = get_userAnswers()
+    attentionChecks = userAnswers[userAnswers[&#34;questiontext&#34;].str.contains(&#34;attention check&#34;, case=False)]
+    attentionChecks[&#34;expected_answer&#34;] = [s.split(&#39;&#34;&#39;)[1] for s in attentionChecks[&#34;questiontext&#34;]]
+    userWrongAnswersToAttentionCheck = attentionChecks[attentionChecks[&#34;expected_answer&#34;].str.lower() \
+                                                       != attentionChecks[&#34;answer&#34;].str.lower()]
+    discarded_users.extend(list(userWrongAnswersToAttentionCheck[&#34;userid&#34;].unique()))
+    discarded_users = list(set(discarded_users))
+    users_without_questionnaire = list(set(users[~users[&#34;id&#34;].isin(userAnswers[&#34;userid&#34;])][&#34;id&#34;]))</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.time_in_user_study"><code class="name flex">
+<span>def <span class="ident">time_in_user_study</span></span>(<span>two_hours_max)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes time spent in user study
+: from first recommender query to first answer to question
+: from first recommender query to last answer to question</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>two_hours_max</code></strong> :&ensp;<code>bool</code></dt>
+<dd>count only with users that spend less than 2 hours in the user study (performed study at once)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def time_in_user_study(two_hours_max):
+    &#34;&#34;&#34;
+    Computes time spent in user study 
+        : from first recommender query to first answer to question
+        : from first recommender query to last answer to question
+
+    Parameters
+    ----------
+    two_hours_max : bool
+        count only with users that spend less than 2 hours in the user study (performed study at once)
+    &#34;&#34;&#34;
+    users = get_table(&#34;Users&#34;)
+    users = users[~users[&#34;firstrecommendationtime&#34;].isna()]
+    #format = cnv_csharp_date_fmt(&#34;dd-MM-yyyy HH:mm:ss.f&#34;)
+    users[&#34;firstrecommendationtime&#34;] = pd.to_datetime(users[&#34;firstrecommendationtime&#34;], format=&#34;%Y-%m-%d %H:%M:%S.%f&#34;)
+    userAnswers = get_userAnswers()
+    userAnswers[&#34;date&#34;] = pd.to_datetime(userAnswers[&#34;date&#34;], format=&#34;%Y-%m-%d %H:%M:%S.%f&#34;)
+    userAnswersMin = userAnswers.groupby(&#34;userid&#34;)[&#34;date&#34;].min()
+    userAnswersMin = userAnswersMin.reset_index()
+    userAnswersMin = userAnswersMin.rename(columns={&#34;date&#34;: &#34;firstanswer&#34;})
+    userAnswersMax = userAnswers.groupby(&#34;userid&#34;)[&#34;date&#34;].max()
+    userAnswersMax = userAnswersMax.reset_index()
+    userAnswersMax = userAnswersMax.rename(columns={&#34;date&#34;: &#34;lastanswer&#34;})
+    userAnswers = pd.merge(userAnswersMin, userAnswersMax, on=&#34;userid&#34;)
+    users = pd.merge(users, userAnswers, left_on=&#34;id&#34;, right_on=&#34;userid&#34;)
+    users[&#34;minutes_to_first_answer&#34;] = users[&#34;firstanswer&#34;] - users[&#34;firstrecommendationtime&#34;]
+    users[&#34;minutes_to_first_answer&#34;] = [delta.total_seconds() / 60 for delta in users[&#34;minutes_to_first_answer&#34;]]
+    users[&#34;minutes_to_last_answer&#34;] = users[&#34;lastanswer&#34;] - users[&#34;firstrecommendationtime&#34;]
+    users[&#34;minutes_to_last_answer&#34;] = [delta.total_seconds() / 60 for delta in users[&#34;minutes_to_last_answer&#34;]]
+    if (two_hours_max):
+        users = users[users[&#34;minutes_to_last_answer&#34;] &lt;=120]
+    minutes_to_first_answer = users.agg({&#39;minutes_to_first_answer&#39;:[&#39;mean&#39;,&#39;std&#39;]})
+    minutes_to_first_answer.to_csv(os.path.join(folder_with_graphs,f&#34;minutes_to_first_answer{str(two_hours_max)}.csv&#34;))
+    minutes_to_last_answer = users.agg({&#39;minutes_to_last_answer&#39;:[&#39;mean&#39;,&#39;std&#39;]})
+    minutes_to_last_answer.to_csv(os.path.join(folder_with_graphs,f&#34;minutes_to_last_answer{str(two_hours_max)}.csv&#34;))</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.variant_performance_on_ratings_by_user_graph"><code class="name flex">
+<span>def <span class="ident">variant_performance_on_ratings_by_user_graph</span></span>(<span>df, column)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Graph of mean positive ratings by user when variants of {column} (metric, tweak mechanism) used in recommmender query</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>df</code></strong> :&ensp;<code>pd.DataFrame</code></dt>
+<dd>Enriched recommender query dataset of users seen, clicks, ratings and positive ratings</dd>
+<dt><strong><code>column</code></strong> :&ensp;<code>str</code></dt>
+<dd>name of column with different variants</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def variant_performance_on_ratings_by_user_graph(df, column):
+    &#34;&#34;&#34;
+    Graph of mean positive ratings by user when variants of {column} (metric, tweak mechanism) used in recommmender query
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Enriched recommender query dataset of users seen, clicks, ratings and positive ratings 
+    column : str
+        name of column with different variants
+    &#34;&#34;&#34;
+    dict = {
+        &#34;positive_ratings_per_seen&#34;: &#34;users mean positive ratings per seen&#34;,
+        &#34;clicks_per_seen&#34;:&#34;users mean number of clicks per seen&#34;
+    }
+    data = df.rename(columns=dict)
+    if(column == &#34;rank&#34;):
+        data[column] = round(df[column]/5)*5
+    count=0
+    y_max = [0.3, 0.05]
+    for value in dict.values():
+        g = sns.barplot(data, y=value, x=column)
+        g.set(title=(&#34;\n&#34;.join(wrap(f&#34;{value} when variants of {column} used in recommmender query&#34;, 60))))
+        g.set_ylim(-0.01,y_max[count])
+        wrap_labels(g, 20)
+        plt.savefig(os.path.join(folder_with_graphs,f&#34;ratings_and_interactions_per_{column.replace(&#39; &#39;, &#39;_&#39;)}_{count}.png&#34;), bbox_inches=&#39;tight&#39;)
+        plt.close(&#39;all&#39;)
+        plt.clf()
+        plt.cla()
+        count+=1</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.ResultsScript.results.wrap_labels"><code class="name flex">
+<span>def <span class="ident">wrap_labels</span></span>(<span>ax, width_x, break_long_words=True, width_y=60)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>wraps labels by newlines
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>ax</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>graph or its axis</dd>
+<dt><strong><code>width</code></strong> :&ensp;<code>int</code></dt>
+<dd>maximum width for one line of text</dd>
+<dt><strong><code>break_long_words</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>If true breaks long words, by default False</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def wrap_labels(ax, width_x, break_long_words=True, width_y = 60):
+    &#34;&#34;&#34;
+    wraps labels by newlines
+    Parameters
+    ----------
+    ax : _type_
+        graph or its axis
+    width : int
+        maximum width for one line of text
+    break_long_words : bool, optional
+        If true breaks long words, by default False
+    &#34;&#34;&#34;
+    labels = []
+    for label in ax.get_xticklabels():
+        text = label.get_text().replace(&#39;_&#39;,&#39; &#39;)
+        labels.append(textwrap.fill(text, width=width_x,
+                      break_long_words=break_long_words))
+    ax.set_xticks(ax.get_xticks().tolist())
+    ax.set_xticklabels(labels, rotation=0)
+    labels = []
+    for label in ax.get_yticklabels():
+        text = label.get_text().replace(&#39;_&#39;,&#39; &#39;)
+        labels.append(textwrap.fill(text, width=width_y,
+                      break_long_words=break_long_words))
+    ax.set_yticks(ax.get_yticks().tolist())
+    ax.set_yticklabels(labels, rotation=0)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="moo-as-voting-fast.ResultsScript" href="index.html">moo-as-voting-fast.ResultsScript</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_Likert_Scale_int_value_mean_and_std_dfs" href="#moo-as-voting-fast.ResultsScript.results.get_Likert_Scale_int_value_mean_and_std_dfs">get_Likert_Scale_int_value_mean_and_std_dfs</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_connection_string" href="#moo-as-voting-fast.ResultsScript.results.get_connection_string">get_connection_string</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_first_user_acts" href="#moo-as-voting-fast.ResultsScript.results.get_first_user_acts">get_first_user_acts</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_most_used_in_recommender_queries" href="#moo-as-voting-fast.ResultsScript.results.get_most_used_in_recommender_queries">get_most_used_in_recommender_queries</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_possible_answers_to_question" href="#moo-as-voting-fast.ResultsScript.results.get_possible_answers_to_question">get_possible_answers_to_question</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_recommender_queries_by_metric" href="#moo-as-voting-fast.ResultsScript.results.get_recommender_queries_by_metric">get_recommender_queries_by_metric</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_recommender_queries_from_file" href="#moo-as-voting-fast.ResultsScript.results.get_recommender_queries_from_file">get_recommender_queries_from_file</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_recommender_queries_rating_interaction" href="#moo-as-voting-fast.ResultsScript.results.get_recommender_queries_rating_interaction">get_recommender_queries_rating_interaction</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_table" href="#moo-as-voting-fast.ResultsScript.results.get_table">get_table</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.get_userAnswers" href="#moo-as-voting-fast.ResultsScript.results.get_userAnswers">get_userAnswers</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.not_null_lists" href="#moo-as-voting-fast.ResultsScript.results.not_null_lists">not_null_lists</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.number_of_finished_groups_of_acts_by_priority" href="#moo-as-voting-fast.ResultsScript.results.number_of_finished_groups_of_acts_by_priority">number_of_finished_groups_of_acts_by_priority</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.number_of_recommended_queries" href="#moo-as-voting-fast.ResultsScript.results.number_of_recommended_queries">number_of_recommended_queries</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.number_of_users_made_act" href="#moo-as-voting-fast.ResultsScript.results.number_of_users_made_act">number_of_users_made_act</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process" href="#moo-as-voting-fast.ResultsScript.results.process">process</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_Likert_Scale_Questions" href="#moo-as-voting-fast.ResultsScript.results.process_Likert_Scale_Questions">process_Likert_Scale_Questions</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_interactions_and_ratings" href="#moo-as-voting-fast.ResultsScript.results.process_interactions_and_ratings">process_interactions_and_ratings</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_metrics" href="#moo-as-voting-fast.ResultsScript.results.process_metrics">process_metrics</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_metrics_per_variant_and_per_mechanism" href="#moo-as-voting-fast.ResultsScript.results.process_metrics_per_variant_and_per_mechanism">process_metrics_per_variant_and_per_mechanism</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_one_question" href="#moo-as-voting-fast.ResultsScript.results.process_one_question">process_one_question</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_one_question_all_answers" href="#moo-as-voting-fast.ResultsScript.results.process_one_question_all_answers">process_one_question_all_answers</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_one_question_best_performances_by_ratings_in_query" href="#moo-as-voting-fast.ResultsScript.results.process_one_question_best_performances_by_ratings_in_query">process_one_question_best_performances_by_ratings_in_query</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_one_question_first_type_of_act" href="#moo-as-voting-fast.ResultsScript.results.process_one_question_first_type_of_act">process_one_question_first_type_of_act</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_one_question_most_used_act_in_query" href="#moo-as-voting-fast.ResultsScript.results.process_one_question_most_used_act_in_query">process_one_question_most_used_act_in_query</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_one_question_other_question" href="#moo-as-voting-fast.ResultsScript.results.process_one_question_other_question">process_one_question_other_question</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_questions" href="#moo-as-voting-fast.ResultsScript.results.process_questions">process_questions</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.process_user_interactions" href="#moo-as-voting-fast.ResultsScript.results.process_user_interactions">process_user_interactions</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.set_discarded_users" href="#moo-as-voting-fast.ResultsScript.results.set_discarded_users">set_discarded_users</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.time_in_user_study" href="#moo-as-voting-fast.ResultsScript.results.time_in_user_study">time_in_user_study</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.variant_performance_on_ratings_by_user_graph" href="#moo-as-voting-fast.ResultsScript.results.variant_performance_on_ratings_by_user_graph">variant_performance_on_ratings_by_user_graph</a></code></li>
+<li><code><a title="moo-as-voting-fast.ResultsScript.results.wrap_labels" href="#moo-as-voting-fast.ResultsScript.results.wrap_labels">wrap_labels</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
