@@ -8,6 +8,7 @@ import types
 import scipy
 import copy
 import mlflow
+from db_connect import get_connection_string
 from support.calibration_support import calibration_support, set_params_calibration
 from support.intra_list_distance_based_novelty_support import intra_list_distance_based_novelty_support
 
@@ -1284,7 +1285,7 @@ def get_avg_ratings_of_items(connectionstring):
 def try_to_connect_to_db(connectionstring):
     """
     Tries connect to db multiple times - checking if the database correctly started
-    
+
     Parameters
     ----------
     connectionstring : str
@@ -1333,22 +1334,8 @@ def init(only_MovieLens = False):
     args.weights = np.fromiter(map(float, args.weights.split(",")), dtype=np.float32)
     args.discounts = [float(d) for d in args.discounts.split(",")]
     args.discount_sequences = np.stack([np.geomspace(start=1.0,stop=d**args.k , num=args.k, endpoint=False) for d in args.discounts], axis=0)
-    DriverName = "SQL Server"
-#    DriverName = "ODBC Driver 18 for SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#2EB6953D\\tsql\\query"
-#    ServerName = "sql-server-db"
-    DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
-    Username = 'RS'
-    file = open('pswd.txt',mode='r')    
-    Password = file.read()
-    file.close()
-    args.connectionstring=f"""DRIVER={{{DriverName}}};
-        SERVER={ServerName};
-        DATABASE={DatabaseName};
-        UID={Username};
-        PWD={Password};
-        TrustServerCertificate=yes;
-    """
+   
+    args.connectionstring = get_connection_string()
     try_to_connect_to_db(args.connectionstring)
     args.df = get_ratings(args.connectionstring, only_MovieLens)
     random.seed(args.seed)

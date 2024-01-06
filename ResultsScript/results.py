@@ -8,6 +8,8 @@ import os
 from textwrap import wrap
 import textwrap
 
+from db_connect import get_connection_string
+
 date_format= "%d-%m-%Y %H:%M:%S.%f"
 number_of_recommendations = 15
 folder_with_graphs = "Results"
@@ -76,26 +78,6 @@ def wrap_labels(ax, width_x, break_long_words=True, width_y = 60):
     ax.set_yticklabels(labels, rotation=0)
 
 
-def get_connection_string():
-    """
-        Connects to the database
-    """
-    DriverName = "SQL Server"
-    ServerName =  "np:\\\\.\\pipe\LOCALDB#6E0416EF\\tsql\\query"
-    ServerName = "localhost,1401"
-    DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
-    Username = 'RS'
-    file = open('pswd.txt',mode='r')    
-    Password = file.read()
-    file.close()
-    connectionstring=f"""DRIVER={{{DriverName}}};
-        SERVER={ServerName};
-        DATABASE={DatabaseName};
-        UID={Username};
-        PWD={Password};
-        TrustServerCertificate=yes;
-    """
-    return connectionstring
 
 def get_table(table_name):
     """
@@ -210,7 +192,7 @@ def get_recommender_queries_from_file():
 
 def get_recommender_queries_by_metric():
     """
-    
+
     Returns
     -------
     pd.DataFrame
@@ -447,7 +429,7 @@ def process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAn
         plt.cla()
 
 def get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers):
-    """_summary_
+    """
 
     Parameters
     ----------
