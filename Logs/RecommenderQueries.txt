@@ -1820,3 +1820,85 @@ also_negative;binomial_diversity;intra_list_distance_based_novelty;num_of_rating
 also_negative;binomial_diversity;intra_list_distance_based_novelty;num_of_ratings;;29;26;14;14;7;Buttons;162615;04-01-2024 22:38:48.5
 also_negative;binomial_diversity;intra_list_distance_based_novelty;num_of_ratings;;29;26;14;14;7;Buttons;162615;04-01-2024 22:38:54.3
 also_negative;binomial_diversity;intra_list_distance_based_novelty;num_of_ratings;;29;26;14;14;7;Buttons;162615;04-01-2024 22:38:58.1
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;20;20;20;20;20;Sliders;162616;05-01-2024 14:17:01.1
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;6;7;3;77;7;Sliders;162616;05-01-2024 14:17:54.3
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;46;4;0;50;0;Sliders;162616;05-01-2024 14:18:09.2
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;46;4;0;50;0;Sliders;162616;05-01-2024 14:18:37.9
+only_positive;maximal_diversity;popularity_complement;avg_ratings;;20;33;13;6;26;Drag and drop;162565;05-01-2024 23:19:03.5
+only_positive;maximal_diversity;popularity_complement;avg_ratings;;20;33;13;6;26;Drag and drop;162565;05-01-2024 23:22:27.3
+only_positive;maximal_diversity;popularity_complement;avg_ratings;;20;33;13;6;26;Drag and drop;162565;06-01-2024 00:27:44.0
+only_positive;maximal_diversity;popularity_complement;avg_ratings;;20;33;13;6;26;Drag and drop;162565;06-01-2024 00:28:05.5
+only_positive;maximal_diversity;popularity_complement;avg_ratings;;20;33;13;6;26;Drag and drop;162565;06-01-2024 00:29:10.9
+only_positive;maximal_diversity;popularity_complement;avg_ratings;;20;33;13;6;26;Drag and drop;162565;06-01-2024 00:29:47.6
+also_negative;binomial_diversity;popularity_complement;avg_ratings;;20;20;20;20;20;Buttons;162617;06-01-2024 10:37:59.1
+also_negative;binomial_diversity;popularity_complement;avg_ratings;;20;20;20;20;20;Buttons;162617;06-01-2024 10:38:44.0
+also_negative;intra_list_diversity;popularity_complement;avg_ratings;;20;20;20;20;20;Buttons;162617;06-01-2024 10:39:37.2
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;20;20;20;20;20;Buttons;162617;06-01-2024 10:40:01.1
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;20;20;20;20;20;Buttons;162617;06-01-2024 10:41:44.7
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;20;20;20;20;20;Drag and drop;162617;06-01-2024 10:43:13.0
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;6;33;13;26;20;Drag and drop;162617;06-01-2024 10:43:42.2
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;33;6;13;26;20;Drag and drop;162617;06-01-2024 10:44:06.8
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;20;6;13;26;33;Drag and drop;162617;06-01-2024 10:44:16.7
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;26;33;13;6;20;Drag and drop;162617;06-01-2024 10:44:43.4
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:44:47.9
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:45:14.6
+also_negative;intra_list_diversity;popularity_complement;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:45:59.4
+also_negative;intra_list_diversity;intra_list_distance_based_novelty;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:46:13.3
+also_negative;intra_list_diversity;intra_list_distance_based_novelty;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:46:47.0
+also_negative;intra_list_diversity;intra_list_distance_based_novelty;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:49:43.7
+also_negative;intra_list_diversity;intra_list_distance_based_novelty;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:50:07.1
+also_negative;maximal_diversity;intra_list_distance_based_novelty;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:50:22.9
+also_negative;maximal_diversity;intra_list_distance_based_novelty;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:50:40.6
+also_negative;maximal_diversity;intra_list_distance_based_novelty;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:50:54.0
+also_negative;maximal_diversity;maximal_distance_based_novelty;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:51:05.0
+only_positive;maximal_diversity;maximal_distance_based_novelty;num_of_ratings;;33;26;13;6;20;Drag and drop;162617;06-01-2024 10:51:14.5
+only_positive;maximal_diversity;popularity_complement;avg_ratings;;20;33;13;6;26;Drag and drop;162565;06-01-2024 19:45:10.4
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:24:45.4
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:25:33.0
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:25:52.1
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:25:58.9
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:26:02.2
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:26:10.6
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:26:18.3
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:26:49.8
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:27:21.9
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:27:31.4
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:29:00.1
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:29:11.5
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:31:23.2
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:31:31.8
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:31:36.0
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:31:39.9
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:34:33.0
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 20:34:56.5
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:01:46.6
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:01:51.9
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:01:55.6
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:01:59.3
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:02:32.3
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:08:29.7
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:08:36.6
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:08:54.2
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:08:55.3
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:08:59.5
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:09:58.5
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:10:53.3
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:43:11.6
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:43:50.7
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:44:11.5
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:57:19.7
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 21:57:41.9
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 22:05:23.5
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 22:05:47.5
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 22:05:52.1
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 22:45:07.7
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 22:45:12.5
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 22:45:18.0
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 23:01:18.7
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 23:17:49.1
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;06-01-2024 23:17:56.1
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;07-01-2024 01:22:37.8
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;07-01-2024 01:54:27.2
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Buttons;162618;07-01-2024 01:54:34.3
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;20;20;20;20;20;Drag and drop;162618;07-01-2024 01:54:38.6
+also_negative;maximal_diversity;intra_list_distance_based_novelty;avg_ratings;;33;26;20;13;6;Drag and drop;162618;07-01-2024 01:54:41.1

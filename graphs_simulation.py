@@ -8,7 +8,7 @@ import os
 
 
 
-def print_line_graphs(df, x_axis, x_axis_postfix = False, folder="OldNormalizationGraphs2"):
+def print_line_graphs(df, x_axis, x_axis_postfix = False, folder="NormalizationGraphs"):
     """
 
     Saves graphs of dependency of support values on x_axis
@@ -23,7 +23,7 @@ def print_line_graphs(df, x_axis, x_axis_postfix = False, folder="OldNormalizati
     x_axis_postfix x_axis name postfix "_{i}" where i corresponds to index of objective: bool, optional
         If true add to the , by default False
     folder : str, optional
-        path to folder where graphs should be saved, by default "OldNormalizationGraphs2"
+        path to folder where graphs should be saved, by default "NormalizationGraphs"
     """
     for i in [4]:
         x_axis_column = x_axis
@@ -82,17 +82,17 @@ def print_line_graphs(df, x_axis, x_axis_postfix = False, folder="OldNormalizati
         plt.savefig(os.path.join(folder,f"line_{relevance_type}_{x_axis}.png"), bbox_inches='tight')
 
 
-def correlation(df, folder="OldNormalizationGraphs2"):
+def correlation(df, folder="NormalizationGraphs"):
     """
     Prints graphs of correlation of each metric when used any combination of metric variants
-    
+
     Parameters
     ----------
     df : pd.DataFrame
         DataFrame containing columns: relevance_type, diversity_type, novelty_type, popularity_type,
             support_{i}, importances_{i}, rank and user_profile_count - where i is index of each objective
     folder : str, optional
-        path to folder where graphs should be saved, by default "OldNormalizationGraphs2"
+        path to folder where graphs should be saved, by default "NormalizationGraphs"
     """
     for diversity_type in ["intra_list_diversity","maximal_diversity","binomial_diversity"]:
         for novelty_type in ["popularity_complement","maximal_distance_based_novelty","intra_list_distance_based_novelty"]:
@@ -128,7 +128,9 @@ code_to_czech = {
     ,"importance":"Váha kritéria"
     ,"user_profile_count":"Počet ohodnocených položek uživatelem"
 }
-df = pd.read_csv("values_21_12_old.csv")
+
+file = "values_.csv"
+df = pd.read_csv(file)
 metrics = ["relevance", "diverzita", "novelty", "popularita","kalibrace"]
 matplotlib.rcParams['figure.figsize'] = 15, 12
 df["user_profile_count"] = round(df["user_profile_count"]/5)*5

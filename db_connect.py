@@ -3,10 +3,10 @@ import pandas as pd
 import sys 
 import time
 
-DriverName = "SQL Server" #code running locally
+DriverName = "SQL Server" #code running locally on Windows
 #DriverName = "ODBC Driver 18 for SQL Server" #code running in container
-ServerName =  "np:\\\\.\\pipe\LOCALDB#2EB6953D\\tsql\\query" #local sql server need to update the code everytime sql server was restarted
-#ServerName = "localhost,1401" #sql server in local container
+#ServerName =  "np:\\\\.\\pipe\LOCALDB#29683B1E\\tsql\\query" #local sql server need to update the code everytime sql server was restarted
+ServerName = "localhost,1401" #sql server in local container
 #ServerName = "sql-server-db" #sql server on same contianer network as this code
 DatabaseName = "aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502"
 Username = 'RS'

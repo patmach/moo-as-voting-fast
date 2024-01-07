@@ -1,6 +1,6 @@
 from datetime import datetime
 from app import create_new_user, get_mask, set_rating_matrices_row
-from db_connect import get_ratings_of_user
+from db_connect import get_connection_string, get_ratings_of_user
 import main
 import copy
 import numpy as np
@@ -34,7 +34,7 @@ def get_first_k_rated(user_id, userindex, k):
         First k ratings of user
     """
     global simulated_users_ratings
-    neg_rated = simulated_users_ratings[user_id]
+    neg_rated = get_ratings_of_user(get_connection_string(),user_id, only_positive=False, order=True) #simulated_users_ratings[user_id]
     neg_rated = neg_rated.head(k)
     pos_rated = neg_rated[neg_rated["ratingscore"] > 5]
     pos_scores = list(pos_rated["ratingscore"].apply(lambda x: x/10.0 if x>5 else 0))
@@ -54,15 +54,15 @@ def get_first_k_rated(user_id, userindex, k):
 
 
 if __name__ == "__main__":
-    profile_counts = np.load("users_profile_counts_randomly.npy")
-    simulated_userIDs = [int(record.split(';')[0]) for record in profile_counts][:1000]
-    profile_counts = [int(record.split(';')[1]) for record in profile_counts]
+    #profile_counts = np.load("users_profile_counts_randomly.npy")
+    #simulated_userIDs = [int(record.split(';')[0]) for record in profile_counts][:1000]
+    #profile_counts = [int(record.split(';')[1]) for record in profile_counts]
     init(True)
-    #simulated_userIDs = random.sample(list(app.userIDs), k=3)
+    simulated_userIDs = random.sample(list(app.userIDs), k=1000)
     simulated_users_ratings = {}
-    for id in simulated_userIDs:
-        simulated_users_ratings[id] = get_ratings_of_user(app.args.connectionstring, id,\
-                                            only_positive=False, order=True)
+    #for id in simulated_userIDs:
+    #    simulated_users_ratings[id] = get_ratings_of_user(app.args.connectionstring, id,\
+    #                                        only_positive=False, order=True)
     random_lengths = []
     k = 15
     profile_counts_index=0
@@ -82,9 +82,9 @@ if __name__ == "__main__":
                         new_user_id = max(app.userIDs) + count
                         create_new_user(new_user_id)
                         userindex =app.userIDs.index(new_user_id) 
-                        l = profile_counts[profile_counts_index]#random.randint(3, 50)
-                        profile_counts_index+=1
-                        #random_lengths.append(f"{user_id};{l}")
+                        l = random.randint(3, 50)#profile_counts[profile_counts_index]
+                        #profile_counts_index+=1
+                        random_lengths.append(f"{user_id};{l}")
                         rated, scores, pos_rated = get_first_k_rated(user_id, userindex, l) 
                         user_id = new_user_id
                         set_rating_matrices_row(rated, scores, app.args, userindex)
@@ -129,5 +129,5 @@ if __name__ == "__main__":
                     values_df.to_csv("values_.csv", index=False)
     values_df = pd.concat(values_dfs)
     values_df.to_csv("values_.csv", index=False)
-    #np.save("users_profile_counts_randomly",np.array(random_lengths))
+    np.save("users_profile_counts_randomly",np.array(random_lengths))
     print("DONE!")

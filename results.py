@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import os
 from textwrap import wrap
 import textwrap
-
 from db_connect import get_connection_string, get_table
 
 date_format= "%d-%m-%Y %H:%M:%S.%f"
@@ -180,8 +179,24 @@ def get_recommender_queries_by_metric():
         All queries to the recommender called by user
     """
     recommenderqueries = get_recommender_queries_from_file()
+    metrics = ["relevance","diversity","novelty","popularity","calibration"]
+    not_changed_weights_rq = recommenderqueries[~((recommenderqueries[metrics].nunique(axis = 1).eq(1)) &
+                                                     (recommenderqueries[metrics[0]] == 20))]
+    l = list(range(1,6))
+    l.reverse()
+    weights_drag_and_drop = [int(x / sum(l) * 100) for x in l]      
+    not_changed_weights_rq = not_changed_weights_rq\
+        [(not_changed_weights_rq[metrics[0]] != weights_drag_and_drop[0]) |
+            (not_changed_weights_rq[metrics[1]] != weights_drag_and_drop[1]) |
+            (not_changed_weights_rq[metrics[2]] != weights_drag_and_drop[2]) |
+            (not_changed_weights_rq[metrics[3]] != weights_drag_and_drop[3]) |
+            (not_changed_weights_rq[metrics[4]] != weights_drag_and_drop[4]) |
+            (not_changed_weights_rq["tweak mechanism"] != "Drag and drop")]
+    return convert_to_by_metric(recommenderqueries, metrics), convert_to_by_metric(not_changed_weights_rq,metrics)
+
+def convert_to_by_metric(recommenderqueries, metrics):
     bymetrics = []
-    for metric in ["relevance","diversity","novelty","popularity","calibration"]:
+    for metric in metrics:
         bymetric = pd.DataFrame()
         bymetric["Metric"] = [metric] * len(recommenderqueries)
         bymetric["Metric importance"] = recommenderqueries[metric]
@@ -195,13 +210,32 @@ def get_recommender_queries_by_metric():
     bymetrics = pd.concat(bymetrics)
     return bymetrics
 
+"""
+def DELETE_LATER_check_interactions(interactions):
+    interactions_ = interactions[interactions["type"]=="Seen"]
+    for i in range(len(interactions_)//200):
+        part_interactions = interactions_.iloc[i*200: (i+1)*200]
+        print(list(part_interactions["userid"].unique()))
+        print(len(part_interactions["itemid"].unique()))
+"""
+        
+
 def get_recommender_queries_rating_interaction():
+    """
+    Enrich recommender query dataset of users seens, clicks, ratings and positive ratings 
+    
+    Returns
+    -------
+    pd.DataFrame
+        Enriched recommender query dataset of users seens, clicks, ratings and positive ratings 
+    """
     recommenderqueries = get_recommender_queries_from_file()
     recommenderqueries = recommenderqueries[~recommenderqueries["userid"].isin(author_users)]
     colnames=["userid","itemid","ratingscore","date"] 
     ratings = pd.read_csv("Logs/Ratings.txt", sep=';', names=colnames)
     colnames=["userid","itemid","type","date"] 
     interactions = pd.read_csv("Logs/Interactions.txt", sep=';', names=colnames)
+    #DELETE_LATER_check_interactions(interactions)
     recommenderqueries_new = []
     recommenderqueries["date"] = pd.to_datetime(recommenderqueries["date"], format=date_format)
     ratings["date"] = pd.to_datetime(ratings["date"], format=date_format)
@@ -213,7 +247,7 @@ def get_recommender_queries_rating_interaction():
 
 def process_user_interactions(userid, ratings, interactions, recommenderqueries):
     """
-    Enrich recommender query dataset of users seen, clicks, ratings and positive ratings 
+    Enrich recommender query dataset of one user seens, clicks, ratings and positive ratings 
     
     Parameters
     ----------
@@ -229,7 +263,7 @@ def process_user_interactions(userid, ratings, interactions, recommenderqueries)
     Returns
     -------
     pd.DataFrame
-        Enriched recommender query dataset of users seen, clicks, ratings and positive ratings 
+        Enriched recommender query dataset of one user seens, clicks, ratings and positive ratings 
     """
     u_ratings = ratings[ratings["userid"]==userid]
     u_interactions = interactions[interactions["userid"]==userid]
@@ -279,29 +313,39 @@ def process_metrics():
     Compute all stats objectives weights in recommender queries and save them as graphs
     """
     global author_users
-    recommenderqueries = get_recommender_queries_by_metric()
+    recommenderqueries, filtered_recommender_queries = get_recommender_queries_by_metric()
+
     recommenderqueries = recommenderqueries[~recommenderqueries["userid"].isin(author_users)]
+    filtered_recommender_queries = filtered_recommender_queries[~filtered_recommender_queries["userid"].isin(author_users)]
+
+    process_metrics_graphs(recommenderqueries, False)        
+    process_metrics_graphs(filtered_recommender_queries, True)
+    
+
+def process_metrics_graphs(recommenderqueries, filtered = False):
     cm = sns.color_palette("plasma",len(recommenderqueries["Metric"].unique()))
     g = sns.violinplot(data = recommenderqueries, x= "Metric", y= "Metric importance",
                palette=cm)
-    g.set(title = f"Metrics weights specified by user")
+    g.set(title = f"Objective weights specified by user")
     wrap_labels(g, 12)
-    plt.savefig(os.path.join(folder_with_graphs,f"Metrics_importances.png"), bbox_inches='tight')
+    plt.savefig(os.path.join(folder_with_graphs,f"Metrics_importances_{filtered}.png"), bbox_inches='tight')
     plt.close('all')
     plt.clf()
     plt.cla()
+
+
     g = sns.violinplot(data = recommenderqueries, x= "Metric variant", y= "Metric importance",
                palette=cm)
     g.set(title = f"Metrics variants weights specified by user")
     wrap_labels(g, 6)
-    plt.savefig(os.path.join(folder_with_graphs,f"Metrics_variants_importances.png"), bbox_inches='tight')
+    plt.savefig(os.path.join(folder_with_graphs,f"Metrics_variants_importances_{filtered}.png"), bbox_inches='tight')
     plt.close('all')
     plt.clf()
     plt.cla()
-    process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm)
+    process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm, filtered)
     
 
-def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
+def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm, filtered=False):
     """
     Compute all stats objectives weights per used metric variant and used mechanism
 
@@ -319,7 +363,7 @@ def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
                palette=cm)
             g.set(title = f"{metric} weight specified by user per metric variant")
             wrap_labels(g, 12)
-            plt.savefig(os.path.join(folder_with_graphs,f"variants_of_{metric}_importances.png"), bbox_inches='tight')
+            plt.savefig(os.path.join(folder_with_graphs,f"variants_of_{metric}_importances_{filtered}.png"), bbox_inches='tight')
             plt.close('all')
             plt.clf()
             plt.cla()
@@ -327,7 +371,7 @@ def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm):
                split=True, palette=cm)
             g.set(title = f"{metric} weight specified by user per tweak mechanism")
             wrap_labels(g, 12)
-            plt.savefig(os.path.join(folder_with_graphs,f"by_tweak_mechanism_{metric}_importances.png"), bbox_inches='tight')
+            plt.savefig(os.path.join(folder_with_graphs,f"by_tweak_mechanism_{metric}_importances_{filtered}.png"), bbox_inches='tight')
             plt.close('all')
             plt.clf()
             plt.cla() 
@@ -342,7 +386,9 @@ def set_discarded_users():
     """
     global discarded_users, author_users, users_without_questionnaire
     users = get_table("Users")
-    author_users.extend(list(users[(users["username"]=="log_master2") | (users["username"]=="lp")]["id"]))
+    author_users.extend(list(users[(users["username"]=="log_master2") 
+                                   | (users["username"]=="lp")
+                                   |(users["username"]=="pm")]["id"]))
     userAnswers = get_userAnswers()
     attentionChecks = userAnswers[userAnswers["questiontext"].str.contains("attention check", case=False)]
     attentionChecks["expected_answer"] = [s.split('"')[1] for s in attentionChecks["questiontext"]]
@@ -361,6 +407,7 @@ def process_questions():
     firstUserActs = get_first_user_acts()
     recommendedQueries = get_most_used_in_recommender_queries()
     best_peformances_by_ratings = process_interactions_and_ratings()
+    userAnswers = userAnswers[~userAnswers["questiontext"].str.contains("attention check", case=False)]
     questions = get_table("Questions")
     userAnswers = userAnswers[~userAnswers["userid"].isin(discarded_users)]
     userAnswers = userAnswers[~userAnswers["userid"].isin(author_users)]
@@ -394,8 +441,16 @@ def process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAn
     likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd.reset_index()
     likertScaleQuestionsMeanAndStd.to_csv((os.path.join(folder_with_graphs,f"LikertScaleQuestionsAnswers.csv")))
     likertScaleAnswers = pd.concat(likertScaleAnswers)
-    for section in likertScaleAnswers["sectionname"].unique():
-        section_LikertScaleAnswers = likertScaleAnswers[likertScaleAnswers["sectionname"] == section]
+    sections = likertScaleAnswers["sectionname"].unique()
+    for i in range(len(sections)):
+        section_LikertScaleAnswers = pd.DataFrame()
+        if(i >= len(section)):
+            section = ["Relevance", "Diversity","Novelty","Popularity","Calibration"]
+            section_LikertScaleAnswers = likertScaleAnswers[likertScaleAnswers["sectionname"].isin(section)]
+            section = "AllObjectives"
+        else:
+            section = sections[i]
+            section_LikertScaleAnswers = likertScaleAnswers[likertScaleAnswers["sectionname"] == section]
         section_likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd[\
         likertScaleQuestionsMeanAndStd["question"].isin(section_LikertScaleAnswers["questiontext"])]
         g = sns.barplot(section_likertScaleQuestionsMeanAndStd, x="mean",y="question")

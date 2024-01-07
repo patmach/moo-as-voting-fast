@@ -1,7 +1,7 @@
 import copy
 import sys
 import main
-import ResultsScript.results as results
+import results as results
 import numpy as np
 import time
 import json 
@@ -23,6 +23,11 @@ extended_rating_matrix, neg_extended_rating_matrix, pos_users_profiles, neg_user
             = None, None, None, None, None, None, None,None,None, None, None, None, None, None, None
 lock = threading.Lock()
 
+@app.before_request
+def log_request_info():
+    app.logger.info('Headers: %s', request.headers)
+    app.logger.info('Body: %s', request.get_json())
+    print(f"'Body: {request.get_json()}", file=sys.stderr)
 
 @app.before_first_request
 def init(only_MovieLens = False):
@@ -92,6 +97,7 @@ def index(user_id):
             for j in range(len(support[0])):
                 support[i][j] = max(np.nan_to_num(support[i][j]),0) 
         result = {itemIDs[int(result[i])]: support[i] for i in range(len(result))}
+        app.logger.info(f"Request successfuly processed")
     return json.dumps(result)
 
 
