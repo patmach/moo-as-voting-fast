@@ -27,6 +27,26 @@ ActTypeToQuestionSection = {
     "Additional":[]
 }
 
+VariantCodeToName = {
+    "also_negative" : "EASE_NEG",
+    "only_positive" : "EASE_POS",
+    "intra_list_diversity" : "intra-list diversity",
+    "maximal_diversity" : "diversity based on maximal similarity",
+    "binomial_diversity" : "binomial diversity",
+    "intra_list_distance_based_novelty": "intra-list distance-based novelty",
+    "maximal_distance_based_novelty": "distance-based novelty based on maximal similarity",
+    "popularity_complement": "expected popularity complement",
+    "avg_ratings" : "popularity based on ratings",
+    "num_of_ratings": "popularity based on knowledge"
+}
+
+TweakMechanismCodeToName = {
+    "DragAndDrop" : "Drag and drop",
+    "PlusMinusButtons" : "Buttons + and -",
+    "Sliders" : "Sliders",
+    "Textboxes":"Textboxes"
+}
+
 QuestionSectionsDependency = {
     "Demographics":[],
     "Information about movies":[],
@@ -119,7 +139,7 @@ def get_userAnswers():
     userAnswers["answer"] = not_null_lists(list(userAnswers["valueanswer"]), list(userAnswers["answertext"]))
     userAnswers["answerindex"] = not_null_lists(list(userAnswers["answerid"]), list(userAnswers["value"]))
     userAnswers.sort_values(by="answerindex", inplace=True)
-    userAnswers = userAnswers.drop(columns=["value","text","answerid","valueanswer"])
+    userAnswers = userAnswers.drop(columns=["value","text"])
     return userAnswers
 
 def get_first_user_acts():
@@ -131,13 +151,16 @@ def get_first_user_acts():
         DataFrame with all users first acts from each group of acts
     """
     acts = get_table("Acts").rename(columns={"id": "actid", "code":"actcode"})
+    acts["actcode"] = [VariantCodeToName[code] if code in VariantCodeToName
+                else TweakMechanismCodeToName[code] 
+                    if code in TweakMechanismCodeToName
+                else code for code in acts["actcode"]]
     colnames=["userid","actid","date"] 
     userActs = pd.read_csv("Logs/UserActs.txt", sep=';', names=colnames)
     userActs["index"] = userActs.index
     userActs = pd.merge_ordered(userActs, acts, how="inner",on="actid")
     userActs.sort_values(by="index", inplace=True)
-    userActs = userActs.drop_duplicates(subset=["userid","typeofact"])    
-
+    userActs = userActs.drop_duplicates(subset=["userid","typeofact"])        
     return userActs
 
 def get_most_used_in_recommender_queries():
@@ -149,8 +172,9 @@ def get_most_used_in_recommender_queries():
         DataFrame with all users first acts from each group of acts
     """
     recommenderQueries = get_recommender_queries_from_file()
-    recommenderQueries["tweak mechanism"] = ["PlusMinusButtons" if x == "Buttons" else "DragAndDrop" if x=="Drag and drop"
-                                             else x for x in list(recommenderQueries["tweak mechanism"])]
+    recommenderQueries["tweak mechanism"] = [TweakMechanismCodeToName[x] 
+                                             if x in TweakMechanismCodeToName
+                                              else x for x in list(recommenderQueries["tweak mechanism"])]
     grouped_dfs = []
     acts = get_table("Acts").rename(columns={"id": "actid", "code":"actcode"})
     for column in ["relevance type","diversity type","novelty type","popularity type", "tweak mechanism"]:
@@ -160,6 +184,10 @@ def get_most_used_in_recommender_queries():
         df= pd.merge(df, acts[["actcode","typeofact"]], on="actcode")
         grouped_dfs.append(df)            
     recommenderQueries = pd.concat(grouped_dfs)
+    recommenderQueries["actcode"] = [VariantCodeToName[code] if code in VariantCodeToName
+                else TweakMechanismCodeToName[code] 
+                    if code in TweakMechanismCodeToName
+                else code for code in recommenderQueries["actcode"]]
     recommenderQueries.sort_values("count", ascending=False, inplace=True)
     recommenderQueries = recommenderQueries.drop_duplicates(subset=["userid","typeofact"])
     
@@ -201,8 +229,10 @@ def convert_to_by_metric(recommenderqueries, metrics):
         bymetric["Metric"] = [metric] * len(recommenderqueries)
         bymetric["Metric importance"] = recommenderqueries[metric]
         bymetric["Metric variant"] = recommenderqueries[metric+" type"]
-        bymetric["Metric variant"] = [s if pd.isna(s) else s.replace("_"," ")
-                                      for s in list(bymetric["Metric variant"])]
+        bymetric["Metric variant"] = [VariantCodeToName[mv]
+                                      if mv in VariantCodeToName
+                                      else mv
+                                      for mv in list(bymetric["Metric variant"])]
         bymetric["Tweak mechanism"] = recommenderqueries["tweak mechanism"]
         bymetric["userid"] = recommenderqueries["userid"]
         bymetric["Date"] = recommenderqueries["date"]
@@ -274,6 +304,7 @@ def process_user_interactions(userid, ratings, interactions, recommenderqueries)
     num_clicks = []
     num_positive_ratings = []
     num_ratings = []
+    keep_query_indices=[]
     upper_bound_date = recommenderqueries["date"].max() + timedelta(days=1)
     for i in range(len(u_recommenderqueries)):
         min_date = u_recommenderqueries.iloc[i]["date"]
@@ -281,6 +312,9 @@ def process_user_interactions(userid, ratings, interactions, recommenderqueries)
         if (len(u_recommenderqueries) > i+1):
             max_date = u_recommenderqueries.iloc[i + 1]["date"]
         cur_seens = u_seens[(u_seens["date"] > min_date) & (u_seens["date"] < max_date)].head(number_of_recommendations)
+        if(len(cur_seens) == 0):
+            continue        
+        keep_query_indices.append(i)
         cur_clicks = u_clicks[(u_clicks["date"] > min_date) & (u_clicks["date"] < max_date)]
         cur_clicks = pd.merge(cur_clicks, cur_seens["itemid"], on=["itemid"]).drop_duplicates(subset=["itemid"])
         cur_ratings = u_ratings[(u_ratings["date"] > min_date) & (u_ratings["date"] < max_date)]
@@ -290,6 +324,7 @@ def process_user_interactions(userid, ratings, interactions, recommenderqueries)
         num_clicks.append(len(cur_clicks))
         num_ratings.append(len(cur_ratings))
         num_positive_ratings.append(len(cur_positive_ratings))
+    u_recommenderqueries =   u_recommenderqueries.iloc[keep_query_indices]
     u_recommenderqueries["seens"] = num_seens
     u_recommenderqueries["clicks"] = num_clicks
     u_recommenderqueries["positive_ratings"] = num_positive_ratings
@@ -324,6 +359,7 @@ def process_metrics():
 
 def process_metrics_graphs(recommenderqueries, filtered = False):
     cm = sns.color_palette("plasma",len(recommenderqueries["Metric"].unique()))
+    recommenderqueries.sort_values(by="Metric", inplace=True)
     g = sns.violinplot(data = recommenderqueries, x= "Metric", y= "Metric importance",
                palette=cm)
     g.set(title = f"Objective weights specified by user")
@@ -333,7 +369,7 @@ def process_metrics_graphs(recommenderqueries, filtered = False):
     plt.clf()
     plt.cla()
 
-
+    recommenderqueries.sort_values(by="Metric variant", inplace=True)
     g = sns.violinplot(data = recommenderqueries, x= "Metric variant", y= "Metric importance",
                palette=cm)
     g.set(title = f"Metrics variants weights specified by user")
@@ -359,6 +395,7 @@ def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm, filter
     for metric in recommenderqueries["Metric"].unique():
         metric_recommenderqueries = recommenderqueries[recommenderqueries["Metric"] == metric]
         if(len(metric_recommenderqueries["Metric variant"].unique()) > 1):
+            metric_recommenderqueries.sort_values(by="Metric", inplace=True)
             g = sns.violinplot(data = metric_recommenderqueries, x= "Metric variant", y= "Metric importance",
                palette=cm)
             g.set(title = f"{metric} weight specified by user per metric variant")
@@ -367,6 +404,8 @@ def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm, filter
             plt.close('all')
             plt.clf()
             plt.cla()
+
+            metric_recommenderqueries.sort_values(by="Tweak mechanism", inplace=True)
             g = sns.violinplot(data = metric_recommenderqueries, x= "Tweak mechanism", y= "Metric importance",
                split=True, palette=cm)
             g.set(title = f"{metric} weight specified by user per tweak mechanism")
@@ -417,6 +456,9 @@ def process_questions():
     likertScaleAnswers = []
     for questionid in questions["id"]:        
         q_userAnswers = userAnswers[userAnswers["questionid"] == questionid]   
+        if(len(q_userAnswers) == 0):
+            continue
+        q_userAnswers.sort_values(by=["answerid","valueanswer"], inplace=True)
         first = q_userAnswers.iloc[0]
         if (first["answertype"] == 0):
             mean_std_df, q_userAnswers = get_Likert_Scale_int_value_mean_and_std_dfs(q_userAnswers)
@@ -442,9 +484,9 @@ def process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAn
     likertScaleQuestionsMeanAndStd.to_csv((os.path.join(folder_with_graphs,f"LikertScaleQuestionsAnswers.csv")))
     likertScaleAnswers = pd.concat(likertScaleAnswers)
     sections = likertScaleAnswers["sectionname"].unique()
-    for i in range(len(sections)):
+    for i in range(len(sections) + 1):
         section_LikertScaleAnswers = pd.DataFrame()
-        if(i >= len(section)):
+        if(i >= len(sections)):
             section = ["Relevance", "Diversity","Novelty","Popularity","Calibration"]
             section_LikertScaleAnswers = likertScaleAnswers[likertScaleAnswers["sectionname"].isin(section)]
             section = "AllObjectives"
@@ -764,6 +806,7 @@ def process_one_question_other_question(questionid, sectionname,userAnswers, q_u
         sname = dependent_userAnswers.iloc[0]["sectionname"]
         qtype = dependent_userAnswers.iloc[0]["answertype"]
         qtext = dependent_userAnswers.iloc[0]["questiontext"]
+        dependent_userAnswers.sort_values(by=["answerid","valueanswer"], inplace=True)
         dependent_userAnswers = dependent_userAnswers.add_suffix(f'_{qid}')
         dependent_userAnswers = dependent_userAnswers.rename(columns={f"userid_{qid}":"userid"})
         dependent_userAnswers = pd.merge(q_userAnswers, dependent_userAnswers, on="userid")
@@ -794,7 +837,7 @@ def process_one_question_other_question(questionid, sectionname,userAnswers, q_u
         plt.cla()
         #plt.show()
 
-def number_of_users_made_act(withFirstUserActs):
+def number_of_users_that_made_act(withFirstUserActs):
     """
     Computes and saves dataset containing how many users have completed each act
 
@@ -803,12 +846,16 @@ def number_of_users_made_act(withFirstUserActs):
     withFirstUserActs : bool
         count users that has the action assigned as default
     """
-    global discarded_users, author_users
+    global users_without_questionnaire, author_users
     userActs = get_table("UserActs")
     acts = get_table("Acts")
+    acts["code"] = [VariantCodeToName[code] if code in VariantCodeToName
+                else TweakMechanismCodeToName[code] 
+                    if code in TweakMechanismCodeToName
+                else code for code in acts["code"]]
     userActs = pd.merge(userActs, acts, left_on="actid", right_on="id")
     userActs = userActs[~userActs["userid"].isin(author_users)]
-    userActs = userActs[~userActs["userid"].isin(discarded_users)]
+    userActs = userActs[~userActs["userid"].isin(users_without_questionnaire)]
     if (not withFirstUserActs):
         firstUserActs = get_first_user_acts()[["userid","actid","priority"]]
         userActs = pd.merge(userActs, firstUserActs, how="left", on=["userid","actid"])
@@ -819,6 +866,71 @@ def number_of_users_made_act(withFirstUserActs):
     groupedUserActs["from_all"] = groupedUserActs["count"] / len(userActs["userid"].unique())
     groupedUserActs[["code","count","from_all","typeofact"]]\
         .to_csv(os.path.join(folder_with_graphs,f"number_of_users_made_act_{str(withFirstUserActs)}.csv"))
+    
+def number_of_acts_made_by_users():
+    """
+    Computes and saves dataset containing how many acts users completed in average
+
+    """
+    global users_without_questionnaire, author_users
+    columns = ["userid", "actid", "date"]
+    userActs = pd.read_csv("Logs/UserActs.txt", sep=';', names=columns)
+    acts = get_table("Acts")
+    acts["code"] = [VariantCodeToName[code] if code in VariantCodeToName
+                else TweakMechanismCodeToName[code] 
+                    if code in TweakMechanismCodeToName
+                else code for code in acts["code"]]
+    userActs = pd.merge(userActs, acts, left_on="actid", right_on="id")
+    userActs = userActs[~userActs["userid"].isin(author_users)]
+    userActs = userActs[~userActs["userid"].isin(users_without_questionnaire)]
+    groupedUserActs = userActs.groupby(["userid","code"])["id"].count()
+    groupedUserActs = groupedUserActs.reset_index()    
+    groupedUserActs = groupedUserActs.rename(columns={"id": "count"})
+    users_to_add = []
+    codes_to_add = []
+    for userid in userActs["userid"].unique():
+        for code in userActs["code"].unique():
+            if len(groupedUserActs[(groupedUserActs["userid"] == userid) 
+                                   & (groupedUserActs["code"] == code)]) == 0:
+                users_to_add.append(userid)
+                codes_to_add.append(code)
+    groupedUserActs_to_add = pd.DataFrame({
+        "userid":users_to_add,
+        "code":codes_to_add,
+        "count": [0] * len(users_to_add)
+    })
+    groupedUserActs = pd.concat([groupedUserActs,groupedUserActs_to_add])
+    groupedUserActs = groupedUserActs.groupby("code").agg({"count": ["mean", "std"]})
+    groupedUserActs.to_csv(os.path.join(folder_with_graphs,f"number_of_acts_made_by_users_.csv"))
+    
+def number_of_blocks_by_user():
+    """
+    Computes and saves dataset containing how many blocks users have given in average
+    """
+    global users_without_questionnaire, author_users
+    columns = ["userid", "blocktype", "value", "date"]
+    blocks = pd.read_csv("Logs/Blocks.txt", sep=',', names=columns)
+    blocks = blocks[~blocks["userid"].isin(author_users)]
+    blocks = blocks[~blocks["userid"].isin(users_without_questionnaire)]
+    groupedBlocks = blocks.groupby(["userid","blocktype"])["date"].count()
+    groupedBlocks = groupedBlocks.reset_index()  
+    groupedBlocks = groupedBlocks.rename(columns={"date": "count"})
+    users_to_add = []
+    types_to_add = []
+    for userid in blocks["userid"].unique():
+        for blocktype in blocks["blocktype"].unique():
+            if len(groupedBlocks[(groupedBlocks["userid"] == userid) 
+                                 & (groupedBlocks["blocktype"] == blocktype)]) == 0:
+                users_to_add.append(userid)
+                types_to_add.append(blocktype)
+    groupedBlocks_to_add = pd.DataFrame({
+        "userid":users_to_add,
+        "blocktype":types_to_add,
+        "count": [0] * len(users_to_add)
+    })
+    groupedBlocks = pd.concat([groupedBlocks, groupedBlocks_to_add])
+    groupedBlocks = groupedBlocks.groupby("blocktype").agg({"count": ["mean", "std"]})
+    groupedBlocks.to_csv(os.path.join(folder_with_graphs,f"number_of_blocks_by_user.csv"))
 
 def number_of_finished_groups_of_acts_by_priority(usersThatAnswered):
     """
@@ -862,9 +974,7 @@ def number_of_recommended_queries(usersThatAnswered):
     usersThatAnswered : bool
         count only users that answered atleast one question
     """
-    colnames=["relevance type","diversity type","novelty type","popularity type","calibration type",
-              "relevance","diversity","novelty","popularity","calibration","tweak mechanism", "userid", "date"] 
-    recommenderqueries = pd.read_csv("Logs/RecommenderQueries.txt", sep=';', names=colnames)
+    recommenderqueries = get_recommender_queries_from_file()
     if (usersThatAnswered):
         recommenderqueries = recommenderqueries[~recommenderqueries["userid"].isin(users_without_questionnaire)]
     recommenderqueries = recommenderqueries.groupby(["userid"])["date"].count()
@@ -929,6 +1039,7 @@ def variant_performance_on_ratings_by_user_graph(df, column):
         data[column] = round(df[column]/5)*5
     count=0
     y_max = [0.3, 0.05]
+    data.sort_values(by=column, inplace=True)
     for value in dict.values():
         g = sns.barplot(data, y=value, x=column)
         g.set(title=("\n".join(wrap(f"{value} when variants of {column} used in recommmender query", 60))))
@@ -953,9 +1064,9 @@ def process_interactions_and_ratings():
     recommender_queries_rating_interaction[~recommender_queries_rating_interaction["userid"].isin(author_users)]
     recommender_queries_rating_interaction = recommender_queries_rating_interaction\
         [recommender_queries_rating_interaction["seens"]>0] 
-    recommender_queries_rating_interaction["tweak mechanism"] = ["PlusMinusButtons" if x == "Buttons" else "DragAndDrop" \
-                                                        if x=="Drag and drop"
-                                                        else x 
+    recommender_queries_rating_interaction["tweak mechanism"] = [TweakMechanismCodeToName[x] 
+                                                                 if x in TweakMechanismCodeToName
+                                                                 else x
                                                         for x in list(recommender_queries_rating_interaction["tweak mechanism"])]
     grouped_dfs = []
     acts = get_table("Acts").rename(columns={"id": "actid", "code":"actcode"})
@@ -965,6 +1076,10 @@ def process_interactions_and_ratings():
         }
     checked_columns = ["relevance type", "diversity type", "novelty type", "popularity type", "tweak mechanism", "rank"]
     for column in checked_columns:
+        recommender_queries_rating_interaction[column] = [VariantCodeToName[mv] 
+                                                          if mv in VariantCodeToName
+                                                          else mv
+                                                           for mv in recommender_queries_rating_interaction[column]]
         stats = recommender_queries_rating_interaction.groupby(column).agg(agg)        
         stats.to_csv(os.path.join(folder_with_graphs,f"ratings_and_interactions_per_{column.replace(' ', '_')}.csv"))
         variant_performance_on_ratings_by_user_graph(recommender_queries_rating_interaction, column)
@@ -979,6 +1094,10 @@ def process_interactions_and_ratings():
             user_best_performance_df.append(stats)
     user_best_performance_df = pd.concat(user_best_performance_df)
     user_best_performance_df = pd.merge(user_best_performance_df, acts[["actcode","typeofact"]], on="actcode")
+    user_best_performance_df["actcode"] = [VariantCodeToName[code] if code in VariantCodeToName
+                else TweakMechanismCodeToName[code] 
+                    if code in TweakMechanismCodeToName
+                else code for code in user_best_performance_df["actcode"]]
     return user_best_performance_df
 
 
@@ -996,8 +1115,10 @@ def process():
     time_in_user_study(False)
     number_of_finished_groups_of_acts_by_priority(False)
     number_of_finished_groups_of_acts_by_priority(True)
-    number_of_users_made_act(False)
-    number_of_users_made_act(True)
+    number_of_acts_made_by_users()
+    number_of_blocks_by_user()
+    number_of_users_that_made_act(False)
+    number_of_users_that_made_act(True)
     process_questions()
     process_metrics()
     print("DONE!")
