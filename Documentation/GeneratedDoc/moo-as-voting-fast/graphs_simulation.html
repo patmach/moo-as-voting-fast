@@ -36,7 +36,7 @@ import os
 
 
 
-def print_line_graphs(df, x_axis, x_axis_postfix = False, folder=&#34;OldNormalizationGraphs2&#34;):
+def print_line_graphs(df, x_axis, x_axis_postfix = False, folder=&#34;NormalizationGraphs&#34;):
     &#34;&#34;&#34;
 
     Saves graphs of dependency of support values on x_axis
@@ -51,7 +51,7 @@ def print_line_graphs(df, x_axis, x_axis_postfix = False, folder=&#34;OldNormali
     x_axis_postfix x_axis name postfix &#34;_{i}&#34; where i corresponds to index of objective: bool, optional
         If true add to the , by default False
     folder : str, optional
-        path to folder where graphs should be saved, by default &#34;OldNormalizationGraphs2&#34;
+        path to folder where graphs should be saved, by default &#34;NormalizationGraphs&#34;
     &#34;&#34;&#34;
     for i in [4]:
         x_axis_column = x_axis
@@ -110,17 +110,17 @@ def print_line_graphs(df, x_axis, x_axis_postfix = False, folder=&#34;OldNormali
         plt.savefig(os.path.join(folder,f&#34;line_{relevance_type}_{x_axis}.png&#34;), bbox_inches=&#39;tight&#39;)
 
 
-def correlation(df, folder=&#34;OldNormalizationGraphs2&#34;):
+def correlation(df, folder=&#34;NormalizationGraphs&#34;):
     &#34;&#34;&#34;
     Prints graphs of correlation of each metric when used any combination of metric variants
-    
+
     Parameters
     ----------
     df : pd.DataFrame
         DataFrame containing columns: relevance_type, diversity_type, novelty_type, popularity_type,
             support_{i}, importances_{i}, rank and user_profile_count - where i is index of each objective
     folder : str, optional
-        path to folder where graphs should be saved, by default &#34;OldNormalizationGraphs2&#34;
+        path to folder where graphs should be saved, by default &#34;NormalizationGraphs&#34;
     &#34;&#34;&#34;
     for diversity_type in [&#34;intra_list_diversity&#34;,&#34;maximal_diversity&#34;,&#34;binomial_diversity&#34;]:
         for novelty_type in [&#34;popularity_complement&#34;,&#34;maximal_distance_based_novelty&#34;,&#34;intra_list_distance_based_novelty&#34;]:
@@ -156,7 +156,9 @@ code_to_czech = {
     ,&#34;importance&#34;:&#34;Váha kritéria&#34;
     ,&#34;user_profile_count&#34;:&#34;Počet ohodnocených položek uživatelem&#34;
 }
-df = pd.read_csv(&#34;values_21_12_old.csv&#34;)
+
+file = &#34;values_.csv&#34;
+df = pd.read_csv(file)
 metrics = [&#34;relevance&#34;, &#34;diverzita&#34;, &#34;novelty&#34;, &#34;popularita&#34;,&#34;kalibrace&#34;]
 matplotlib.rcParams[&#39;figure.figsize&#39;] = 15, 12
 df[&#34;user_profile_count&#34;] = round(df[&#34;user_profile_count&#34;]/5)*5
@@ -176,7 +178,7 @@ if __name__ == &#34;__main__&#34;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="moo-as-voting-fast.graphs_simulation.correlation"><code class="name flex">
-<span>def <span class="ident">correlation</span></span>(<span>df, folder='OldNormalizationGraphs2')</span>
+<span>def <span class="ident">correlation</span></span>(<span>df, folder='NormalizationGraphs')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Prints graphs of correlation of each metric when used any combination of metric variants</p>
@@ -186,23 +188,23 @@ if __name__ == &#34;__main__&#34;:
 <dd>DataFrame containing columns: relevance_type, diversity_type, novelty_type, popularity_type,
 support_{i}, importances_{i}, rank and user_profile_count - where i is index of each objective</dd>
 <dt><strong><code>folder</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>path to folder where graphs should be saved, by default "OldNormalizationGraphs2"</dd>
+<dd>path to folder where graphs should be saved, by default "NormalizationGraphs"</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def correlation(df, folder=&#34;OldNormalizationGraphs2&#34;):
+<pre><code class="python">def correlation(df, folder=&#34;NormalizationGraphs&#34;):
     &#34;&#34;&#34;
     Prints graphs of correlation of each metric when used any combination of metric variants
-    
+
     Parameters
     ----------
     df : pd.DataFrame
         DataFrame containing columns: relevance_type, diversity_type, novelty_type, popularity_type,
             support_{i}, importances_{i}, rank and user_profile_count - where i is index of each objective
     folder : str, optional
-        path to folder where graphs should be saved, by default &#34;OldNormalizationGraphs2&#34;
+        path to folder where graphs should be saved, by default &#34;NormalizationGraphs&#34;
     &#34;&#34;&#34;
     for diversity_type in [&#34;intra_list_diversity&#34;,&#34;maximal_diversity&#34;,&#34;binomial_diversity&#34;]:
         for novelty_type in [&#34;popularity_complement&#34;,&#34;maximal_distance_based_novelty&#34;,&#34;intra_list_distance_based_novelty&#34;]:
@@ -223,7 +225,7 @@ support_{i}, importances_{i}, rank and user_profile_count - where i is index of 
 </details>
 </dd>
 <dt id="moo-as-voting-fast.graphs_simulation.print_line_graphs"><code class="name flex">
-<span>def <span class="ident">print_line_graphs</span></span>(<span>df, x_axis, x_axis_postfix=False, folder='OldNormalizationGraphs2')</span>
+<span>def <span class="ident">print_line_graphs</span></span>(<span>df, x_axis, x_axis_postfix=False, folder='NormalizationGraphs')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Saves graphs of dependency of support values on x_axis</p>
@@ -237,13 +239,13 @@ support_{i}, importances_{i}, rank and user_profile_count - where i is index of 
 <dt>x_axis_postfix x_axis name postfix "_{i}" where i corresponds to index of objective: bool, optional</dt>
 <dt>If true add to the , by default False</dt>
 <dt><strong><code>folder</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>path to folder where graphs should be saved, by default "OldNormalizationGraphs2"</dd>
+<dd>path to folder where graphs should be saved, by default "NormalizationGraphs"</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def print_line_graphs(df, x_axis, x_axis_postfix = False, folder=&#34;OldNormalizationGraphs2&#34;):
+<pre><code class="python">def print_line_graphs(df, x_axis, x_axis_postfix = False, folder=&#34;NormalizationGraphs&#34;):
     &#34;&#34;&#34;
 
     Saves graphs of dependency of support values on x_axis
@@ -258,7 +260,7 @@ support_{i}, importances_{i}, rank and user_profile_count - where i is index of 
     x_axis_postfix x_axis name postfix &#34;_{i}&#34; where i corresponds to index of objective: bool, optional
         If true add to the , by default False
     folder : str, optional
-        path to folder where graphs should be saved, by default &#34;OldNormalizationGraphs2&#34;
+        path to folder where graphs should be saved, by default &#34;NormalizationGraphs&#34;
     &#34;&#34;&#34;
     for i in [4]:
         x_axis_column = x_axis

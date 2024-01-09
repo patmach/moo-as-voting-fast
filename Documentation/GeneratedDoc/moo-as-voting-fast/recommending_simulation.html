@@ -28,7 +28,7 @@
 </summary>
 <pre><code class="python">from datetime import datetime
 from app import create_new_user, get_mask, set_rating_matrices_row
-from db_connect import get_ratings_of_user
+from db_connect import get_connection_string, get_ratings_of_user
 import main
 import copy
 import numpy as np
@@ -62,7 +62,7 @@ def get_first_k_rated(user_id, userindex, k):
         First k ratings of user
     &#34;&#34;&#34;
     global simulated_users_ratings
-    neg_rated = simulated_users_ratings[user_id]
+    neg_rated = get_ratings_of_user(get_connection_string(),user_id, only_positive=False, order=True) #simulated_users_ratings[user_id]
     neg_rated = neg_rated.head(k)
     pos_rated = neg_rated[neg_rated[&#34;ratingscore&#34;] &gt; 5]
     pos_scores = list(pos_rated[&#34;ratingscore&#34;].apply(lambda x: x/10.0 if x&gt;5 else 0))
@@ -82,15 +82,15 @@ def get_first_k_rated(user_id, userindex, k):
 
 
 if __name__ == &#34;__main__&#34;:
-    profile_counts = np.load(&#34;users_profile_counts_randomly.npy&#34;)
-    simulated_userIDs = [int(record.split(&#39;;&#39;)[0]) for record in profile_counts][:1000]
-    profile_counts = [int(record.split(&#39;;&#39;)[1]) for record in profile_counts]
+    #profile_counts = np.load(&#34;users_profile_counts_randomly.npy&#34;)
+    #simulated_userIDs = [int(record.split(&#39;;&#39;)[0]) for record in profile_counts][:1000]
+    #profile_counts = [int(record.split(&#39;;&#39;)[1]) for record in profile_counts]
     init(True)
-    #simulated_userIDs = random.sample(list(app.userIDs), k=3)
+    simulated_userIDs = random.sample(list(app.userIDs), k=1000)
     simulated_users_ratings = {}
-    for id in simulated_userIDs:
-        simulated_users_ratings[id] = get_ratings_of_user(app.args.connectionstring, id,\
-                                            only_positive=False, order=True)
+    #for id in simulated_userIDs:
+    #    simulated_users_ratings[id] = get_ratings_of_user(app.args.connectionstring, id,\
+    #                                        only_positive=False, order=True)
     random_lengths = []
     k = 15
     profile_counts_index=0
@@ -110,9 +110,9 @@ if __name__ == &#34;__main__&#34;:
                         new_user_id = max(app.userIDs) + count
                         create_new_user(new_user_id)
                         userindex =app.userIDs.index(new_user_id) 
-                        l = profile_counts[profile_counts_index]#random.randint(3, 50)
-                        profile_counts_index+=1
-                        #random_lengths.append(f&#34;{user_id};{l}&#34;)
+                        l = random.randint(3, 50)#profile_counts[profile_counts_index]
+                        #profile_counts_index+=1
+                        random_lengths.append(f&#34;{user_id};{l}&#34;)
                         rated, scores, pos_rated = get_first_k_rated(user_id, userindex, l) 
                         user_id = new_user_id
                         set_rating_matrices_row(rated, scores, app.args, userindex)
@@ -157,7 +157,7 @@ if __name__ == &#34;__main__&#34;:
                     values_df.to_csv(&#34;values_.csv&#34;, index=False)
     values_df = pd.concat(values_dfs)
     values_df.to_csv(&#34;values_.csv&#34;, index=False)
-    #np.save(&#34;users_profile_counts_randomly&#34;,np.array(random_lengths))
+    np.save(&#34;users_profile_counts_randomly&#34;,np.array(random_lengths))
     print(&#34;DONE!&#34;)</code></pre>
 </details>
 </section>
@@ -208,7 +208,7 @@ if __name__ == &#34;__main__&#34;:
         First k ratings of user
     &#34;&#34;&#34;
     global simulated_users_ratings
-    neg_rated = simulated_users_ratings[user_id]
+    neg_rated = get_ratings_of_user(get_connection_string(),user_id, only_positive=False, order=True) #simulated_users_ratings[user_id]
     neg_rated = neg_rated.head(k)
     pos_rated = neg_rated[neg_rated[&#34;ratingscore&#34;] &gt; 5]
     pos_scores = list(pos_rated[&#34;ratingscore&#34;].apply(lambda x: x/10.0 if x&gt;5 else 0))

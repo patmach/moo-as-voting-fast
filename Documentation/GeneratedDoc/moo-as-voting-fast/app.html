@@ -29,7 +29,7 @@
 <pre><code class="python">import copy
 import sys
 import main
-import ResultsScript.results as results
+import results as results
 import numpy as np
 import time
 import json 
@@ -51,6 +51,11 @@ extended_rating_matrix, neg_extended_rating_matrix, pos_users_profiles, neg_user
             = None, None, None, None, None, None, None,None,None, None, None, None, None, None, None
 lock = threading.Lock()
 
+@app.before_request
+def log_request_info():
+    app.logger.info(&#39;Headers: %s&#39;, request.headers)
+    app.logger.info(&#39;Body: %s&#39;, request.get_json())
+    print(f&#34;&#39;Body: {request.get_json()}&#34;, file=sys.stderr)
 
 @app.before_first_request
 def init(only_MovieLens = False):
@@ -120,6 +125,7 @@ def index(user_id):
             for j in range(len(support[0])):
                 support[i][j] = max(np.nan_to_num(support[i][j]),0) 
         result = {itemIDs[int(result[i])]: support[i] for i in range(len(result))}
+        app.logger.info(f&#34;Request successfuly processed&#34;)
     return json.dumps(result)
 
 
@@ -581,6 +587,7 @@ def index(user_id):
             for j in range(len(support[0])):
                 support[i][j] = max(np.nan_to_num(support[i][j]),0) 
         result = {itemIDs[int(result[i])]: support[i] for i in range(len(result))}
+        app.logger.info(f&#34;Request successfuly processed&#34;)
     return json.dumps(result)</code></pre>
 </details>
 </dd>
@@ -613,6 +620,22 @@ def init(only_MovieLens = False):
         y = x + datetime.timedelta(days=1)
         y = y.replace(hour=3, minute=30, second=0, microsecond=0)
         threading.Timer((y - x).seconds, init).start()</code></pre>
+</details>
+</dd>
+<dt id="moo-as-voting-fast.app.log_request_info"><code class="name flex">
+<span>def <span class="ident">log_request_info</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.before_request
+def log_request_info():
+    app.logger.info(&#39;Headers: %s&#39;, request.headers)
+    app.logger.info(&#39;Body: %s&#39;, request.get_json())
+    print(f&#34;&#39;Body: {request.get_json()}&#34;, file=sys.stderr)</code></pre>
 </details>
 </dd>
 <dt id="moo-as-voting-fast.app.set_client_args"><code class="name flex">
@@ -754,6 +777,7 @@ def start():
 <li><code><a title="moo-as-voting-fast.app.graphs" href="#moo-as-voting-fast.app.graphs">graphs</a></code></li>
 <li><code><a title="moo-as-voting-fast.app.index" href="#moo-as-voting-fast.app.index">index</a></code></li>
 <li><code><a title="moo-as-voting-fast.app.init" href="#moo-as-voting-fast.app.init">init</a></code></li>
+<li><code><a title="moo-as-voting-fast.app.log_request_info" href="#moo-as-voting-fast.app.log_request_info">log_request_info</a></code></li>
 <li><code><a title="moo-as-voting-fast.app.set_client_args" href="#moo-as-voting-fast.app.set_client_args">set_client_args</a></code></li>
 <li><code><a title="moo-as-voting-fast.app.set_rating_matrices_row" href="#moo-as-voting-fast.app.set_rating_matrices_row">set_rating_matrices_row</a></code></li>
 <li><code><a title="moo-as-voting-fast.app.start" href="#moo-as-voting-fast.app.start">start</a></code></li>

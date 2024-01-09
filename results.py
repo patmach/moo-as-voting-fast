@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import pypyodbc as odbc
 import pandas as pd
 import seaborn as sns
 import numpy as np
@@ -129,6 +128,9 @@ def get_userAnswers():
     """
     userAnswers = get_table("UserAnswers")
     questions = get_table("Questions").rename(columns={"id": "questionid", "text":"questiontext"})
+    questionIDs = questions.sort_values(by=["questionsectionid","questionid"])
+    questions["questiontext"] = [f"O{i + 1}: " + questions.iloc[i]["questiontext"]
+                                 for i in range(len(questions))]
     answers = get_table("Answers").rename(columns={"id": "answerid", "text":"answertext"}).drop(columns=["questionid"])
     questionSections = get_table("QuestionSections").rename(columns={"id": "questionsectionid", "name": "sectionname"})
     questions = pd.merge_ordered(questions, questionSections, how="left", on="questionsectionid")
@@ -227,7 +229,7 @@ def convert_to_by_metric(recommenderqueries, metrics):
     for metric in metrics:
         bymetric = pd.DataFrame()
         bymetric["Metric"] = [metric] * len(recommenderqueries)
-        bymetric["Metric importance"] = recommenderqueries[metric]
+        bymetric["Weight"] = recommenderqueries[metric]
         bymetric["Metric variant"] = recommenderqueries[metric+" type"]
         bymetric["Metric variant"] = [VariantCodeToName[mv]
                                       if mv in VariantCodeToName
@@ -359,10 +361,9 @@ def process_metrics():
 
 def process_metrics_graphs(recommenderqueries, filtered = False):
     cm = sns.color_palette("plasma",len(recommenderqueries["Metric"].unique()))
-    recommenderqueries.sort_values(by="Metric", inplace=True)
-    g = sns.violinplot(data = recommenderqueries, x= "Metric", y= "Metric importance",
+    g = sns.violinplot(data = recommenderqueries, x= "Metric", y= "Weight",
                palette=cm)
-    g.set(title = f"Objective weights specified by user")
+    g.set(title = f"Objective weights specified by user {'filtered' if filtered else ''}")
     wrap_labels(g, 12)
     plt.savefig(os.path.join(folder_with_graphs,f"Metrics_importances_{filtered}.png"), bbox_inches='tight')
     plt.close('all')
@@ -370,9 +371,9 @@ def process_metrics_graphs(recommenderqueries, filtered = False):
     plt.cla()
 
     recommenderqueries.sort_values(by="Metric variant", inplace=True)
-    g = sns.violinplot(data = recommenderqueries, x= "Metric variant", y= "Metric importance",
+    g = sns.violinplot(data = recommenderqueries, x= "Metric variant", y= "Weight",
                palette=cm)
-    g.set(title = f"Metrics variants weights specified by user")
+    g.set(title = f"Metrics variants weights specified by user  {'filtered' if filtered else ''}")
     wrap_labels(g, 6)
     plt.savefig(os.path.join(folder_with_graphs,f"Metrics_variants_importances_{filtered}.png"), bbox_inches='tight')
     plt.close('all')
@@ -396,9 +397,9 @@ def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm, filter
         metric_recommenderqueries = recommenderqueries[recommenderqueries["Metric"] == metric]
         if(len(metric_recommenderqueries["Metric variant"].unique()) > 1):
             metric_recommenderqueries.sort_values(by="Metric", inplace=True)
-            g = sns.violinplot(data = metric_recommenderqueries, x= "Metric variant", y= "Metric importance",
+            g = sns.violinplot(data = metric_recommenderqueries, x= "Metric variant", y= "Weight",
                palette=cm)
-            g.set(title = f"{metric} weight specified by user per metric variant")
+            g.set(title = f"{metric} weight specified by user per metric variant  {'filtered' if filtered else ''}")
             wrap_labels(g, 12)
             plt.savefig(os.path.join(folder_with_graphs,f"variants_of_{metric}_importances_{filtered}.png"), bbox_inches='tight')
             plt.close('all')
@@ -406,9 +407,9 @@ def process_metrics_per_variant_and_per_mechanism(recommenderqueries, cm, filter
             plt.cla()
 
             metric_recommenderqueries.sort_values(by="Tweak mechanism", inplace=True)
-            g = sns.violinplot(data = metric_recommenderqueries, x= "Tweak mechanism", y= "Metric importance",
+            g = sns.violinplot(data = metric_recommenderqueries, x= "Tweak mechanism", y= "Weight",
                split=True, palette=cm)
-            g.set(title = f"{metric} weight specified by user per tweak mechanism")
+            g.set(title = f"{metric} weight specified by user per tweak mechanism  {'filtered' if filtered else ''}")
             wrap_labels(g, 12)
             plt.savefig(os.path.join(folder_with_graphs,f"by_tweak_mechanism_{metric}_importances_{filtered}.png"), bbox_inches='tight')
             plt.close('all')
@@ -495,10 +496,11 @@ def process_Likert_Scale_Questions(likertScaleQuestionsMeanAndStd, likertScaleAn
             section_LikertScaleAnswers = likertScaleAnswers[likertScaleAnswers["sectionname"] == section]
         section_likertScaleQuestionsMeanAndStd = likertScaleQuestionsMeanAndStd[\
         likertScaleQuestionsMeanAndStd["question"].isin(section_LikertScaleAnswers["questiontext"])]
-        g = sns.barplot(section_likertScaleQuestionsMeanAndStd, x="mean",y="question")
+        section_likertScaleQuestionsMeanAndStd["mean"] = section_likertScaleQuestionsMeanAndStd["mean"] + 1
+        g = sns.barplot(section_likertScaleQuestionsMeanAndStd, x="mean",y="question", left=-1)
+        g.set_xlim(-1,1)  
         y_coords = [p.get_y() + 0.5*p.get_height() for p in g.patches]
-        x_coords = [p.get_width() for p in g.patches]        
-        g.set_xlim(-1.1,1.1)        
+        x_coords = [p.get_width() - 1 for p in g.patches]              
         g.errorbar(x=x_coords, y=y_coords, xerr=section_likertScaleQuestionsMeanAndStd["std"], fmt="none", c= "k")
         wrap_labels(g, 20)
         plt.savefig(os.path.join(folder_with_graphs,f"{section.replace(' ', '_')}LikertScaleQuestionsMeanAndStd.png"), bbox_inches='tight')
@@ -867,6 +869,24 @@ def number_of_users_that_made_act(withFirstUserActs):
     groupedUserActs[["code","count","from_all","typeofact"]]\
         .to_csv(os.path.join(folder_with_graphs,f"number_of_users_made_act_{str(withFirstUserActs)}.csv"))
     
+def number_of_blocks_made_by_users():
+    """
+    Computes and saves dataset containing how many block types users completed in average
+
+    """
+    global users_without_questionnaire, author_users
+    columns = ["userid", "blocktype", "value", "date"]
+    blocks = pd.read_csv("Logs/Blocks.txt", sep=',', names=columns)
+    blocks = blocks[~blocks["userid"].isin(author_users)]
+    blocks = blocks[~blocks["userid"].isin(users_without_questionnaire)]
+    blocks = blocks.drop_duplicates(subset=["userid", "blocktype"])
+    groupedBlocks = blocks.groupby(["blocktype"])["date"].count()
+    groupedBlocks = groupedBlocks.reset_index()    
+    groupedBlocks = groupedBlocks.rename(columns={"date": "count"})
+    groupedBlocks["from_all"] = groupedBlocks["count"] / len(blocks["userid"].unique())
+    groupedBlocks[["blocktype","count","from_all"]]\
+        .to_csv(os.path.join(folder_with_graphs,f"number_of_users_made_block.csv"))
+
 def number_of_acts_made_by_users():
     """
     Computes and saves dataset containing how many acts users completed in average
@@ -1117,6 +1137,7 @@ def process():
     number_of_finished_groups_of_acts_by_priority(True)
     number_of_acts_made_by_users()
     number_of_blocks_by_user()
+    number_of_blocks_made_by_users()
     number_of_users_that_made_act(False)
     number_of_users_that_made_act(True)
     process_questions()
