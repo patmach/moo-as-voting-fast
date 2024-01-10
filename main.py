@@ -1190,10 +1190,10 @@ def main(args):
     obj_weights = args.weights
     obj_weights /= obj_weights.sum()
     start_time = time.perf_counter()
-    normalizations = load_cache(os.path.join("cache", "normalizations.pckl"))
-    # normalizations = compute_all_normalizations(args, normalization_factory, extended_rating_matrix, neg_extended_rating_matrix,\
-    #                                               ease_X, ease_B, neg_ease_X, neg_ease_B,  distance_matrix, users_viewed_item, items, users,\
-    #                                                  avg_ratings)
+    # normalizations = load_cache(os.path.join("cache", "normalizations.pckl"))
+    normalizations = compute_all_normalizations(args, normalization_factory, extended_rating_matrix, neg_extended_rating_matrix,\
+                                                  ease_X, ease_B, neg_ease_X, neg_ease_B,  distance_matrix, users_viewed_item, items, users,\
+                                                     avg_ratings)
     print(f"Preparing normalizations took: {time.perf_counter() - start_time}",file=sys.stderr)
     return extended_rating_matrix, neg_extended_rating_matrix, pos_users_profiles, neg_users_profiles,\
     users_viewed_item, distance_matrix, items,itemIDs, users, userIDs, algorithm_factory, normalizations,\
