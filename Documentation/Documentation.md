@@ -43,7 +43,8 @@ Go to file `db_connect.py` set properties, based on where the code and the MS SQ
 ## Call API
 
 - Route
-  - "/getRecommendations/<user_id>"
+  - /getRecommendations/<user_id>
+
 - Parameters (in JSON)
   - `WhiteListItemIDs` - IDs of items possible to recommend. Empty means all are possible (Array)
   - `BlackListItemIDs` - IDs of items that shouldn't be returned (Array)
@@ -66,10 +67,51 @@ Go to file `db_connect.py` set properties, based on where the code and the MS SQ
       - Popularity
         - `num_of_ratings`
         - `avg_ratings`
+
+- Example of request data
+
+  - ```json
+    {
+    	'whiteListItemIDs': [32, 47, 253, 266, 555, 1061, 1619, 2340, 2959, 2997, 3418, 4011, 4161, 4901, 4963, 7458, 8984, 33679, 46723, 53322, 55363, 61323, 64957, 68157, 81564, 86898, 89492, 103249, 105844, 115210, 148626, 187593, 202429],
+    	'blackListItemIDs': [189363, 93840, 1682, 590, 1580, 2953, 95441, 1, 45722, 5349, 96079, 49272, 108190],
+        'currentListItemIDs': [],
+        'count': 15,
+        'metrics': [33, 26, 20, 13, 6],
+        'metricVariantsCodes': ['also_negative', 'maximal_diversity', 'intra_list_distance_based_novelty', 'avg_ratings', '']
+    }
+    ```
+
+    
+
 - Response (in JSON)
   - Dictionary
     - Keys = item ID (Integer)
     - Values = metric scores In order: relevance, diversity, novelty, popularity, calibration (Array)
+
+- Example of response data
+
+  - ```json
+    {
+        "168": [95.71171602775985, 90.08456836777941, 62.680255494616, 10.737544026390541, 83.19340759715217],
+    	"160080": [94.70690543417534, 86.10188818703168, 70.41777030835512, 23.193101704706365, 39.21020047427453], 
+        "27773": [99.71952522566625, 90.93282368158113, 1.476083275329402, 88.42896025155231, 94.51327923054002], 
+        "94018": [94.64414362384046, 84.81483799958659, 58.86083472131182, 30.756441368076377, 34.69852102567428], 
+        "3979": [87.68170424540077, 87.15829205637759, 53.97749593454705, 43.73617016040326, 20.496661704893988], 
+        "60397": [97.31801155313336, 85.87358812670686, 34.096195458569525, 48.736968725374076, 94.68283336366451], 
+        "95558": [91.63793814711464, 97.67549723992501, 68.7215793929318, 9.350243532378876, 98.89009430388575], 
+        "55577": [87.9570011069638, 91.26715900713194, 64.42218498251766, 22.823267980484623, 97.57380037878883], 
+        "204698": [98.1984015886596, 99.71628909747466, 65.881612128059, 1.580463602815664, 85.23852968622566], 
+        "2393": [92.491029176663, 96.6300721463742, 54.10505506159712, 25.419011549960217, 89.43264999360598], 
+        "100498": [86.1471291571386, 84.57454407043521, 79.54912282734999, 16.67257131503161, 55.89537297504624], 
+        "788": [94.43437957463668, 78.63961422770002, 23.402628781946795, 70.33597847370129, 98.00451946878945], 
+        "193": [86.95403350949059, 98.84893665372616, 81.93941764211442, 7.598383831758807, 19.764971554860637], 
+        "60950": [94.12007165888708, 94.11694461263582, 23.557400032800015, 54.69261906835441, 86.94939033589546], 
+        "6157": [99.25873670128004, 66.93127685838842, 30.06585228955807, 67.0191718964582, 23.561599383964623]}
+    
+    ```
+
+    
+
 
 
 
@@ -82,7 +124,7 @@ Go to file `db_connect.py` set properties, based on where the code and the MS SQ
   - `-w` number of workers (every worker will train the RS before it's able to respond to queries)
   - `--threads` number of threads used by one worker
 
-- Should be available at `http://localhost:5000/
+- Should be available at http://localhost:5000/
 
 ### Run simulation of recommending to check dependencies
 
