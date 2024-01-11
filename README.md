@@ -1,5 +1,5 @@
 # Multi-objective Recommender System
-### Original implementation
+### Original Implementation
 
 - https://github.com/pdokoupil/moo-as-voting-fast
 
@@ -12,3 +12,9 @@
 - `Documentation.md`
   - What needs to be set and how to run and call the RS
 
+### Other Files
+
+- movies.csv
+  - Dataset containing metadata to movies from MovieLens25m
+- requirements.txt
+  - Contains all needed packages that can be installed by running `pip install -r requirements.txt`
